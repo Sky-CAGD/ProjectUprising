@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class CameraController : SingletonPattern<CameraController>
 {
@@ -10,7 +12,7 @@ public class CameraController : SingletonPattern<CameraController>
     public float moveTime;
     public float rotateSpeed;
     public float zoomSpeed;
-    public Transform followTransform;
+    public Transform followTarget;
 
     //Camera Position
     private float moveSpeed;
@@ -30,125 +32,172 @@ public class CameraController : SingletonPattern<CameraController>
     private Vector3 rotateStartPos;
     private Vector3 rotateCurrentPos;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        cameraTransform = transform.GetChild(0);
+    //Input Actions
+    private PlayerInput playerInput;
+    private InputAction move;
+    private InputAction click;
+    private InputAction rotateAxis;
+    private InputAction rotatePan;
+    private InputAction zoom;
+    private InputAction speedUp;
+    private InputAction mousePosition;
+    private Vector2 mousePos;
 
+    protected override void Awake()
+    {
+        base.Awake();
+
+        //Get references and initialize values
+        cameraTransform = transform.GetChild(0);
         newPosition = transform.position;
         newRotation = transform.rotation;
         newZoom = cameraTransform.localPosition;
-
         zoomAxis = new Vector3(0, -1, 1);
+        dragStartPos = Vector3.zero;
+        rotateStartPos = Vector3.zero;
+
+        //Set up player input events
+        playerInput = new PlayerInput();
+    }
+
+    /// <summary>
+    /// Set up input reading
+    /// </summary>
+    private void OnEnable()
+    {
+        move = playerInput.PlayerActions.Move;
+        click = playerInput.PlayerActions.Interact;
+        rotateAxis = playerInput.PlayerActions.RotateAxis;
+        rotatePan = playerInput.PlayerActions.RotatePan;
+        zoom = playerInput.PlayerActions.Zoom;
+        speedUp = playerInput.PlayerActions.SpeedUp;
+        mousePosition = playerInput.PlayerActions.MousePosition;
+
+        playerInput.Enable();
+
+        playerInput.PlayerActions.Interact.performed += StartEndMousePanning;
+        playerInput.PlayerActions.Interact.canceled += StartEndMousePanning;
+        playerInput.PlayerActions.RotatePan.performed += StartEndMouseRotating;
+        playerInput.PlayerActions.RotatePan.canceled += StartEndMouseRotating;
+    }
+
+    private void OnDisable()
+    {
+        playerInput.Disable();
+
+        playerInput.PlayerActions.Interact.performed -= StartEndMousePanning;
+        playerInput.PlayerActions.Interact.canceled -= StartEndMousePanning;
+        playerInput.PlayerActions.RotatePan.performed -= StartEndMouseRotating;
+        playerInput.PlayerActions.RotatePan.canceled -= StartEndMouseRotating;
     }
 
     // Update is called once per frame
     void Update()
-    {  
-        if (followTransform != null )
-            FollowTransform();
+    {
+        mousePos = mousePosition.ReadValue<Vector2>();
 
-        HandleMouseInput();
+        MousePanning();
+        MouseRotating();
         RotateCamera();
         ZoomCamera();
         MoveCamera();
+        ApplyNewValues();
     }
 
-    private void FollowTransform()
+    private void ApplyNewValues()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            followTransform = null;
-        }
-
-        newPosition = followTransform.position;
-    }
-
-    private void MoveCamera()
-    {
-        moveSpeed = Input.GetKey(KeyCode.LeftShift) ? fastSpeed : baseSpeed;
-
-        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
-        {
-            newPosition += (transform.forward * moveSpeed);
-            followTransform = null;
-        }
-        if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
-        {
-            newPosition += -(transform.forward * moveSpeed);
-            followTransform = null;
-        }
-        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
-        {
-            newPosition += (transform.right * moveSpeed);
-            followTransform = null;
-        }
-        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
-        {
-            newPosition += -(transform.right * moveSpeed);
-            followTransform = null;
-        }
-
+        //Smoothly move camera to new positions & rotations
         transform.position = Vector3.Lerp(transform.position, newPosition, Time.deltaTime * moveTime);
-    }
-
-    private void RotateCamera()
-    {
-        if (Input.GetKey(KeyCode.Q))
-        {
-            newRotation *= Quaternion.Euler(Vector3.up * rotateSpeed);
-        }
-        if (Input.GetKey(KeyCode.E))
-        {
-            newRotation *= Quaternion.Euler(Vector3.up * -rotateSpeed);
-        }
-
         transform.rotation = Quaternion.Lerp(transform.rotation, newRotation, Time.deltaTime * moveTime);
-    }
-
-    private void ZoomCamera()
-    {
-        if (Input.GetKey(KeyCode.R))
-        {
-            newZoom += zoomAxis * zoomSpeed;
-        }
-        if (Input.GetKey(KeyCode.F))
-        {
-            newZoom -= zoomAxis * zoomSpeed;
-        }
-
         cameraTransform.localPosition = Vector3.Lerp(cameraTransform.localPosition, newZoom, Time.deltaTime * moveTime);
     }
 
-    private void HandleMouseInput()
+    /// <summary>
+    /// Moves the camera to a newPosition, taking user inputs into account
+    /// </summary>
+    private void MoveCamera()
     {
-        //Convert scroll wheel input to Zoom
-        if(Input.mouseScrollDelta.y != 0)
-        {
-            newZoom += Input.mouseScrollDelta.y * zoomAxis * zoomSpeed;
-        }
+        //Set move speed based on if speed up (left shift) key is held
+        bool isSpeedUpHeld = speedUp.ReadValue<float>() > 0.1f;
+        moveSpeed = isSpeedUpHeld ? fastSpeed : baseSpeed;
 
-        //Start left click and drag to move camera
-        if(Input.GetMouseButtonDown(0))
+        //Get the movement input
+        Vector2 moveInput = move.ReadValue<Vector2>();
+        Vector3 moveDir = new Vector3(moveInput.x, 0, moveInput.y);
+
+        //If moving camera, adjust newPosition and stop following any targets
+        if(moveDir != Vector3.zero)
+        {
+            newPosition += (moveDir * moveSpeed);
+            followTarget = null;
+        }
+        //Move to follow target if one is set and camera is not otherwise moving
+        else if(followTarget != null)
+        {
+            newPosition = followTarget.position;
+        }
+    }
+
+    /// <summary>
+    /// Rotates the camera around the rig using user input
+    /// </summary>
+    private void RotateCamera()
+    {
+        float rotateInput = rotateAxis.ReadValue<float>();
+
+        if(rotateInput != 0)
+            newRotation *= Quaternion.Euler(Vector3.up * rotateInput * rotateSpeed);
+    }
+
+    /// <summary>
+    /// Zooms the camera forward/back along the zoomAxis using user input
+    /// </summary>
+    private void ZoomCamera()
+    {
+        float zoomInput = Mathf.Clamp(zoom.ReadValue<float>(), -1, 1);
+
+        if (zoomInput != 0)
+            newZoom += zoomInput * zoomAxis * zoomSpeed;
+    }
+
+    /// <summary>
+    /// Called for a single frame when left mouse is clicked or released to set the dragStartPos
+    /// </summary>
+    /// <param name="context"></param>
+    private void StartEndMousePanning(InputAction.CallbackContext context)
+    {
+        if (context.performed)
         {
             Plane plane = new Plane(Vector3.up, Vector3.zero);
 
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Ray ray = Camera.main.ScreenPointToRay(mousePos);
 
             float entry;
 
-            if(plane.Raycast(ray, out entry))
+            if (plane.Raycast(ray, out entry))
             {
                 dragStartPos = ray.GetPoint(entry);
             }
         }
+        else if(context.canceled)
+        {
+            dragStartPos = Vector3.zero;
+        }
+    }
+
+    /// <summary>
+    /// Continuously reads whether the left mouse is held to pan the camera
+    /// </summary>
+    private void MousePanning()
+    {
+        bool isMouseHeld = click.ReadValue<float>() > 0.1f;
 
         //Continuous left click held to drag camera
-        if (Input.GetMouseButton(0))
+        if (isMouseHeld && dragStartPos != Vector3.zero)
         {
             Plane plane = new Plane(Vector3.up, Vector3.zero);
 
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Ray ray = Camera.main.ScreenPointToRay(mousePos);
 
             float entry;
 
@@ -159,21 +208,35 @@ public class CameraController : SingletonPattern<CameraController>
                 newPosition = transform.position + dragStartPos - dragCurrentPos;
             }
         }
+    }
 
-        //Start middle click to rotate camera
-        if(Input.GetMouseButtonDown(2))
-        {
-            rotateStartPos = Input.mousePosition;
-        }
+    /// <summary>
+    /// Called for a single frame when middle mouse is pressed or released to set the rotateStartPos
+    /// </summary>
+    /// <param name="context"></param>
+    private void StartEndMouseRotating(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+            rotateStartPos = mousePos;
+        else if(context.canceled)
+            rotateStartPos = Vector3.zero;
+    }
+
+    /// <summary>
+    /// Continuously reads whether the middle mouse is held to pan the camera
+    /// </summary>
+    private void MouseRotating()
+    {
+        bool isRotateHeld = rotatePan.ReadValue<float>() > 0.1f;
 
         //Continuous middle click held to rotate camera
-        if ( Input.GetMouseButton(2))
+        if (isRotateHeld && rotateStartPos != Vector3.zero)
         {
-            rotateCurrentPos = Input.mousePosition;
+            rotateCurrentPos = mousePos;
             Vector3 difference = rotateStartPos - rotateCurrentPos;
             rotateStartPos = rotateCurrentPos;
 
-            newRotation *= Quaternion.Euler(Vector3.up * (-difference.x / 5f));
+            newRotation *= Quaternion.Euler(Vector3.up * (-difference.x / 5f));           
         }
     }
 }

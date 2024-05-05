@@ -15,8 +15,10 @@ public class Tile : MonoBehaviour
     public int terrainCost = 0;
     public float TotalCost { get { return costFromOrigin + costToDestination + terrainCost; } }
     public bool Occupied { get; set; } = false;
+    public bool traversable = true;
 
     [SerializeField] private TMP_Text costText;
+    [SerializeField] private GameObject hexTileWall;
 
     private Material baseMaterial;
     private Material highlightMaterial;
@@ -49,6 +51,8 @@ public class Tile : MonoBehaviour
             case TileType.None:
                 {
                     GetComponent<Renderer>().enabled = false;
+                    hexTileWall.SetActive(false);
+                    traversable = false;
                     //baseMaterial = TileManager.Instance.noneMaterial;
                     //TileManager.Instance.SetTileAsNone(this);
                 }
@@ -56,14 +60,18 @@ public class Tile : MonoBehaviour
             case TileType.Standard:
                 {
                     GetComponent<Renderer>().enabled = true;
+                    hexTileWall.SetActive(false);
                     baseMaterial = TileManager.Instance.standardMaterial;
+                    traversable = true;
                     //TileManager.Instance.SetTileAsStandard(this);
                 }
                 break;
             case TileType.Wall:
                 {
-                    GetComponent<Renderer>().enabled = true;
+                    GetComponent<Renderer>().enabled = false;
+                    hexTileWall.SetActive(true);
                     baseMaterial = TileManager.Instance.wallMaterial;
+                    traversable = false;
                     //TileManager.Instance.SetTileAsWall(this);
                 }
                 break;

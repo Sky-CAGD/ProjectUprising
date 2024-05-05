@@ -50,13 +50,30 @@ public class Interact : MonoBehaviour
         }
         else //The mouse is over a non-interactable object
         {
-            if(Input.GetMouseButtonDown(0))
+            //Check for left click input in open area to deselect units/paths
+            if (Input.GetMouseButtonDown(0))
             {
-                currentTile = null;
-                selectedUnit = null;
-                CameraController.Instance.followTransform = null;
+                ClearAllSelections();
             }
         }
+
+        //Check for right click input to deselect units/paths
+        if (Input.GetMouseButtonDown(1))
+        {
+            ClearAllSelections();
+        }
+    }
+
+    /// <summary>
+    /// Deselect/Clear all units and paths unless a selected unit is moving
+    /// </summary>
+    private void ClearAllSelections()
+    {
+        if (selectedUnit && selectedUnit.Moving)
+            return;
+
+        ClearPath(lastPath);
+        DeselectUnit();
     }
 
     private void InspectTile()
@@ -81,7 +98,7 @@ public class Interact : MonoBehaviour
             return;
 
         //Clear drawn paths and highlight this unit's tile
-        ClearPaths(lastPath);
+        ClearPath(lastPath);
         currentTile.Highlight();
 
         //Mouse clicked on unit
@@ -110,17 +127,17 @@ public class Interact : MonoBehaviour
         currentTile = null;
     }
 
-    private void SelectUnit()
+    public void SelectUnit()
     {
         selectedUnit = currentTile.occupyingUnit;
-        CameraController.Instance.followTransform = selectedUnit.transform;
+        CameraController.Instance.followTarget = selectedUnit.transform;
         //GetComponent<AudioSource>().PlayOneShot(pop);
     }
 
-    private void DeselectUnit()
+    public void DeselectUnit()
     {
         selectedUnit = null;
-        CameraController.Instance.followTransform = null;
+        CameraController.Instance.followTarget = null;
         //GetComponent<AudioSource>().PlayOneShot(pop);
     }
 
@@ -149,7 +166,7 @@ public class Interact : MonoBehaviour
         if (path == null || path == lastPath)
             return false;
 
-        ClearPaths(lastPath);
+        ClearPath(lastPath);
         DrawPath(path);
 
         lastPath = path;
@@ -164,7 +181,7 @@ public class Interact : MonoBehaviour
             illustrator.DebugPathCosts(path);
     }
 
-    private void ClearPaths(Path path)
+    private void ClearPath(Path path)
     {
         if (path != null)
         {

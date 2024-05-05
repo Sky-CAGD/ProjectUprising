@@ -55,7 +55,8 @@ public class Pathfinder : SingletonPattern<Pathfinder>
             foreach (Tile neighbor in NeighborTiles(currentTile))
             {
                 //Skip checking a neighbor tile that is already within the actual path
-                if(closedSet.Contains(neighbor))
+                //Skip checking a tile that is not traversable
+                if(closedSet.Contains(neighbor) || !neighbor.traversable)
                     continue;
                 
                 float costToNeighbor = currentTile.costFromOrigin + neighbor.terrainCost + tileDistance;
