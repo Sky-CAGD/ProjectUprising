@@ -3,6 +3,13 @@ using TMPro;
 using System.Collections.Generic;
 using System;
 
+public enum TileType
+{
+    None,
+    Standard,
+    Wall
+}
+
 public class Tile : MonoBehaviour
 {
     public TileType tileType = TileType.Standard;
@@ -17,17 +24,32 @@ public class Tile : MonoBehaviour
     public bool Occupied { get; set; } = false;
     public bool traversable = true;
 
-    [SerializeField] private TMP_Text costText;
+    [SerializeField] private TMP_Text tileText;
+    [SerializeField] private GameObject hexTileStandard;
     [SerializeField] private GameObject hexTileWall;
+    [SerializeField] private GameObject highlightMesh;
+    private Color highlightColor;
+    private Renderer mesh;
 
-    private Material baseMaterial;
-    private Material highlightMaterial;
+    private void Awake()
+    {
+        tileText.text = "";
+        highlightMesh.gameObject.SetActive(true);
+        mesh = highlightMesh.GetComponent<Renderer>();
+        mesh.enabled = false;
+    }
 
     private void Start()
     {
-        costText.text = "";
-        highlightMaterial = TileManager.Instance.highlightMaterial;
+        highlightColor = GameManager.Instance.tileHighlightColor;
+        mesh.material.color = highlightColor;
         SetTileParameters();
+    }
+
+    private void Update()
+    {
+        //highlightColor = GameManager.Instance.tileHighlightColor;
+        //mesh.material.color = highlightColor;
     }
 
     /// <summary>
@@ -36,12 +58,13 @@ public class Tile : MonoBehaviour
     /// <param name="col"></param>
     public void Highlight()
     {
-        SetMaterial(highlightMaterial);
+        if (tileType == TileType.Standard)
+            mesh.enabled = true;
     }
 
     public void ClearHighlight()
     {
-        SetMaterial(baseMaterial);
+        mesh.enabled = false;
     }
 
     private void SetTileParameters()
@@ -50,50 +73,44 @@ public class Tile : MonoBehaviour
         {
             case TileType.None:
                 {
-                    GetComponent<Renderer>().enabled = false;
+                    hexTileStandard.SetActive(false);
                     hexTileWall.SetActive(false);
                     traversable = false;
-                    //baseMaterial = TileManager.Instance.noneMaterial;
-                    //TileManager.Instance.SetTileAsNone(this);
                 }
                 break;
             case TileType.Standard:
                 {
-                    GetComponent<Renderer>().enabled = true;
+                    hexTileStandard.SetActive(true);
                     hexTileWall.SetActive(false);
-                    baseMaterial = TileManager.Instance.standardMaterial;
                     traversable = true;
-                    //TileManager.Instance.SetTileAsStandard(this);
                 }
                 break;
             case TileType.Wall:
                 {
-                    GetComponent<Renderer>().enabled = false;
+                    hexTileStandard.SetActive(false);
                     hexTileWall.SetActive(true);
-                    baseMaterial = TileManager.Instance.wallMaterial;
                     traversable = false;
-                    //TileManager.Instance.SetTileAsWall(this);
                 }
                 break;
             default:
                 break;
         }
-
-        SetMaterial(baseMaterial);
     }
 
     /// <summary>
     /// This is called when right clicking a tile to change its type
     /// </summary>
     /// <param name="value"></param>
-    public void ChangeTile()
+    public void ChangeTile(int changeVal)
     {
         int numTileTypes = Enum.GetValues(typeof(TileType)).Length;
         int currTileIndex = (int)tileType;
 
-        currTileIndex++;
+        currTileIndex += changeVal;
         if (currTileIndex > numTileTypes - 1)
             currTileIndex = 0;
+        else if(currTileIndex < 0)
+            currTileIndex = numTileTypes - 1;
 
         tileType = (TileType)currTileIndex;
 
@@ -107,11 +124,16 @@ public class Tile : MonoBehaviour
     
     public void DebugCostText()
     {
-        costText.text = TotalCost.ToString("F1");
+        tileText.text = TotalCost.ToString("F1");
+    }
+
+    public void DisplayDistancesText(int tileDist)
+    {
+        tileText.text = tileDist.ToString();
     }
 
     public void ClearText()
     {
-        costText.text = "";
+        tileText.text = "";
     }
 }

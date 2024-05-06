@@ -27,7 +27,7 @@ public class Unit : MonoBehaviour
             return;
         }
 
-        if (Physics.Raycast(transform.position, -transform.up, out RaycastHit hit, 50f, GroundLayerMask))
+        if (Physics.Raycast(transform.position + new Vector3(0, 1, 0), -transform.up, out RaycastHit hit, 50f, GroundLayerMask))
         {
             FinalizePosition(hit.transform.GetComponent<Tile>());
             return;
@@ -102,6 +102,9 @@ public class Unit : MonoBehaviour
     void MoveAndRotate(Vector3 origin, Vector3 destination, float duration)
     {
         transform.position = Vector3.Lerp(origin, destination, duration);
-        transform.rotation = Quaternion.LookRotation(origin.DirectionTo(destination).Flat(), Vector3.up);
+        Vector3 lookDir = origin.DirectionTo(destination).Flat();
+
+        if(lookDir != Vector3.zero)
+            transform.rotation = Quaternion.LookRotation(lookDir, Vector3.up);
     }
 }

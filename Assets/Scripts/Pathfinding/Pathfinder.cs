@@ -80,7 +80,7 @@ public class Pathfinder : SingletonPattern<Pathfinder>
     /// </summary>
     /// <param name="origin"></param>
     /// <returns></returns>
-    private List<Tile> NeighborTiles(Tile origin)
+    public List<Tile> NeighborTiles(Tile origin)
     {
         const float HEXAGONAL_OFFSET = 1.75f;
         List<Tile> tiles = new List<Tile>();

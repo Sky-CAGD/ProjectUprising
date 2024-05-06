@@ -19,6 +19,7 @@ public class PathIllustrator : MonoBehaviour
         foreach (Tile tile in path.tiles)
         {
             tile.ClearHighlight();
+            tile.ClearText();
         }
     }
 
@@ -31,15 +32,19 @@ public class PathIllustrator : MonoBehaviour
         }
     }
 
-    //Debug only
-    public void ClearPathCosts(Path path)
+    /// <summary>
+    /// Displays the distance of each tile along a path relative to the origin
+    /// </summary>
+    /// <param name="path"></param>
+    public void DisplayPathDistances(Path path)
     {
-        if (path == null)
-            return;
-
+        int tileNum = 0;
         foreach (Tile tile in path.tiles)
         {
-            tile.ClearText();
+            if (tileNum != 0)
+                tile.DisplayDistancesText(tileNum);
+
+            tileNum++;
         }
     }
 }

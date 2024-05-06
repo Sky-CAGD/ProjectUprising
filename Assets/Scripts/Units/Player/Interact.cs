@@ -32,7 +32,7 @@ public class Interact : MonoBehaviour
     private void MouseUpdate()
     {
         //Check if mouse hit object on an interactable layer (tiles, units, etc)
-        if (Physics.Raycast(mainCam.ScreenPointToRay(Input.mousePosition), out RaycastHit hit, 200f, interactMask))
+        if (Physics.Raycast(mainCam.ScreenPointToRay(Input.mousePosition), out RaycastHit hit, float.MaxValue, interactMask))
         {
             //If a tile was moused over, set as the current tile
             if (hit.transform.GetComponent<Tile>())
@@ -83,11 +83,17 @@ public class Interact : MonoBehaviour
         else if (selectedUnit != null)
             NavigateToTile();
 
-        //Alter tile type by left clicking while no unit is selected
-        if (!currentTile.Occupied && selectedUnit == null && Input.GetMouseButtonDown(0))
+        //Alter tile type by left/right clicking on open tile while no unit is selected
+        if (!currentTile.Occupied && selectedUnit == null)
         {
-            currentTile.ChangeTile();
-            return;
+            if(Input.GetMouseButtonDown(0))
+            {
+                currentTile.ChangeTile(1);
+            }
+            else if(Input.GetMouseButtonDown(1))
+            {
+                currentTile.ChangeTile(-1);
+            }
         }
     }
 
@@ -179,6 +185,8 @@ public class Interact : MonoBehaviour
 
         if (debug) //Debug only
             illustrator.DebugPathCosts(path);
+        else
+            illustrator.DisplayPathDistances(path);
     }
 
     private void ClearPath(Path path)
@@ -186,9 +194,6 @@ public class Interact : MonoBehaviour
         if (path != null)
         {
             illustrator.ClearPathHighlights(path);
-
-            if (debug)
-                illustrator.ClearPathCosts(path);
         }
     }
 }

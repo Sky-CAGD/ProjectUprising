@@ -12,6 +12,7 @@ public class CameraController : SingletonPattern<CameraController>
     public float moveTime;
     public float rotateSpeed;
     public float zoomSpeed;
+    public float vertMoveSpeed;
     public Transform followTarget;
 
     //Camera Position
@@ -23,7 +24,7 @@ public class CameraController : SingletonPattern<CameraController>
 
     //Camera Zoom
     private Vector3 newZoom;
-    private Vector3 zoomAxis;
+    public Vector3 zoomAxis;
     private Transform cameraTransform;
 
     //Mouse Control
@@ -48,13 +49,18 @@ public class CameraController : SingletonPattern<CameraController>
         base.Awake();
 
         //Get references and initialize values
-        cameraTransform = transform.GetChild(0);
+        cameraTransform = Camera.main.transform;
         newPosition = transform.position;
         newRotation = transform.rotation;
         newZoom = cameraTransform.localPosition;
-        zoomAxis = new Vector3(0, -1, 1);
         dragStartPos = Vector3.zero;
         rotateStartPos = Vector3.zero;
+
+        //Set up camera looking at rig and proper zoom axis
+        cameraTransform = Camera.main.transform;
+        cameraTransform.LookAt(transform);
+        zoomAxis = cameraTransform.position.normalized;
+        zoomAxis.x = 0;
 
         //Set up player input events
         playerInput = new PlayerInput();
@@ -98,7 +104,7 @@ public class CameraController : SingletonPattern<CameraController>
 
         MousePanning();
         MouseRotating();
-        RotateCamera();
+        RotateCameraVertically();
         ZoomCamera();
         MoveCamera();
         ApplyNewValues();
@@ -107,9 +113,14 @@ public class CameraController : SingletonPattern<CameraController>
     private void ApplyNewValues()
     {
         //Smoothly move camera to new positions & rotations
-        transform.position = Vector3.Lerp(transform.position, newPosition, Time.deltaTime * moveTime);
-        transform.rotation = Quaternion.Lerp(transform.rotation, newRotation, Time.deltaTime * moveTime);
+        if(newPosition != Vector3.zero)
+            transform.position = Vector3.Lerp(transform.position, newPosition, Time.deltaTime * moveTime);
+
+        if (newRotation != Quaternion.identity)
+            transform.rotation = Quaternion.Lerp(transform.rotation, newRotation, Time.deltaTime * moveTime);
+
         cameraTransform.localPosition = Vector3.Lerp(cameraTransform.localPosition, newZoom, Time.deltaTime * moveTime);
+        cameraTransform.LookAt(transform);
     }
 
     /// <summary>
@@ -123,10 +134,10 @@ public class CameraController : SingletonPattern<CameraController>
 
         //Get the movement input
         Vector2 moveInput = move.ReadValue<Vector2>();
-        Vector3 moveDir = new Vector3(moveInput.x, 0, moveInput.y);
+        Vector3 moveDir = (moveInput.x * transform.right) + (moveInput.y * transform.forward);
 
         //If moving camera, adjust newPosition and stop following any targets
-        if(moveDir != Vector3.zero)
+        if (moveDir != Vector3.zero)
         {
             newPosition += (moveDir * moveSpeed);
             followTarget = null;
@@ -139,14 +150,15 @@ public class CameraController : SingletonPattern<CameraController>
     }
 
     /// <summary>
-    /// Rotates the camera around the rig using user input
+    /// Rotates the camera vertically around the rig using user input
     /// </summary>
-    private void RotateCamera()
+    private void RotateCameraVertically()
     {
         float rotateInput = rotateAxis.ReadValue<float>();
 
-        if(rotateInput != 0)
-            newRotation *= Quaternion.Euler(Vector3.up * rotateInput * rotateSpeed);
+        if (rotateInput != 0)
+            newZoom += new Vector3(0, rotateInput * vertMoveSpeed, 0);
+            //newRotation *= Quaternion.Euler(Vector3.up * rotateInput * rotateSpeed);
     }
 
     /// <summary>
@@ -157,7 +169,7 @@ public class CameraController : SingletonPattern<CameraController>
         float zoomInput = Mathf.Clamp(zoom.ReadValue<float>(), -1, 1);
 
         if (zoomInput != 0)
-            newZoom += zoomInput * zoomAxis * zoomSpeed;
+            newZoom -= zoomInput * zoomAxis * zoomSpeed;
     }
 
     /// <summary>
