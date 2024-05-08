@@ -1,21 +1,58 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class Unit : MonoBehaviour
+public class Unit : MonoBehaviour, IDamagable
 {
-    public bool Moving { get; private set; } = false;
+    [field: SerializeField] public UnitData unitData { get; private set; }
+    [SerializeField] private Slider shieldBar;
+    [SerializeField] private Slider healthBar;
+    public LayerMask GroundLayerMask;
 
-    public CharacterMoveData movedata;
-    public Tile occupiedTile;
+    public int MaxShield { get; private set; }
+    public int Shield { get; private set; }
+    public int MaxHealth { get; private set; }
+    public int Health { get; private set; }
+    public bool Moving { get; private set; }
 
-    [SerializeField] private LayerMask GroundLayerMask;
+    public int MaxMove { get; private set; }
+    public float MoveSpeed { get; private set; }
+
+    [HideInInspector] public Tile occupiedTile;
 
     private void Awake()
     {
+        //set unit to occupy a tile on the hex grid
         FindTileAtStart();
+
+        //set starting data from unit data
+        MaxShield = unitData.MaxShield;
+        Shield = unitData.Shield;
+        MaxHealth = unitData.MaxHealth;
+        Health = unitData.Health;
+        MaxMove = unitData.MaxMove;
+        MoveSpeed = unitData.MoveSpeed;
+
+        //update the health & shield bar UI
+        UpdateHealthUI();
+
+        Moving = false;
     }
 
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.T))
+        {
+            Damage(3);
+        }
+    }
+
+    //--------------------------------------------
+    // Unit Movement
+    //--------------------------------------------
+
+    #region Movement
     /// <summary>
     /// If no starting tile has been manually assigned, we find one beneath us
     /// </summary>
@@ -69,7 +106,7 @@ public class Unit : MonoBehaviour
             //Move towards the next step in the path until we are closer than MIN_DIST
             Vector3 nextTilePosition = path.tiles[currentStep].transform.position;
 
-            float movementTime = animationTime / (movedata.MoveSpeed + path.tiles[currentStep].terrainCost * TERRAIN_PENALTY);
+            float movementTime = animationTime / (MoveSpeed + path.tiles[currentStep].terrainCost * TERRAIN_PENALTY);
             MoveAndRotate(currentTile.transform.position, nextTilePosition, movementTime);
             animationTime += Time.deltaTime;
 
@@ -107,4 +144,54 @@ public class Unit : MonoBehaviour
         if(lookDir != Vector3.zero)
             transform.rotation = Quaternion.LookRotation(lookDir, Vector3.up);
     }
+    #endregion
+
+    //--------------------------------------------
+    // Unit Health
+    //--------------------------------------------
+
+    #region Health
+    /// <summary>
+    /// Decreases Health by provided damage value, prevents Health from becoming zero
+    /// </summary>
+    /// <param name="damage"></param>
+    public void Damage(int damage)
+    {
+        int dmgToHealth = (Shield - damage) <= 0 ? Mathf.Abs(Shield - damage) : 0;
+
+        Shield = Mathf.Max(Shield - damage, 0);
+        Health = Mathf.Max(Health - dmgToHealth, 0);
+        UpdateHealthUI();
+
+        if(Health <= 0)
+            OnDeath();
+    }
+
+    /// <summary>
+    /// Increases Health by provided healAmt value, prevents Health from being larger than MaxHealth
+    /// </summary>
+    /// <param name="healAmt"></param>
+    public void Heal(int healAmt)
+    {
+        Health += Mathf.Min(healAmt, MaxHealth);
+    }
+
+    /// <summary>
+    /// Called from Damage when Health is reduced to 0
+    /// </summary>
+    private void OnDeath()
+    {
+        Destroy(gameObject);
+        Debug.Log("Player unit killed!");
+    }
+
+    private void UpdateHealthUI()
+    {
+        shieldBar.maxValue = MaxShield;
+        shieldBar.value = Shield;
+        healthBar.maxValue = MaxHealth;
+        healthBar.value = Health;
+    }
+    #endregion
+
 }

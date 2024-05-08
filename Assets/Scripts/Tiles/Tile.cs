@@ -12,17 +12,18 @@ public enum TileType
 
 public class Tile : MonoBehaviour
 {
-    public TileType tileType = TileType.Standard;
     public Tile parent;
     public Tile connectedTile;
+    public List<Tile> neighbors = new List<Tile>();
     public Unit occupyingUnit;
 
+    public TileType tileType = TileType.Standard;
     public float costFromOrigin = 0;
     public float costToDestination = 0;
     public int terrainCost = 0;
     public float TotalCost { get { return costFromOrigin + costToDestination + terrainCost; } }
     public bool Occupied { get; set; } = false;
-    public bool traversable = true;
+    public bool walkable = true;
 
     [SerializeField] private TMP_Text tileText;
     [SerializeField] private GameObject hexTileStandard;
@@ -48,6 +49,7 @@ public class Tile : MonoBehaviour
 
     private void Update()
     {
+        //update the highlight color of tiles each frame for testing
         //highlightColor = GameManager.Instance.tileHighlightColor;
         //mesh.material.color = highlightColor;
     }
@@ -75,21 +77,21 @@ public class Tile : MonoBehaviour
                 {
                     hexTileStandard.SetActive(false);
                     hexTileWall.SetActive(false);
-                    traversable = false;
+                    walkable = false;
                 }
                 break;
             case TileType.Standard:
                 {
                     hexTileStandard.SetActive(true);
                     hexTileWall.SetActive(false);
-                    traversable = true;
+                    walkable = true;
                 }
                 break;
             case TileType.Wall:
                 {
                     hexTileStandard.SetActive(false);
                     hexTileWall.SetActive(true);
-                    traversable = false;
+                    walkable = false;
                 }
                 break;
             default:

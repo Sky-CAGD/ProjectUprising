@@ -56,7 +56,7 @@ public class Pathfinder : SingletonPattern<Pathfinder>
             {
                 //Skip checking a neighbor tile that is already within the actual path
                 //Skip checking a tile that is not traversable
-                if(closedSet.Contains(neighbor) || !neighbor.traversable)
+                if(closedSet.Contains(neighbor) || !neighbor.walkable)
                     continue;
                 
                 float costToNeighbor = currentTile.costFromOrigin + neighbor.terrainCost + tileDistance;
@@ -82,6 +82,10 @@ public class Pathfinder : SingletonPattern<Pathfinder>
     /// <returns></returns>
     public List<Tile> NeighborTiles(Tile origin)
     {
+        //if this tile has stored neighbors, return them
+        if(origin.neighbors.Count > 0)
+            return origin.neighbors;
+
         const float HEXAGONAL_OFFSET = 1.75f;
         List<Tile> tiles = new List<Tile>();
         Vector3 direction = Vector3.forward * (origin.GetComponent<MeshFilter>().sharedMesh.bounds.extents.x * HEXAGONAL_OFFSET);
@@ -108,6 +112,9 @@ public class Pathfinder : SingletonPattern<Pathfinder>
         //Additionally add connected tiles such as ladders
         if (origin.connectedTile != null)
             tiles.Add(origin.connectedTile);
+
+        //Store the neighbors of this tile to save time in in future searches
+        origin.neighbors = tiles;
 
         return tiles;
     }
