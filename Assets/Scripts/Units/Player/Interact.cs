@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 //[RequireComponent(typeof(AudioSource))]
@@ -8,13 +9,16 @@ public class Interact : MonoBehaviour
 
     //Debug purposes only
     [SerializeField] private bool debug;
-    private Path lastPath;
+    private TileGroup lastPath;
 
     private Camera mainCam;
     private Tile currentTile;
     private Unit selectedUnit;
+    private Unit lastUnitViewed;
+    private List<Tile> unitMoveArea;
     private Pathfinder pathfinder;
     private PathIllustrator illustrator;
+    private GameObject lastThingHit;
 
     private void Start()
     {
@@ -25,7 +29,6 @@ public class Interact : MonoBehaviour
 
     private void Update()
     {
-        Clear();
         MouseUpdate();
     }
 
@@ -34,19 +37,33 @@ public class Interact : MonoBehaviour
         //Check if mouse hit object on an interactable layer (tiles, units, etc)
         if (Physics.Raycast(mainCam.ScreenPointToRay(Input.mousePosition), out RaycastHit hit, float.MaxValue, interactMask))
         {
-            //If a tile was moused over, set as the current tile
-            if (hit.transform.GetComponent<Tile>())
+            //Check if a new object was hit (mouse moved over new thing)
+            if (hit.transform.gameObject != lastThingHit)
             {
-                currentTile = hit.transform.GetComponent<Tile>();
+                Clear();
+ 
+                //If a tile was moused over, set as the current tile and inspect the tile
+                if (hit.transform.GetComponent<Tile>())
+                {
+                    currentTile = hit.transform.GetComponent<Tile>();
+                    InspectTile();
+                }
+                //If a unit was moused over, set the current tile as its occupied tile and inspect the unit
+                else if (hit.transform.GetComponent<Unit>())
+                {
+                    currentTile = hit.transform.GetComponent<Unit>().occupiedTile;
+                    InspectUnit();
+                }
 
+                lastThingHit = hit.transform.gameObject;
             }
-            //If a unit was moused over, set the current tile as its occupied tile
-            else if (hit.transform.GetComponent<Unit>())
+            else //The same object was hit as the last frame - inspect it but do not clear and draw highlights
             {
-                currentTile = hit.transform.GetComponent<Unit>().occupiedTile;
+                if (lastThingHit.GetComponent<Tile>())
+                    InspectTile();
+                else if (lastThingHit.GetComponent<Unit>())
+                    InspectUnit();
             }
-
-            InspectTile();
         }
         else //The mouse is over a non-interactable object
         {
@@ -78,8 +95,10 @@ public class Interact : MonoBehaviour
 
     private void InspectTile()
     {
+        //If a tile with a unit is hovered over, highlight the unit
         if (currentTile.Occupied)
             InspectUnit();
+        //If a unit is selected and the hovered tile is not occupied, generate a path
         else if (selectedUnit != null)
             NavigateToTile();
 
@@ -103,9 +122,18 @@ public class Interact : MonoBehaviour
         if (currentTile.occupyingUnit.Moving)
             return;
 
-        //Clear drawn paths and highlight this unit's tile
-        ClearPath(lastPath);
-        currentTile.Highlight();
+        //Check if this unit was not the last one viewed
+        if (lastUnitViewed == null || lastThingHit != lastUnitViewed.gameObject)
+        {
+            //Set this as the last unit viewed - used to clear move area highlights later
+            lastUnitViewed = currentTile.occupyingUnit;
+
+            //Highlight this unit's tile
+            currentTile.HighlightUnit();
+
+            //Highlight all tiles with this unit's range
+            currentTile.occupyingUnit.ShowMovementRange();
+        }
 
         //Mouse clicked on unit
         if (Input.GetMouseButtonDown(0))
@@ -125,23 +153,39 @@ public class Interact : MonoBehaviour
 
     private void Clear()
     {
-        if (currentTile == null  || currentTile.Occupied == false)
+        if (lastThingHit == null || currentTile == null  || currentTile.Occupied == false)
             return;
 
-        //currentTile.ModifyCost(currentTile.terrainCost-1);//Reverses to previous cost and color after being highlighted
-        currentTile.ClearHighlight();
+        ClearPath(lastPath);
+
+        //if no unit is selected - clear its highlight(s)
+        if (!selectedUnit)
+        {
+            currentTile.ClearUnitHighlight();
+
+            //if the unit is not the same as the one viewed last frame - hide its movement area
+            if(lastUnitViewed != null)
+                lastUnitViewed.HideMovementRange();
+        }
+
         currentTile = null;
+        lastUnitViewed = null;
     }
 
     public void SelectUnit()
     {
         selectedUnit = currentTile.occupyingUnit;
+        selectedUnit.UnitSelected();
         CameraController.Instance.followTarget = selectedUnit.transform;
         //GetComponent<AudioSource>().PlayOneShot(pop);
     }
 
     public void DeselectUnit()
     {
+        if (selectedUnit == null)
+            return;
+
+        selectedUnit.UnitDeselected();
         selectedUnit = null;
         CameraController.Instance.followTarget = null;
         //GetComponent<AudioSource>().PlayOneShot(pop);
@@ -155,7 +199,7 @@ public class Interact : MonoBehaviour
         if (selectedUnit == null || selectedUnit.Moving == true)
             return;
 
-        if (RetrievePath(out Path newPath))
+        if (RetrievePath(out TileGroup newPath))
         {
             if (Input.GetMouseButtonDown(0))
             {
@@ -165,7 +209,7 @@ public class Interact : MonoBehaviour
         }
     }
 
-    bool RetrievePath(out Path path)
+    bool RetrievePath(out TileGroup path)
     {
         path = pathfinder.FindPath(selectedUnit.occupiedTile, currentTile);
         
@@ -179,7 +223,7 @@ public class Interact : MonoBehaviour
         return true;
     }
 
-    private void DrawPath(Path path)
+    private void DrawPath(TileGroup path)
     {
         illustrator.HighlightPath(path);
 
@@ -189,7 +233,7 @@ public class Interact : MonoBehaviour
             illustrator.DisplayPathDistances(path);
     }
 
-    private void ClearPath(Path path)
+    private void ClearPath(TileGroup path)
     {
         if (path != null)
         {

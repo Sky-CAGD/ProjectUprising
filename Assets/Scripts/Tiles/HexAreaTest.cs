@@ -31,7 +31,7 @@ public class HexAreaTest : MonoBehaviour
             return;
         else if (selectedTiles.Count == 1)
         {
-            currentTile.ClearHighlight();
+            currentTile.ClearPathHighlight();
             selectedTiles.Remove(currentTile);
         }
         else if (selectedTiles.Count > 1)
@@ -58,7 +58,7 @@ public class HexAreaTest : MonoBehaviour
     {
         if (currentTile != null)
         {
-            currentTile.Highlight();
+            currentTile.HighlightPath();
             selectedTiles.Add(currentTile);
 
             List<Tile> newTileList = Pathfinder.Instance.NeighborTiles(currentTile);
@@ -66,7 +66,7 @@ public class HexAreaTest : MonoBehaviour
             foreach (Tile tile in newTileList)
             {
                 selectedTiles.Add(tile);
-                tile.Highlight();
+                tile.HighlightPath();
             }
         }
     }
@@ -77,7 +77,7 @@ public class HexAreaTest : MonoBehaviour
     private void ClearAllSelections()
     {
         foreach (Tile tile in selectedTiles)
-            tile.ClearHighlight();
+            tile.ClearPathHighlight();
 
         selectedTiles.Clear();
     }

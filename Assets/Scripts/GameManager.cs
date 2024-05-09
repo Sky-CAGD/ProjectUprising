@@ -4,5 +4,7 @@ using UnityEngine;
 
 public class GameManager : SingletonPattern<GameManager>
 {
-    public Color tileHighlightColor;
+    public Color tileMoveAreaColor;
+    public Color tilePathHighlightColor;
+    public Color tileUnitHighlightColor;
 }

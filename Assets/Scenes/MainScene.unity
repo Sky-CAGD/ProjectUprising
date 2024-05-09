@@ -349,6 +349,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1337559934}
   hexTileStandard: {fileID: 1593469211}
   hexTileWall: {fileID: 577840326}
@@ -691,6 +692,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 104793662}
   hexTileStandard: {fileID: 552485778}
   hexTileWall: {fileID: 211677170}
@@ -2601,6 +2603,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1886684906}
   hexTileStandard: {fileID: 383179181}
   hexTileWall: {fileID: 1799039417}
@@ -2694,6 +2697,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1637621353}
   hexTileStandard: {fileID: 1180040369}
   hexTileWall: {fileID: 530890074}
@@ -2787,6 +2791,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1058680964}
   hexTileStandard: {fileID: 83098483}
   hexTileWall: {fileID: 1657336308}
@@ -3430,6 +3435,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1148171946}
   hexTileStandard: {fileID: 258502874}
   hexTileWall: {fileID: 66633818}
@@ -5916,6 +5922,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 963952925}
   hexTileStandard: {fileID: 1231279698}
   hexTileWall: {fileID: 2008151500}
@@ -7379,6 +7386,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 114248424}
   hexTileStandard: {fileID: 850963334}
   hexTileWall: {fileID: 10797614}
@@ -7856,6 +7864,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1631382052}
   hexTileStandard: {fileID: 744365221}
   hexTileWall: {fileID: 2003171301}
@@ -9103,6 +9112,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 471893641}
   hexTileStandard: {fileID: 989281576}
   hexTileWall: {fileID: 1601387517}
@@ -11202,6 +11212,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 37762236}
   hexTileStandard: {fileID: 996912815}
   hexTileWall: {fileID: 1498610342}
@@ -11378,6 +11389,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 169919380}
   hexTileStandard: {fileID: 1256811369}
   hexTileWall: {fileID: 1630423539}
@@ -11471,6 +11483,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1087127953}
   hexTileStandard: {fileID: 1120643698}
   hexTileWall: {fileID: 1576413194}
@@ -11648,6 +11661,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 52159897}
   hexTileStandard: {fileID: 1747673748}
   hexTileWall: {fileID: 868086502}
@@ -12043,6 +12057,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 195158225}
   hexTileStandard: {fileID: 1561362759}
   hexTileWall: {fileID: 1328532801}
@@ -12655,6 +12670,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1095252716}
   hexTileStandard: {fileID: 2084536695}
   hexTileWall: {fileID: 280419772}
@@ -13600,6 +13616,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1160298629}
   hexTileStandard: {fileID: 1464726565}
   hexTileWall: {fileID: 1857104983}
@@ -13776,6 +13793,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1288810004}
   hexTileStandard: {fileID: 413782563}
   hexTileWall: {fileID: 975252665}
@@ -14504,6 +14522,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 581427157}
   hexTileStandard: {fileID: 1511370004}
   hexTileWall: {fileID: 1960888337}
@@ -14765,6 +14784,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 2005476924}
   hexTileStandard: {fileID: 662963829}
   hexTileWall: {fileID: 197919859}
@@ -15460,6 +15480,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1873241554}
   hexTileStandard: {fileID: 1423719399}
   hexTileWall: {fileID: 706643728}
@@ -16105,6 +16126,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 831198701}
   hexTileStandard: {fileID: 1868094639}
   hexTileWall: {fileID: 130820266}
@@ -16499,6 +16521,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 132312794}
   hexTileStandard: {fileID: 2063225498}
   hexTileWall: {fileID: 1805286452}
@@ -16675,6 +16698,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 687665591}
   hexTileStandard: {fileID: 1179383891}
   hexTileWall: {fileID: 2031122223}
@@ -16851,6 +16875,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 200948414}
   hexTileStandard: {fileID: 485174320}
   hexTileWall: {fileID: 1716305475}
@@ -17682,6 +17707,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1622059593}
   hexTileStandard: {fileID: 1625512095}
   hexTileWall: {fileID: 195580084}
@@ -18243,6 +18269,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 267918922}
   hexTileStandard: {fileID: 864816992}
   hexTileWall: {fileID: 455228987}
@@ -18471,6 +18498,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 942155129}
   hexTileStandard: {fileID: 334722854}
   hexTileWall: {fileID: 2107707727}
@@ -18564,6 +18592,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 887765600}
   hexTileStandard: {fileID: 156438246}
   hexTileWall: {fileID: 1509688509}
@@ -18991,6 +19020,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1992063541}
   hexTileStandard: {fileID: 831693475}
   hexTileWall: {fileID: 1967545397}
@@ -19302,6 +19332,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 2129924230}
   hexTileStandard: {fileID: 1925120421}
   hexTileWall: {fileID: 713907257}
@@ -19478,6 +19509,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 688856324}
   hexTileStandard: {fileID: 1846630055}
   hexTileWall: {fileID: 667509224}
@@ -20881,6 +20913,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 510441798}
   hexTileStandard: {fileID: 1250863839}
   hexTileWall: {fileID: 1034159330}
@@ -21057,6 +21090,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1251724099}
   hexTileStandard: {fileID: 473965420}
   hexTileWall: {fileID: 1526055627}
@@ -21649,6 +21683,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 633553840}
   hexTileStandard: {fileID: 34664815}
   hexTileWall: {fileID: 1109961896}
@@ -23697,6 +23732,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1534644903}
   hexTileStandard: {fileID: 393609140}
   hexTileWall: {fileID: 1430552730}
@@ -23873,6 +23909,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1808774237}
   hexTileStandard: {fileID: 1906530591}
   hexTileWall: {fileID: 613479251}
@@ -24205,6 +24242,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1571878234}
   hexTileStandard: {fileID: 146710365}
   hexTileWall: {fileID: 26127782}
@@ -26033,6 +26071,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 808474171}
   hexTileStandard: {fileID: 2023451259}
   hexTileWall: {fileID: 1901800525}
@@ -26459,6 +26498,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1573873327}
   hexTileStandard: {fileID: 2086620231}
   hexTileWall: {fileID: 285070381}
@@ -26719,6 +26759,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 194334133}
   hexTileStandard: {fileID: 1349930641}
   hexTileWall: {fileID: 820694386}
@@ -27830,6 +27871,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 96895716}
   hexTileStandard: {fileID: 1016294460}
   hexTileWall: {fileID: 1297818185}
@@ -28006,6 +28048,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 2137828787}
   hexTileStandard: {fileID: 836883107}
   hexTileWall: {fileID: 889494938}
@@ -28271,6 +28314,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1068854798}
   hexTileStandard: {fileID: 1646362263}
   hexTileWall: {fileID: 2053072167}
@@ -28447,6 +28491,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 625619107}
   hexTileStandard: {fileID: 1081295190}
   hexTileWall: {fileID: 1373325907}
@@ -29227,6 +29272,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 929597185}
   hexTileStandard: {fileID: 1077118063}
   hexTileWall: {fileID: 1588003980}
@@ -29320,6 +29366,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 372555291}
   hexTileStandard: {fileID: 1342918025}
   hexTileWall: {fileID: 1915808212}
@@ -30246,6 +30293,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1970421743}
   hexTileStandard: {fileID: 1073941248}
   hexTileWall: {fileID: 482828610}
@@ -31181,6 +31229,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 476194636}
   hexTileStandard: {fileID: 1269198863}
   hexTileWall: {fileID: 2042092800}
@@ -31357,6 +31406,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1005805809}
   hexTileStandard: {fileID: 44883693}
   hexTileWall: {fileID: 1021837701}
@@ -31616,6 +31666,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1125393157}
   hexTileStandard: {fileID: 1539685108}
   hexTileWall: {fileID: 1984990592}
@@ -32499,6 +32550,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 289518946}
   hexTileStandard: {fileID: 1005479993}
   hexTileWall: {fileID: 47753186}
@@ -32759,6 +32811,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1280661668}
   hexTileStandard: {fileID: 689414098}
   hexTileWall: {fileID: 477259739}
@@ -33018,6 +33071,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1801931969}
   hexTileStandard: {fileID: 1465442135}
   hexTileWall: {fileID: 41189214}
@@ -33194,6 +33248,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1948191902}
   hexTileStandard: {fileID: 951947880}
   hexTileWall: {fileID: 1826385364}
@@ -33621,6 +33676,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1353985021}
   hexTileStandard: {fileID: 1721645377}
   hexTileWall: {fileID: 1044444902}
@@ -34348,6 +34404,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1240354481}
   hexTileStandard: {fileID: 1654677337}
   hexTileWall: {fileID: 172367431}
@@ -34608,6 +34665,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 2011965803}
   hexTileStandard: {fileID: 1469913781}
   hexTileWall: {fileID: 951042823}
@@ -38443,6 +38501,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1671197982}
   hexTileStandard: {fileID: 332727321}
   hexTileWall: {fileID: 645350649}
@@ -38536,6 +38595,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 325516643}
   hexTileStandard: {fileID: 1922111988}
   hexTileWall: {fileID: 1253036408}
@@ -38629,6 +38689,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1148818330}
   hexTileStandard: {fileID: 434619047}
   hexTileWall: {fileID: 580507212}
@@ -38940,6 +39001,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1754981548}
   hexTileStandard: {fileID: 2093242254}
   hexTileWall: {fileID: 1623186452}
@@ -40357,6 +40419,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1635410709}
   hexTileStandard: {fileID: 919954180}
   hexTileWall: {fileID: 423168383}
@@ -40450,6 +40513,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 953851625}
   hexTileStandard: {fileID: 300419453}
   hexTileWall: {fileID: 1122121492}
@@ -40795,6 +40859,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1822338855}
   hexTileStandard: {fileID: 217316407}
   hexTileWall: {fileID: 1314734095}
@@ -41576,6 +41641,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1509716580}
   hexTileStandard: {fileID: 568731393}
   hexTileWall: {fileID: 1819595745}
@@ -41835,6 +41901,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1353057311}
   hexTileStandard: {fileID: 879753378}
   hexTileWall: {fileID: 1601679492}
@@ -41928,6 +41995,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1172319393}
   hexTileStandard: {fileID: 1639179989}
   hexTileWall: {fileID: 1934068223}
@@ -42239,6 +42307,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 567818883}
   hexTileStandard: {fileID: 1264631893}
   hexTileWall: {fileID: 2091605660}
@@ -42753,6 +42822,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 136585249}
   hexTileStandard: {fileID: 775642273}
   hexTileWall: {fileID: 293772189}
@@ -42846,6 +42916,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 255645901}
   hexTileStandard: {fileID: 135593690}
   hexTileWall: {fileID: 1147459153}
@@ -43105,6 +43176,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 320857244}
   hexTileStandard: {fileID: 1234210769}
   hexTileWall: {fileID: 175612708}
@@ -44269,6 +44341,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 45000645}
   hexTileStandard: {fileID: 469890694}
   hexTileWall: {fileID: 644695397}
@@ -44799,6 +44872,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 333468615}
   hexTileStandard: {fileID: 1784481650}
   hexTileWall: {fileID: 817067250}
@@ -45193,6 +45267,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1345636250}
   hexTileStandard: {fileID: 1318176290}
   hexTileWall: {fileID: 1058692970}
@@ -45452,6 +45527,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1131414214}
   hexTileStandard: {fileID: 1223440043}
   hexTileWall: {fileID: 739358983}
@@ -46595,6 +46671,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 153092754}
   hexTileStandard: {fileID: 653404848}
   hexTileWall: {fileID: 860975393}
@@ -47241,6 +47318,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 157411185}
   hexTileStandard: {fileID: 690367314}
   hexTileWall: {fileID: 747951553}
@@ -47886,6 +47964,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1733059409}
   hexTileStandard: {fileID: 2034736185}
   hexTileWall: {fileID: 35940691}
@@ -47979,6 +48058,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 870585202}
   hexTileStandard: {fileID: 656460608}
   hexTileWall: {fileID: 531402086}
@@ -48373,6 +48453,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 279504451}
   hexTileStandard: {fileID: 1748989298}
   hexTileWall: {fileID: 492986051}
@@ -49077,6 +49158,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 2036109721}
   hexTileStandard: {fileID: 1288520928}
   hexTileWall: {fileID: 224119945}
@@ -49471,6 +49553,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1855756440}
   hexTileStandard: {fileID: 1551778305}
   hexTileWall: {fileID: 914542231}
@@ -49564,6 +49647,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 368780547}
   hexTileStandard: {fileID: 1468569330}
   hexTileWall: {fileID: 1661311655}
@@ -50093,6 +50177,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 847133839}
   hexTileStandard: {fileID: 97956596}
   hexTileWall: {fileID: 76567057}
@@ -50269,6 +50354,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 255854005}
   hexTileStandard: {fileID: 1059816780}
   hexTileWall: {fileID: 207199140}
@@ -51568,6 +51654,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 469213053}
   hexTileStandard: {fileID: 1568396961}
   hexTileWall: {fileID: 1405481896}
@@ -51827,6 +51914,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1753090296}
   hexTileStandard: {fileID: 794788527}
   hexTileWall: {fileID: 445030650}
@@ -51920,6 +52008,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 391941967}
   hexTileStandard: {fileID: 1529585703}
   hexTileWall: {fileID: 1592174711}
@@ -52699,6 +52788,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1945671694}
   hexTileStandard: {fileID: 594115673}
   hexTileWall: {fileID: 561415873}
@@ -52927,6 +53017,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 2098684324}
   hexTileStandard: {fileID: 968329970}
   hexTileWall: {fileID: 766210962}
@@ -53104,6 +53195,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1053939375}
   hexTileStandard: {fileID: 346490395}
   hexTileWall: {fileID: 1707812102}
@@ -53367,7 +53459,7 @@ PrefabInstance:
     - target: {fileID: 220303031585184930, guid: 9e62eacb0b934924e996871848be7ecb,
         type: 3}
       propertyPath: m_Name
-      value: Player
+      value: Player (4)
       objectReference: {fileID: 0}
     - target: {fileID: 220303031585184934, guid: 9e62eacb0b934924e996871848be7ecb,
         type: 3}
@@ -53377,7 +53469,7 @@ PrefabInstance:
     - target: {fileID: 220303031585184934, guid: 9e62eacb0b934924e996871848be7ecb,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.26
+      value: 17.939999
       objectReference: {fileID: 0}
     - target: {fileID: 220303031585184934, guid: 9e62eacb0b934924e996871848be7ecb,
         type: 3}
@@ -53387,7 +53479,7 @@ PrefabInstance:
     - target: {fileID: 220303031585184934, guid: 9e62eacb0b934924e996871848be7ecb,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.06
+      value: 1.28
       objectReference: {fileID: 0}
     - target: {fileID: 220303031585184934, guid: 9e62eacb0b934924e996871848be7ecb,
         type: 3}
@@ -53422,6 +53514,86 @@ PrefabInstance:
     - target: {fileID: 220303031585184934, guid: 9e62eacb0b934924e996871848be7ecb,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3152366192583233711, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3152366192583233711, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5431600505528156354, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5431600505528156354, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5431600505528156354, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5431600505528156354, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5431600505528156354, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5431600505528156354, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5551839984774874892, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5551839984774874892, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5551839984774874892, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5551839984774874892, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5551839984774874892, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5551839984774874892, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6715710177881652159, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6715710177881652159, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -54830,6 +55002,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1362739950}
   hexTileStandard: {fileID: 644017635}
   hexTileWall: {fileID: 162434092}
@@ -55058,6 +55231,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1899116342}
   hexTileStandard: {fileID: 1620316613}
   hexTileWall: {fileID: 1896626075}
@@ -55317,6 +55491,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 144306442}
   hexTileStandard: {fileID: 878253704}
   hexTileWall: {fileID: 1617947647}
@@ -55493,6 +55668,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 598168891}
   hexTileStandard: {fileID: 784167112}
   hexTileWall: {fileID: 1827573150}
@@ -55972,6 +56148,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 2080238523}
   hexTileStandard: {fileID: 1518543190}
   hexTileWall: {fileID: 1408858157}
@@ -56918,6 +57095,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1197791944}
   hexTileStandard: {fileID: 325092727}
   hexTileWall: {fileID: 249824858}
@@ -57094,6 +57272,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1684753151}
   hexTileStandard: {fileID: 1422407009}
   hexTileWall: {fileID: 1139942540}
@@ -57187,6 +57366,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1244104365}
   hexTileStandard: {fileID: 1103665182}
   hexTileWall: {fileID: 1403680609}
@@ -58735,6 +58915,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1990922186}
   hexTileStandard: {fileID: 52598427}
   hexTileWall: {fileID: 1904019515}
@@ -58911,6 +59092,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 955533703}
   hexTileStandard: {fileID: 369628101}
   hexTileWall: {fileID: 2115793245}
@@ -59253,6 +59435,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 358436039}
   hexTileStandard: {fileID: 563474860}
   hexTileWall: {fileID: 2061550511}
@@ -60379,7 +60562,7 @@ PrefabInstance:
     - target: {fileID: 220303031585184934, guid: 9e62eacb0b934924e996871848be7ecb,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 6.68
+      value: 13.29
       objectReference: {fileID: 0}
     - target: {fileID: 220303031585184934, guid: 9e62eacb0b934924e996871848be7ecb,
         type: 3}
@@ -60389,7 +60572,7 @@ PrefabInstance:
     - target: {fileID: 220303031585184934, guid: 9e62eacb0b934924e996871848be7ecb,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.41
+      value: 1.14
       objectReference: {fileID: 0}
     - target: {fileID: 220303031585184934, guid: 9e62eacb0b934924e996871848be7ecb,
         type: 3}
@@ -60424,6 +60607,86 @@ PrefabInstance:
     - target: {fileID: 220303031585184934, guid: 9e62eacb0b934924e996871848be7ecb,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3152366192583233711, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3152366192583233711, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5431600505528156354, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5431600505528156354, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5431600505528156354, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5431600505528156354, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5431600505528156354, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5431600505528156354, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5551839984774874892, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5551839984774874892, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5551839984774874892, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5551839984774874892, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5551839984774874892, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5551839984774874892, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6715710177881652159, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6715710177881652159, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -60490,6 +60753,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1946752708}
   hexTileStandard: {fileID: 141990091}
   hexTileWall: {fileID: 1712743391}
@@ -61353,6 +61617,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1597149000}
   hexTileStandard: {fileID: 1540777719}
   hexTileWall: {fileID: 481146110}
@@ -61446,6 +61711,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1618739462}
   hexTileStandard: {fileID: 219735323}
   hexTileWall: {fileID: 1733819987}
@@ -61872,6 +62138,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 136777526}
   hexTileStandard: {fileID: 448973606}
   hexTileWall: {fileID: 117315554}
@@ -61927,7 +62194,7 @@ PrefabInstance:
     - target: {fileID: 220303031585184934, guid: 9e62eacb0b934924e996871848be7ecb,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.11
+      value: 4.43
       objectReference: {fileID: 0}
     - target: {fileID: 220303031585184934, guid: 9e62eacb0b934924e996871848be7ecb,
         type: 3}
@@ -61972,6 +62239,86 @@ PrefabInstance:
     - target: {fileID: 220303031585184934, guid: 9e62eacb0b934924e996871848be7ecb,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3152366192583233711, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3152366192583233711, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5431600505528156354, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5431600505528156354, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5431600505528156354, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5431600505528156354, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5431600505528156354, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5431600505528156354, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5551839984774874892, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5551839984774874892, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5551839984774874892, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5551839984774874892, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5551839984774874892, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5551839984774874892, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6715710177881652159, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6715710177881652159, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -62288,6 +62635,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 214380422}
   hexTileStandard: {fileID: 263120407}
   hexTileWall: {fileID: 683143513}
@@ -62682,6 +63030,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1129646649}
   hexTileStandard: {fileID: 144291452}
   hexTileWall: {fileID: 103957552}
@@ -62858,6 +63207,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 791689623}
   hexTileStandard: {fileID: 1266467531}
   hexTileWall: {fileID: 570622846}
@@ -63522,6 +63872,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1508805716}
   hexTileStandard: {fileID: 1233759721}
   hexTileWall: {fileID: 1809677107}
@@ -64302,6 +64653,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1513067566}
   hexTileStandard: {fileID: 449846510}
   hexTileWall: {fileID: 1651650262}
@@ -64395,6 +64747,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1234709605}
   hexTileStandard: {fileID: 329954850}
   hexTileWall: {fileID: 86571829}
@@ -64789,6 +65142,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1137462457}
   hexTileStandard: {fileID: 123563009}
   hexTileWall: {fileID: 178058163}
@@ -65132,6 +65486,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1452926993}
   hexTileStandard: {fileID: 852493198}
   hexTileWall: {fileID: 1812104608}
@@ -65225,6 +65580,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 972792610}
   hexTileStandard: {fileID: 1601982202}
   hexTileWall: {fileID: 1633772127}
@@ -65733,6 +66089,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1840645484}
   hexTileStandard: {fileID: 4670814}
   hexTileWall: {fileID: 1913955847}
@@ -66160,6 +66517,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 951226558}
   hexTileStandard: {fileID: 1095979843}
   hexTileWall: {fileID: 1068615664}
@@ -66504,6 +66862,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 660817203}
   hexTileStandard: {fileID: 682814178}
   hexTileWall: {fileID: 1226335158}
@@ -66559,7 +66918,7 @@ PrefabInstance:
     - target: {fileID: 220303031585184934, guid: 9e62eacb0b934924e996871848be7ecb,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4.49
+      value: 8.809999
       objectReference: {fileID: 0}
     - target: {fileID: 220303031585184934, guid: 9e62eacb0b934924e996871848be7ecb,
         type: 3}
@@ -66604,6 +66963,86 @@ PrefabInstance:
     - target: {fileID: 220303031585184934, guid: 9e62eacb0b934924e996871848be7ecb,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3152366192583233711, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3152366192583233711, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5431600505528156354, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5431600505528156354, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5431600505528156354, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5431600505528156354, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5431600505528156354, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5431600505528156354, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5551839984774874892, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5551839984774874892, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5551839984774874892, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5551839984774874892, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5551839984774874892, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5551839984774874892, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6715710177881652159, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6715710177881652159, guid: 9e62eacb0b934924e996871848be7ecb,
+        type: 3}
+      propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -67086,6 +67525,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1976678495}
   hexTileStandard: {fileID: 1922099175}
   hexTileWall: {fileID: 1278652849}
@@ -67730,6 +68170,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 904349921}
   hexTileStandard: {fileID: 309062446}
   hexTileWall: {fileID: 1735075924}
@@ -67906,6 +68347,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1293301036}
   hexTileStandard: {fileID: 1397537378}
   hexTileWall: {fileID: 751552795}
@@ -68467,6 +68909,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1079034649}
   hexTileStandard: {fileID: 4992764}
   hexTileWall: {fileID: 524043227}
@@ -68560,6 +69003,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1945734811}
   hexTileStandard: {fileID: 133243575}
   hexTileWall: {fileID: 159539125}
@@ -69039,6 +69483,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1053035931}
   hexTileStandard: {fileID: 1602311344}
   hexTileWall: {fileID: 43532847}
@@ -69934,6 +70379,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 834235677}
   hexTileStandard: {fileID: 2103617324}
   hexTileWall: {fileID: 1367872000}
@@ -71735,6 +72181,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1566375619}
   hexTileStandard: {fileID: 1689306260}
   hexTileWall: {fileID: 476495629}
@@ -71995,6 +72442,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 872186784}
   hexTileStandard: {fileID: 1681576266}
   hexTileWall: {fileID: 1354287489}
@@ -72088,6 +72536,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1199927782}
   hexTileStandard: {fileID: 974140498}
   hexTileWall: {fileID: 1381948751}
@@ -72639,6 +73088,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1070933939}
   hexTileStandard: {fileID: 1563051828}
   hexTileWall: {fileID: 33975100}
@@ -73368,6 +73818,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1639237996}
   hexTileStandard: {fileID: 363227583}
   hexTileWall: {fileID: 1284695240}
@@ -74177,6 +74628,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1273099230}
   hexTileStandard: {fileID: 1146319936}
   hexTileWall: {fileID: 1638449334}
@@ -74706,6 +75158,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1082365999}
   hexTileStandard: {fileID: 1558035719}
   hexTileWall: {fileID: 966837247}
@@ -74882,6 +75335,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 2015068895}
   hexTileStandard: {fileID: 1432274047}
   hexTileWall: {fileID: 3427642}
@@ -76722,6 +77176,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1820190718}
   hexTileStandard: {fileID: 1418489290}
   hexTileWall: {fileID: 1754819606}
@@ -77501,6 +77956,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1183499949}
   hexTileStandard: {fileID: 833752622}
   hexTileWall: {fileID: 144821625}
@@ -77594,6 +78050,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 810848125}
   hexTileStandard: {fileID: 74077982}
   hexTileWall: {fileID: 997604872}
@@ -77770,6 +78227,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1554634738}
   hexTileStandard: {fileID: 1957581821}
   hexTileWall: {fileID: 332747832}
@@ -78247,6 +78705,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 87231013}
   hexTileStandard: {fileID: 1673917141}
   hexTileWall: {fileID: 1121257156}
@@ -78506,6 +78965,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1466387374}
   hexTileStandard: {fileID: 1862748981}
   hexTileWall: {fileID: 443654457}
@@ -80638,6 +81098,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 396432162}
   hexTileStandard: {fileID: 951685433}
   hexTileWall: {fileID: 261430255}
@@ -81256,6 +81717,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 910569772}
   hexTileStandard: {fileID: 1733649229}
   hexTileWall: {fileID: 1497018977}
@@ -81349,6 +81811,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1026208436}
   hexTileStandard: {fileID: 516600104}
   hexTileWall: {fileID: 949785295}
@@ -82749,6 +83212,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1597266999}
   hexTileStandard: {fileID: 370117716}
   hexTileWall: {fileID: 1952987513}
@@ -82925,6 +83389,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1011551754}
   hexTileStandard: {fileID: 571010058}
   hexTileWall: {fileID: 49637515}
@@ -83632,6 +84097,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1417964214}
   hexTileStandard: {fileID: 216610672}
   hexTileWall: {fileID: 1624190093}
@@ -84661,6 +85127,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 106209262}
   hexTileStandard: {fileID: 151523379}
   hexTileWall: {fileID: 1510827964}
@@ -84978,6 +85445,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 463147578}
   hexTileStandard: {fileID: 1205040732}
   hexTileWall: {fileID: 2106874899}
@@ -85823,6 +86291,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1273256415}
   hexTileStandard: {fileID: 1389107767}
   hexTileWall: {fileID: 1903348731}
@@ -86301,6 +86770,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 336110574}
   hexTileStandard: {fileID: 92402955}
   hexTileWall: {fileID: 393820012}
@@ -88183,6 +88653,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 169175768}
   hexTileStandard: {fileID: 879051442}
   hexTileWall: {fileID: 808444245}
@@ -88695,6 +89166,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 670935646}
   hexTileStandard: {fileID: 955444328}
   hexTileWall: {fileID: 473394030}
@@ -89506,6 +89978,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1669071972}
   hexTileStandard: {fileID: 1937595770}
   hexTileWall: {fileID: 727058880}
@@ -89902,6 +90375,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 510738385}
   hexTileStandard: {fileID: 1709606560}
   hexTileWall: {fileID: 317800501}
@@ -90161,6 +90635,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 195828373}
   hexTileStandard: {fileID: 879546697}
   hexTileWall: {fileID: 1900952683}
@@ -90472,6 +90947,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1433089435}
   hexTileStandard: {fileID: 595601695}
   hexTileWall: {fileID: 438275456}
@@ -90619,9 +91095,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 611457830}
-  - {fileID: 2111271917}
   - {fileID: 1715707423}
+  - {fileID: 2111271917}
+  - {fileID: 611457830}
   - {fileID: 1909914171}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -91068,6 +91544,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 307677760}
   hexTileStandard: {fileID: 2145336619}
   hexTileWall: {fileID: 475956702}
@@ -91244,6 +91721,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1482765879}
   hexTileStandard: {fileID: 1639196371}
   hexTileWall: {fileID: 1739932687}
@@ -91675,6 +92153,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 346837094}
   hexTileStandard: {fileID: 1573348642}
   hexTileWall: {fileID: 816147663}
@@ -92017,6 +92496,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1933945937}
   hexTileStandard: {fileID: 868076723}
   hexTileWall: {fileID: 449698798}
@@ -92827,6 +93307,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 107374385}
   hexTileStandard: {fileID: 50551474}
   hexTileWall: {fileID: 820113164}
@@ -93627,6 +94108,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 694705645}
   hexTileStandard: {fileID: 1881595643}
   hexTileWall: {fileID: 934943070}
@@ -94438,6 +94920,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 356074831}
   hexTileStandard: {fileID: 43120635}
   hexTileWall: {fileID: 145200794}
@@ -95307,6 +95790,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1161638949}
   hexTileStandard: {fileID: 620580146}
   hexTileWall: {fileID: 1365587826}
@@ -96087,6 +96571,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1599814699}
   hexTileStandard: {fileID: 1327170622}
   hexTileWall: {fileID: 343288254}
@@ -96180,6 +96665,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 691925303}
   hexTileStandard: {fileID: 1261264445}
   hexTileWall: {fileID: 225990283}
@@ -97010,6 +97496,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 745336129}
   hexTileStandard: {fileID: 1953246934}
   hexTileWall: {fileID: 1198042057}
@@ -97602,6 +98089,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1961743870}
   hexTileStandard: {fileID: 520653196}
   hexTileWall: {fileID: 1995728247}
@@ -97914,6 +98402,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 75933436}
   hexTileStandard: {fileID: 1652414296}
   hexTileWall: {fileID: 290214162}
@@ -98507,6 +98996,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1161957297}
   hexTileStandard: {fileID: 1381774696}
   hexTileWall: {fileID: 1378016982}
@@ -98600,6 +99090,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1035136726}
   hexTileStandard: {fileID: 300267449}
   hexTileWall: {fileID: 1908783141}
@@ -98943,6 +99434,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1592502379}
   hexTileStandard: {fileID: 1730812694}
   hexTileWall: {fileID: 1569268076}
@@ -99202,6 +99694,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1322036213}
   hexTileStandard: {fileID: 49810024}
   hexTileWall: {fileID: 1383598396}
@@ -99295,6 +99788,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 756605469}
   hexTileStandard: {fileID: 1933735107}
   hexTileWall: {fileID: 139538413}
@@ -99388,6 +99882,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1637725904}
   hexTileStandard: {fileID: 1288527197}
   hexTileWall: {fileID: 1496113905}
@@ -99950,6 +100445,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1337839586}
   hexTileStandard: {fileID: 1618556332}
   hexTileWall: {fileID: 850674804}
@@ -101483,6 +101979,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 433347070}
   hexTileStandard: {fileID: 956963309}
   hexTileWall: {fileID: 570482007}
@@ -101576,6 +102073,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 961259102}
   hexTileStandard: {fileID: 1313008068}
   hexTileWall: {fileID: 1704890463}
@@ -101753,6 +102251,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 1584392291}
   hexTileStandard: {fileID: 113942176}
   hexTileWall: {fileID: 2032304205}
@@ -102232,6 +102731,7 @@ MonoBehaviour:
   costToDestination: 0
   terrainCost: 0
   walkable: 1
+  moveAreaHighlighted: 0
   tileText: {fileID: 862477205}
   hexTileStandard: {fileID: 1191801624}
   hexTileWall: {fileID: 1788591314}
@@ -102484,6 +102984,26 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7307732344114956181, guid: 757b6cc8a0af91a43bb448c4afe574ad,
         type: 3}
+      propertyPath: tileMoveAreaColor.a
+      value: 0.2509804
+      objectReference: {fileID: 0}
+    - target: {fileID: 7307732344114956181, guid: 757b6cc8a0af91a43bb448c4afe574ad,
+        type: 3}
+      propertyPath: tileMoveAreaColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7307732344114956181, guid: 757b6cc8a0af91a43bb448c4afe574ad,
+        type: 3}
+      propertyPath: tileMoveAreaColor.g
+      value: 0.55823076
+      objectReference: {fileID: 0}
+    - target: {fileID: 7307732344114956181, guid: 757b6cc8a0af91a43bb448c4afe574ad,
+        type: 3}
+      propertyPath: tileMoveAreaColor.r
+      value: 0.24905658
+      objectReference: {fileID: 0}
+    - target: {fileID: 7307732344114956181, guid: 757b6cc8a0af91a43bb448c4afe574ad,
+        type: 3}
       propertyPath: tileHighlightColor.a
       value: 0.14901961
       objectReference: {fileID: 0}
@@ -102496,6 +103016,46 @@ PrefabInstance:
         type: 3}
       propertyPath: tileHighlightColor.g
       value: 0.21176471
+      objectReference: {fileID: 0}
+    - target: {fileID: 7307732344114956181, guid: 757b6cc8a0af91a43bb448c4afe574ad,
+        type: 3}
+      propertyPath: tilePathHighlightColor.a
+      value: 0.2509804
+      objectReference: {fileID: 0}
+    - target: {fileID: 7307732344114956181, guid: 757b6cc8a0af91a43bb448c4afe574ad,
+        type: 3}
+      propertyPath: tilePathHighlightColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7307732344114956181, guid: 757b6cc8a0af91a43bb448c4afe574ad,
+        type: 3}
+      propertyPath: tilePathHighlightColor.g
+      value: 0.38016188
+      objectReference: {fileID: 0}
+    - target: {fileID: 7307732344114956181, guid: 757b6cc8a0af91a43bb448c4afe574ad,
+        type: 3}
+      propertyPath: tilePathHighlightColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7307732344114956181, guid: 757b6cc8a0af91a43bb448c4afe574ad,
+        type: 3}
+      propertyPath: tileUnitHighlightColor.a
+      value: 0.7490196
+      objectReference: {fileID: 0}
+    - target: {fileID: 7307732344114956181, guid: 757b6cc8a0af91a43bb448c4afe574ad,
+        type: 3}
+      propertyPath: tileUnitHighlightColor.b
+      value: 0.18700601
+      objectReference: {fileID: 0}
+    - target: {fileID: 7307732344114956181, guid: 757b6cc8a0af91a43bb448c4afe574ad,
+        type: 3}
+      propertyPath: tileUnitHighlightColor.g
+      value: 0.9238766
+      objectReference: {fileID: 0}
+    - target: {fileID: 7307732344114956181, guid: 757b6cc8a0af91a43bb448c4afe574ad,
+        type: 3}
+      propertyPath: tileUnitHighlightColor.r
+      value: 0.9716981
       objectReference: {fileID: 0}
     - target: {fileID: 9206523868978398221, guid: 757b6cc8a0af91a43bb448c4afe574ad,
         type: 3}

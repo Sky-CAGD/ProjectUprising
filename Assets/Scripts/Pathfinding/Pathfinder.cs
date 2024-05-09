@@ -22,7 +22,7 @@ public class Pathfinder : SingletonPattern<Pathfinder>
     /// in "currentFrontier" for later clearing
     /// </summary>
     /// <param name="character"></param>
-    public Path FindPath(Tile origin, Tile destination)
+    public TileGroup FindPath(Tile origin, Tile destination)
     {
         List<Tile> openSet = new List<Tile>(); //contains all new neighboring tiles that we discover
         List<Tile> closedSet = new List<Tile>(); //contains tiles that will become the actual path
@@ -76,6 +76,77 @@ public class Pathfinder : SingletonPattern<Pathfinder>
     }
 
     /// <summary>
+    /// Returns a list of all tiles within a set range from an origin tile
+    /// </summary>
+    /// <param name="origin"></param>
+    /// <param name="range"></param>
+    /// <returns></returns>
+    public List<Tile> FindTilesInRange(Tile origin, int range)
+    {
+        //If range is 0 (or less), return nothing
+        if (range <= 0)
+            return null;
+
+        List<Tile> neighborTiles = NeighborTiles(origin);
+        List<Tile> range1Tiles = new List<Tile>();
+
+        //Get all walkable neighbor tiles of the origin tile
+        foreach (Tile neighbor in neighborTiles)
+        {
+            if (neighbor.walkable)
+            {
+                range1Tiles.Add(neighbor);
+                neighbor.rangeFromOrigin = 1;
+            }
+        }
+
+        //If range is 1, return the range 1 tiles
+        if (range == 1)
+            return range1Tiles;
+
+        List<Tile> tilesInRange = new List<Tile>();
+        List<Tile> nextRangeNeighborTiles = new List<Tile>();
+
+        //Add all neighbors (tiles in range 1) to the tilesInRange list
+        tilesInRange.AddRange(neighborTiles);
+
+        //Set the tiles to check next to the range1Tiles
+        nextRangeNeighborTiles = range1Tiles;
+
+        for (int currTileRange = 1; currTileRange < range; currTileRange++)
+        {
+            List<Tile> tilesAtNewRange = new List<Tile>();
+
+            //Iterate through each tile at the current range
+            foreach (Tile tile in nextRangeNeighborTiles)
+            {
+                //Get neighbors of the tile at the current range
+                List<Tile> newNeighborTiles = NeighborTiles(tile);
+
+                //Iterate through the new neighbors found
+                foreach (Tile nextNeighborTile in newNeighborTiles)
+                {
+                    //Add walkable tiles at next range to the tilesAtNewRange list if not in it
+                    if (!tilesInRange.Contains(nextNeighborTile) && nextNeighborTile.walkable)
+                    {
+                        tilesInRange.Add(nextNeighborTile);
+                        tilesAtNewRange.Add(nextNeighborTile);
+
+                        //Set range from origin for the added tiles
+                        nextNeighborTile.rangeFromOrigin = currTileRange + 1;
+                    }
+                }
+            }
+
+            //Clear out the list of tiles at the current range, replace with list of tiles at the next range
+            nextRangeNeighborTiles.Clear();
+            nextRangeNeighborTiles = tilesAtNewRange;
+        }
+
+        return tilesInRange;
+    }
+
+    /// <summary>
     /// Returns a list of all neighboring hexagonal tiles and ladders
     /// </summary>
     /// <param name="origin"></param>
@@ -125,9 +196,9 @@ public class Pathfinder : SingletonPattern<Pathfinder>
     /// <param name="dest"></param>
     /// <param name="source"></param>
     /// <returns></returns>
-    public Path PathBetween(Tile dest, Tile source)
+    public TileGroup PathBetween(Tile dest, Tile source)
     {
-        Path path = MakePath(dest, source);
+        TileGroup path = MakePath(dest, source);
         //illustrator.IllustratePath(path);
         return path;
     }
@@ -138,7 +209,7 @@ public class Pathfinder : SingletonPattern<Pathfinder>
     /// <param name="destination"></param>
     /// <param name="origin"></param>
     /// <returns></returns>
-    private Path MakePath(Tile destination, Tile origin)
+    private TileGroup MakePath(Tile destination, Tile origin)
     {
         List<Tile> tiles = new List<Tile>();
         Tile current = destination;
@@ -155,7 +226,7 @@ public class Pathfinder : SingletonPattern<Pathfinder>
         tiles.Add(origin);
         tiles.Reverse();
 
-        Path path = new Path();
+        TileGroup path = new TileGroup();
         path.tiles = tiles.ToArray();
 
         return path;

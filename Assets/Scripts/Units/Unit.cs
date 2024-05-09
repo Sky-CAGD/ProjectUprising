@@ -21,6 +21,8 @@ public class Unit : MonoBehaviour, IDamagable
 
     [HideInInspector] public Tile occupiedTile;
 
+    private List<Tile> tilesInRange = new List<Tile>();
+
     private void Awake()
     {
         //set unit to occupy a tile on the hex grid
@@ -47,6 +49,55 @@ public class Unit : MonoBehaviour, IDamagable
             Damage(3);
         }
     }
+
+    //--------------------------------------------
+    // Unit Selection
+    //--------------------------------------------
+
+    #region Selection
+
+    public virtual void UnitSelected()
+    {
+        //occupiedTile.HighlightUnit();
+        //ShowMovementRange();
+    }
+
+    public virtual void UnitDeselected()
+    {
+        occupiedTile.ClearUnitHighlight();
+
+        HideMovementRange();       
+    }
+
+    /// <summary>
+    /// Gets all tiles within this unit's movement range, highlights them, and displays their distance
+    /// </summary>
+    public void ShowMovementRange()
+    {
+        tilesInRange = Pathfinder.Instance.FindTilesInRange(occupiedTile, MaxMove);
+
+        foreach (Tile tile in tilesInRange)
+            tile.HighlightMoveArea();
+
+        //Displays the distances to all tiles in a given move area
+        Pathfinder.Instance.Illustrator.DisplayMoveAreaDistances(tilesInRange);
+    }
+
+    /// <summary>
+    /// Hides the highlights and text for all tiles within the last generated movement range
+    /// </summary>
+    public void HideMovementRange()
+    {
+        foreach (Tile tile in tilesInRange)
+        {
+            tile.ClearMoveAreaHighlight();
+            tile.ClearText();
+        }
+
+        tilesInRange.Clear();
+    }
+
+    #endregion
 
     //--------------------------------------------
     // Unit Movement
@@ -77,7 +128,7 @@ public class Unit : MonoBehaviour, IDamagable
     /// Start moving this unit along a designated path
     /// </summary>
     /// <param name="_path"></param>
-    public void StartMove(Path _path)
+    public void StartMove(TileGroup _path)
     {
         Moving = true;
         occupiedTile.Occupied = false;
@@ -89,7 +140,7 @@ public class Unit : MonoBehaviour, IDamagable
     /// </summary>
     /// <param name="path"></param>
     /// <returns></returns>
-    IEnumerator MoveAlongPath(Path path)
+    IEnumerator MoveAlongPath(TileGroup path)
     {
         const float MIN_DISTANCE = 0.05f;
         const float TERRAIN_PENALTY = 0.5f;
@@ -121,6 +172,9 @@ public class Unit : MonoBehaviour, IDamagable
 
         FinalizePosition(path.tiles[pathLength]);
         Pathfinder.Instance.Illustrator.ClearPathHighlights(path);
+
+        HideMovementRange();
+        ShowMovementRange();
     }
 
     /// <summary>

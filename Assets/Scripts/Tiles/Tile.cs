@@ -21,15 +21,19 @@ public class Tile : MonoBehaviour
     public float costFromOrigin = 0;
     public float costToDestination = 0;
     public int terrainCost = 0;
+    public int rangeFromOrigin = 0;
     public float TotalCost { get { return costFromOrigin + costToDestination + terrainCost; } }
     public bool Occupied { get; set; } = false;
     public bool walkable = true;
+    public bool moveAreaHighlighted;
 
     [SerializeField] private TMP_Text tileText;
     [SerializeField] private GameObject hexTileStandard;
     [SerializeField] private GameObject hexTileWall;
     [SerializeField] private GameObject highlightMesh;
-    private Color highlightColor;
+    private Color pathHighlightColor;
+    private Color moveAreaColor;
+    private Color unitHighlightColor;
     private Renderer mesh;
 
     private void Awake()
@@ -42,8 +46,10 @@ public class Tile : MonoBehaviour
 
     private void Start()
     {
-        highlightColor = GameManager.Instance.tileHighlightColor;
-        mesh.material.color = highlightColor;
+        pathHighlightColor = GameManager.Instance.tilePathHighlightColor;
+        moveAreaColor = GameManager.Instance.tileMoveAreaColor;
+        unitHighlightColor = GameManager.Instance.tileUnitHighlightColor;
+        mesh.material.color = pathHighlightColor;
         SetTileParameters();
     }
 
@@ -55,18 +61,74 @@ public class Tile : MonoBehaviour
     }
 
     /// <summary>
-    /// Changes color of the tile by activating child-objects of different colors
+    /// Enables highlight mesh and sets color to path highlight color
     /// </summary>
     /// <param name="col"></param>
-    public void Highlight()
+    public void HighlightPath()
     {
         if (tileType == TileType.Standard)
+        {
             mesh.enabled = true;
+            mesh.material.color = pathHighlightColor;
+        }
     }
 
-    public void ClearHighlight()
+    /// <summary>
+    /// Enables highlight mesh and sets color to move area highlight color
+    /// </summary>
+    /// <param name="col"></param>
+    public void HighlightMoveArea()
     {
-        mesh.enabled = false;
+        if (tileType == TileType.Standard)
+        {
+            mesh.enabled = true;
+            mesh.material.color = moveAreaColor;
+            moveAreaHighlighted = true;
+        }
+    }
+
+    /// <summary>
+    /// Enables highlight mesh and sets color to unit highlight color
+    /// </summary>
+    /// <param name="col"></param>
+    public void HighlightUnit()
+    {
+        if (tileType == TileType.Standard)
+        {
+            mesh.enabled = true;
+            mesh.material.color = unitHighlightColor;
+        }
+    }
+
+    public void ClearPathHighlight()
+    {
+        if(moveAreaHighlighted)
+        {
+            mesh.material.color = moveAreaColor;
+            DisplayText(rangeFromOrigin.ToString());
+        }
+        else
+        {
+            mesh.enabled = false;
+            ClearText();
+        }
+    }
+
+    public void ClearMoveAreaHighlight()
+    {
+        if (tileType == TileType.Standard)
+        {
+            mesh.enabled = false;
+            moveAreaHighlighted = false;
+        }
+    }
+
+    public void ClearUnitHighlight()
+    {
+        if (tileType == TileType.Standard)
+        {
+            mesh.enabled = false;
+        }
     }
 
     private void SetTileParameters()
@@ -118,11 +180,6 @@ public class Tile : MonoBehaviour
 
         SetTileParameters();
     }
-
-    private void SetMaterial(Material mat)
-    {
-        GetComponent<MeshRenderer>().material = mat;
-    }
     
     public void DebugCostText()
     {
@@ -132,6 +189,11 @@ public class Tile : MonoBehaviour
     public void DisplayDistancesText(int tileDist)
     {
         tileText.text = tileDist.ToString();
+    }
+
+    public void DisplayText(string text)
+    {
+        tileText.text = text;
     }
 
     public void ClearText()

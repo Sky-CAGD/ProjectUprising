@@ -16,8 +16,5 @@ MonoBehaviour:
   Shield: 10
   MaxHealth: 10
   Health: 10
-  MaxMove: 8
+  MaxMove: 5
   MoveSpeed: 0.35
-  GroundLayerMask:
-    serializedVersion: 2
-    m_Bits: 8
