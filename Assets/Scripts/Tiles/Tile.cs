@@ -102,7 +102,7 @@ public class Tile : MonoBehaviour
 
     public void ClearPathHighlight()
     {
-        if(moveAreaHighlighted)
+        if(moveAreaHighlighted && tileType == TileType.Standard)
         {
             mesh.material.color = moveAreaColor;
             DisplayText(rangeFromOrigin.ToString());

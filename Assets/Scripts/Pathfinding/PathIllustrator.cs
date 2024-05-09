@@ -28,7 +28,8 @@ public class PathIllustrator : MonoBehaviour
     {
         foreach (Tile tile in path.tiles)
         {
-            tile.DebugCostText();
+            if(tile.tileType == TileType.Standard)
+                tile.DebugCostText();
         }
     }
 
@@ -56,7 +57,8 @@ public class PathIllustrator : MonoBehaviour
     {
         foreach (Tile tile in tilesAtRange)
         {
-            tile.DisplayDistancesText(tile.rangeFromOrigin);
+            if(tile.tileType == TileType.Standard)
+                tile.DisplayDistancesText(tile.rangeFromOrigin);
         }
     }
 }
