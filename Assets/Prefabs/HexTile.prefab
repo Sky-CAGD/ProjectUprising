@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6090286115219573084}
   - component: {fileID: 551688272040654542}
   - component: {fileID: 5707373604771947985}
+  - component: {fileID: 1375975614249764836}
   m_Layer: 3
   m_Name: HexTile
   m_TagString: Untagged
@@ -80,19 +81,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e756be36c92cff47bb1f4e8017253b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tileType: 1
   parent: {fileID: 0}
   connectedTile: {fileID: 0}
+  neighbors: []
   occupyingUnit: {fileID: 0}
+  tileType: 1
   costFromOrigin: 0
   costToDestination: 0
   terrainCost: 0
-  traversable: 1
-  tileText: {fileID: 5414345140399377436}
-  hexTileStandard: {fileID: 7554034790510032543}
-  hexTileWall: {fileID: 3926994183879587237}
-  highlightMesh: {fileID: 9086155470349411890}
-  highlightColor: {r: 0.98894763, g: 0.990566, b: 0.40557137, a: 0.2509804}
+  rangeFromOrigin: 0
+  walkable: 1
+  moveAreaHighlighted: 0
+  <tileText>k__BackingField: {fileID: 5414345140399377436}
+  <hexTileStandard>k__BackingField: {fileID: 7554034790510032543}
+  <hexTileWall>k__BackingField: {fileID: 3926994183879587237}
+  <highlightMesh>k__BackingField: {fileID: 9086155470349411890}
+--- !u!114 &1375975614249764836
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3373158506805096038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 876d1cad1594e5348a520d60ec0dc3a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3926994183879587237
 GameObject:
   m_ObjectHideFlags: 0

@@ -10,14 +10,17 @@ public class Unit : MonoBehaviour, IDamagable
     [SerializeField] private Slider healthBar;
     public LayerMask GroundLayerMask;
 
+    //Health/Shield Properties
     public int MaxShield { get; private set; }
     public int Shield { get; private set; }
     public int MaxHealth { get; private set; }
     public int Health { get; private set; }
-    public bool Moving { get; private set; }
+    
 
-    public int MaxMove { get; private set; }
+    public int MaxMoveRange { get; private set; }
+    public int CurrMoveRange { get; private set; }
     public float MoveSpeed { get; private set; }
+    public bool Moving { get; private set; }
 
     [HideInInspector] public Tile occupiedTile;
 
@@ -25,18 +28,21 @@ public class Unit : MonoBehaviour, IDamagable
 
     private void Awake()
     {
-        //set unit to occupy a tile on the hex grid
+        //Set unit to occupy a tile on the hex grid
         FindTileAtStart();
 
-        //set starting data from unit data
+        //Set starting data from unit data
         MaxShield = unitData.MaxShield;
         Shield = unitData.Shield;
         MaxHealth = unitData.MaxHealth;
         Health = unitData.Health;
-        MaxMove = unitData.MaxMove;
+        MaxMoveRange = unitData.MaxMove;
         MoveSpeed = unitData.MoveSpeed;
 
-        //update the health & shield bar UI
+        //Set CurrMoveRange to MaxMoveRange
+        RefreshMovementRange();
+
+        //Update the health & shield bar UI
         UpdateHealthUI();
 
         Moving = false;
@@ -58,15 +64,12 @@ public class Unit : MonoBehaviour, IDamagable
 
     public virtual void UnitSelected()
     {
-        //occupiedTile.HighlightUnit();
-        //ShowMovementRange();
+
     }
 
     public virtual void UnitDeselected()
     {
-        occupiedTile.ClearUnitHighlight();
 
-        HideMovementRange();       
     }
 
     /// <summary>
@@ -74,12 +77,15 @@ public class Unit : MonoBehaviour, IDamagable
     /// </summary>
     public void ShowMovementRange()
     {
-        tilesInRange = Pathfinder.Instance.FindTilesInRange(occupiedTile, MaxMove);
+        //Get all tiles in move range if not previously done
+        //if (tilesInRange.Count == 0)
+        tilesInRange = Pathfinder.Instance.FindTilesInRange(occupiedTile, MaxMoveRange);
 
+        //Hightlight all tiles in move range
         foreach (Tile tile in tilesInRange)
-            tile.HighlightMoveArea();
+            tile.Highlighter.HighlightTile(HighlightType.moveArea);
 
-        //Displays the distances to all tiles in a given move area
+        //Displays the distances to all tiles in move range
         Pathfinder.Instance.Illustrator.DisplayMoveAreaDistances(tilesInRange);
     }
 
@@ -89,12 +95,7 @@ public class Unit : MonoBehaviour, IDamagable
     public void HideMovementRange()
     {
         foreach (Tile tile in tilesInRange)
-        {
-            tile.ClearMoveAreaHighlight();
-            tile.ClearText();
-        }
-
-        tilesInRange.Clear();
+            tile.Highlighter.ClearTileHighlight();
     }
 
     #endregion
@@ -105,9 +106,9 @@ public class Unit : MonoBehaviour, IDamagable
 
     #region Movement
     /// <summary>
-    /// If no starting tile has been manually assigned, we find one beneath us
+    /// If no starting tile has been manually assigned, unit looks for one beneath it to occupy
     /// </summary>
-    void FindTileAtStart()
+    private void FindTileAtStart()
     {
         if (occupiedTile != null)
         {
@@ -131,7 +132,7 @@ public class Unit : MonoBehaviour, IDamagable
     public void StartMove(TileGroup _path)
     {
         Moving = true;
-        occupiedTile.Occupied = false;
+        occupiedTile.occupyingUnit = null;
         StartCoroutine(MoveAlongPath(_path));
     }
 
@@ -140,7 +141,7 @@ public class Unit : MonoBehaviour, IDamagable
     /// </summary>
     /// <param name="path"></param>
     /// <returns></returns>
-    IEnumerator MoveAlongPath(TileGroup path)
+    private IEnumerator MoveAlongPath(TileGroup path)
     {
         const float MIN_DISTANCE = 0.05f;
         const float TERRAIN_PENALTY = 0.5f;
@@ -171,26 +172,26 @@ public class Unit : MonoBehaviour, IDamagable
         }
 
         FinalizePosition(path.tiles[pathLength]);
-        Pathfinder.Instance.Illustrator.ClearPathHighlights(path);
 
-        HideMovementRange();
+        occupiedTile.Highlighter.ClearAllTileHighlights();
         ShowMovementRange();
+        occupiedTile.Highlighter.HighlightTile(HighlightType.unitSelection);
     }
 
     /// <summary>
     /// End the movement along a path for this unit
     /// </summary>
     /// <param name="tile"></param>
-    void FinalizePosition(Tile tile)
+    private void FinalizePosition(Tile tile)
     {
+        tilesInRange.Clear();
         transform.position = tile.transform.position;
         occupiedTile = tile;
         Moving = false;
-        tile.Occupied = true;
         tile.occupyingUnit = this;
     }
 
-    void MoveAndRotate(Vector3 origin, Vector3 destination, float duration)
+    private void MoveAndRotate(Vector3 origin, Vector3 destination, float duration)
     {
         transform.position = Vector3.Lerp(origin, destination, duration);
         Vector3 lookDir = origin.DirectionTo(destination).Flat();
@@ -198,6 +199,12 @@ public class Unit : MonoBehaviour, IDamagable
         if(lookDir != Vector3.zero)
             transform.rotation = Quaternion.LookRotation(lookDir, Vector3.up);
     }
+
+    private void RefreshMovementRange()
+    {
+        CurrMoveRange = MaxMoveRange;
+    }
+
     #endregion
 
     //--------------------------------------------

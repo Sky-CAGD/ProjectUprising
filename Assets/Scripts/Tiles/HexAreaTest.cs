@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class HexAreaTest : MonoBehaviour
 {
-
     [SerializeField] private LayerMask tileLayer;
 
     private Camera mainCam;
@@ -31,7 +30,7 @@ public class HexAreaTest : MonoBehaviour
             return;
         else if (selectedTiles.Count == 1)
         {
-            currentTile.ClearPathHighlight();
+            currentTile.Highlighter.ClearTileHighlight();
             selectedTiles.Remove(currentTile);
         }
         else if (selectedTiles.Count > 1)
@@ -58,7 +57,7 @@ public class HexAreaTest : MonoBehaviour
     {
         if (currentTile != null)
         {
-            currentTile.HighlightPath();
+            currentTile.Highlighter.HighlightTile(HighlightType.validPath);
             selectedTiles.Add(currentTile);
 
             List<Tile> newTileList = Pathfinder.Instance.NeighborTiles(currentTile);
@@ -66,7 +65,7 @@ public class HexAreaTest : MonoBehaviour
             foreach (Tile tile in newTileList)
             {
                 selectedTiles.Add(tile);
-                tile.HighlightPath();
+                tile.Highlighter.HighlightTile(HighlightType.validPath);
             }
         }
     }
@@ -77,7 +76,7 @@ public class HexAreaTest : MonoBehaviour
     private void ClearAllSelections()
     {
         foreach (Tile tile in selectedTiles)
-            tile.ClearPathHighlight();
+            tile.Highlighter.ClearTileHighlight();
 
         selectedTiles.Clear();
     }

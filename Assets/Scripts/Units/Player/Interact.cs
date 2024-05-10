@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 //[RequireComponent(typeof(AudioSource))]
@@ -40,8 +41,13 @@ public class Interact : MonoBehaviour
             //Check if a new object was hit (mouse moved over new thing)
             if (hit.transform.gameObject != lastThingHit)
             {
+                //Clear all highlights & text
                 Clear();
- 
+
+                //if a unit is selected - highlight unit and move area
+                if (selectedUnit)
+                    HighlightUnitArea(selectedUnit);
+
                 //If a tile was moused over, set as the current tile and inspect the tile
                 if (hit.transform.GetComponent<Tile>())
                 {
@@ -89,7 +95,7 @@ public class Interact : MonoBehaviour
         if (selectedUnit && selectedUnit.Moving)
             return;
 
-        ClearPath(lastPath);
+        FindObjectOfType<TileHighlighter>().ClearAllTileHighlights();
         DeselectUnit();
     }
 
@@ -118,21 +124,18 @@ public class Interact : MonoBehaviour
 
     private void InspectUnit()
     {
-        //Exit if unit is moving
-        if (currentTile.occupyingUnit.Moving)
+        //Exit if current tile is not occupied or occupied unit is moving
+        if (!currentTile.Occupied || currentTile.occupyingUnit.Moving)
             return;
 
-        //Check if this unit was not the last one viewed
-        if (lastUnitViewed == null || lastThingHit != lastUnitViewed.gameObject)
+        //Check if no unit is selected and this unit was not the last one viewed
+        if (selectedUnit == null && (lastUnitViewed == null || lastThingHit != lastUnitViewed.gameObject))
         {
             //Set this as the last unit viewed - used to clear move area highlights later
             lastUnitViewed = currentTile.occupyingUnit;
 
-            //Highlight this unit's tile
-            currentTile.HighlightUnit();
-
-            //Highlight all tiles with this unit's range
-            currentTile.occupyingUnit.ShowMovementRange();
+            //Highlight this unit's tile and show its move area
+            HighlightUnitArea(lastUnitViewed);
         }
 
         //Mouse clicked on unit
@@ -143,49 +146,70 @@ public class Interact : MonoBehaviour
             {
                 SelectUnit();
             }
-            //Unit is selected - deselect it
+            //Unit is selected - deselect it (and potentially select a new one)
             else
             {
                 DeselectUnit();
+
+                //if the unit interacted with is a different unit - select it
+                if (currentTile.occupyingUnit != selectedUnit)
+                {
+                    SelectUnit();
+                    HighlightUnitArea(selectedUnit);
+                }
             }
         }
     }
 
+    /// <summary>
+    /// Highlight this unit's tile and show its move area
+    /// </summary>
+    private void HighlightUnitArea(Unit unit)
+    {
+        //Highlight this unit's tile
+        unit.occupiedTile.Highlighter.HighlightTile(HighlightType.unitSelection);
+
+        //Highlight all tiles with this unit's range
+        unit.ShowMovementRange();
+    }
+    
+    /// <summary>
+    /// Clears highlighted tiles - Called when mousing over a new thing
+    /// </summary>
     private void Clear()
     {
-        if (lastThingHit == null || currentTile == null  || currentTile.Occupied == false)
+        //Do not clear highlighted tiles if:
+        //There was no last thing or tile hit
+        if (lastThingHit == null || currentTile == null)
+            return;
+        //Or if a selected unit is moving
+        if (selectedUnit && selectedUnit.Moving)
             return;
 
-        ClearPath(lastPath);
-
-        //if no unit is selected - clear its highlight(s)
-        if (!selectedUnit)
-        {
-            currentTile.ClearUnitHighlight();
-
-            //if the unit is not the same as the one viewed last frame - hide its movement area
-            if(lastUnitViewed != null)
-                lastUnitViewed.HideMovementRange();
-        }
-
+        currentTile.Highlighter.ClearAllTileHighlights();
         currentTile = null;
-        lastUnitViewed = null;
     }
 
+    /// <summary>
+    /// Sets a unit to be selected and sets the camera to follow it
+    /// </summary> 
     public void SelectUnit()
     {
         selectedUnit = currentTile.occupyingUnit;
-        selectedUnit.UnitSelected();
+        selectedUnit.UnitSelected(); //Does nothing (yet)
         CameraController.Instance.followTarget = selectedUnit.transform;
         //GetComponent<AudioSource>().PlayOneShot(pop);
     }
 
+    /// <summary>
+    /// Deselect current selected unit and stops the camera from following it
+    /// </summary>
     public void DeselectUnit()
     {
         if (selectedUnit == null)
             return;
 
-        selectedUnit.UnitDeselected();
+        selectedUnit.UnitDeselected(); //Does nothing (yet)
         selectedUnit = null;
         CameraController.Instance.followTarget = null;
         //GetComponent<AudioSource>().PlayOneShot(pop);
@@ -196,9 +220,11 @@ public class Interact : MonoBehaviour
     /// </summary>
     private void NavigateToTile()
     {
+        //Exit path navigation if no unit is selected or if a selected unit is currently moving
         if (selectedUnit == null || selectedUnit.Moving == true)
             return;
 
+        //Get and draw a path to the current tile
         if (RetrievePath(out TileGroup newPath))
         {
             if (Input.GetMouseButtonDown(0))
@@ -209,35 +235,21 @@ public class Interact : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Gets a path from a selected unit to the current tile moused over and draws it
+    /// </summary>
+    /// <param name="path"></param>
+    /// <returns>Returns true if a new valid path was found and drawn</returns>
     bool RetrievePath(out TileGroup path)
     {
         path = pathfinder.FindPath(selectedUnit.occupiedTile, currentTile);
         
-        if (path == null || path == lastPath)
+        if (path == null)
             return false;
 
-        ClearPath(lastPath);
-        DrawPath(path);
+        pathfinder.Illustrator.DrawPath(path);
 
         lastPath = path;
         return true;
-    }
-
-    private void DrawPath(TileGroup path)
-    {
-        illustrator.HighlightPath(path);
-
-        if (debug) //Debug only
-            illustrator.DebugPathCosts(path);
-        else
-            illustrator.DisplayPathDistances(path);
-    }
-
-    private void ClearPath(TileGroup path)
-    {
-        if (path != null)
-        {
-            illustrator.ClearPathHighlights(path);
-        }
     }
 }

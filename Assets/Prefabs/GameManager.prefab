@@ -117,7 +117,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2542179541249183676}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aca7733883cfb2e4690a526394fd62f5, type: 3}
   m_Name: 
@@ -188,6 +188,7 @@ Transform:
   m_Children:
   - {fileID: 6496181843195580489}
   - {fileID: 5872339481070279397}
+  - {fileID: 4852309072228334192}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7307732344114956181
@@ -202,3 +203,53 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92f854b7abd088145b213c5d3e16cc78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &6534005357383463898
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4852309072228334192}
+  - component: {fileID: 5698585773400015434}
+  m_Layer: 0
+  m_Name: HighlightColors
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4852309072228334192
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6534005357383463898}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 732128573496710969}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5698585773400015434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6534005357383463898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a98cfcf62daedf64a880d902362b359d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <moveAreaColor>k__BackingField: {r: 0.19999997, g: 0.5251638, b: 0.9843137, a: 0.2509804}
+  <validPathColor>k__BackingField: {r: 0.32985914, g: 0.7169812, b: 0.2529726, a: 0.2509804}
+  <invalidPathColor>k__BackingField: {r: 0.9716981, g: 0.43417773, b: 0.10450332,
+    a: 0.2509804}
+  <unitSelectionColor>k__BackingField: {r: 0.9811321, g: 0.89635557, b: 0.2721253,
+    a: 0.7490196}

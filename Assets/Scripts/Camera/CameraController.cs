@@ -15,6 +15,17 @@ public class CameraController : SingletonPattern<CameraController>
     public float vertMoveSpeed;
     public Transform followTarget;
 
+    [Header("Edge Scrolling")]
+    public float edgeScrollDist;
+    public float scrollSpeed;
+
+    [Header("Bounding Box")]
+    public Transform boundingBox;
+    private float leftBounds;
+    private float rightBounds;
+    private float topBounds;
+    private float bottomBounds;
+
     //Camera Position
     private float moveSpeed;
     private Vector3 newPosition;
@@ -24,7 +35,7 @@ public class CameraController : SingletonPattern<CameraController>
 
     //Camera Zoom
     private Vector3 newZoom;
-    public Vector3 zoomAxis;
+    private Vector3 zoomAxis;
     private Transform cameraTransform;
 
     //Mouse Control
@@ -64,6 +75,15 @@ public class CameraController : SingletonPattern<CameraController>
 
         //Set up player input events
         playerInput = new PlayerInput();
+
+        //Confine Cursor to screen
+        Cursor.lockState = CursorLockMode.Confined;
+
+        Vector3 boundsCenter = boundingBox.position;
+        leftBounds = boundsCenter.x - (boundingBox.localScale.x / 2);
+        rightBounds = boundsCenter.x + (boundingBox.localScale.x / 2);
+        topBounds = boundsCenter.z + (boundingBox.localScale.z / 2);
+        bottomBounds = boundsCenter.z - (boundingBox.localScale.z / 2);
     }
 
     /// <summary>
@@ -102,7 +122,8 @@ public class CameraController : SingletonPattern<CameraController>
     {
         mousePos = mousePosition.ReadValue<Vector2>();
 
-        MousePanning();
+        MouseEdgePanning();
+        MouseDragPanning();
         MouseRotating();
         RotateCameraVertically();
         ZoomCamera();
@@ -112,8 +133,12 @@ public class CameraController : SingletonPattern<CameraController>
 
     private void ApplyNewValues()
     {
+        //Clamp the camera's move position within the bounding box
+        newPosition.x = Mathf.Clamp(newPosition.x, leftBounds, rightBounds);
+        newPosition.z = Mathf.Clamp(newPosition.z, bottomBounds, topBounds);
+
         //Smoothly move camera to new positions & rotations
-        if(newPosition != Vector3.zero)
+        if (newPosition != Vector3.zero)
             transform.position = Vector3.Lerp(transform.position, newPosition, Time.deltaTime * moveTime);
 
         if (newRotation != Quaternion.identity)
@@ -200,7 +225,7 @@ public class CameraController : SingletonPattern<CameraController>
     /// <summary>
     /// Continuously reads whether the left mouse is held to pan the camera
     /// </summary>
-    private void MousePanning()
+    private void MouseDragPanning()
     {
         bool isMouseHeld = click.ReadValue<float>() > 0.1f;
 
@@ -219,6 +244,45 @@ public class CameraController : SingletonPattern<CameraController>
 
                 newPosition = transform.position + dragStartPos - dragCurrentPos;
             }
+        }
+    }
+
+    /// <summary>
+    /// Handles moving the camera when the mouse pointer reaches the edges of the screen 
+    /// </summary>
+    private void MouseEdgePanning()
+    {
+        float rightPanX = Screen.width - edgeScrollDist;
+        float leftPanX = edgeScrollDist;
+        float topPanY = Screen.height - edgeScrollDist;
+        float bottomPanY = edgeScrollDist;
+
+        //Used to get coordinates slightly past edge of screen
+        //Mouse will stop tracking if leaving game window
+        float beyondEdgeAmt = 5f;
+
+        //Scroll left/right
+        if (mousePos.x < leftPanX && mousePos.x > 0 - beyondEdgeAmt)
+        {
+            newPosition -= (transform.right * scrollSpeed);
+            followTarget = null;
+        }
+        else if(mousePos.x > rightPanX && mousePos.x < Screen.width + beyondEdgeAmt)
+        {
+            newPosition += (transform.right * scrollSpeed);
+            followTarget = null;
+        }
+
+        //Scroll up/down
+        if (mousePos.y > topPanY && mousePos.y < Screen.height + beyondEdgeAmt)
+        {
+            newPosition += (transform.forward * scrollSpeed);
+            followTarget = null;
+        }
+        else if (mousePos.y < bottomPanY && mousePos.y > 0 - beyondEdgeAmt)
+        {
+            newPosition -= (transform.forward * scrollSpeed);
+            followTarget = null;
         }
     }
 

@@ -2,6 +2,8 @@ using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
 using System;
+using UnityEditor;
+using Unity.VisualScripting;
 
 public enum TileType
 {
@@ -10,6 +12,7 @@ public enum TileType
     Wall
 }
 
+[RequireComponent(typeof(TileHighlighter))]
 public class Tile : MonoBehaviour
 {
     public Tile parent;
@@ -17,39 +20,35 @@ public class Tile : MonoBehaviour
     public List<Tile> neighbors = new List<Tile>();
     public Unit occupyingUnit;
 
+    public TileHighlighter Highlighter { get; private set; }
+
     public TileType tileType = TileType.Standard;
     public float costFromOrigin = 0;
     public float costToDestination = 0;
     public int terrainCost = 0;
     public int rangeFromOrigin = 0;
     public float TotalCost { get { return costFromOrigin + costToDestination + terrainCost; } }
-    public bool Occupied { get; set; } = false;
     public bool walkable = true;
-    public bool moveAreaHighlighted;
 
-    [SerializeField] private TMP_Text tileText;
-    [SerializeField] private GameObject hexTileStandard;
-    [SerializeField] private GameObject hexTileWall;
-    [SerializeField] private GameObject highlightMesh;
-    private Color pathHighlightColor;
-    private Color moveAreaColor;
-    private Color unitHighlightColor;
-    private Renderer mesh;
+    [field: SerializeField] public TMP_Text tileText { get; private set; }
+    [field: SerializeField] public GameObject hexTileStandard { get; private set; }
+    [field: SerializeField] public GameObject hexTileWall { get; private set; }
+    [field: SerializeField] public GameObject highlightMesh { get; private set; }
 
-    private void Awake()
+    public bool Occupied
     {
-        tileText.text = "";
-        highlightMesh.gameObject.SetActive(true);
-        mesh = highlightMesh.GetComponent<Renderer>();
-        mesh.enabled = false;
+        get
+        {
+            if (occupyingUnit == null)
+                return false;
+            else
+                return true;
+        }
     }
 
     private void Start()
     {
-        pathHighlightColor = GameManager.Instance.tilePathHighlightColor;
-        moveAreaColor = GameManager.Instance.tileMoveAreaColor;
-        unitHighlightColor = GameManager.Instance.tileUnitHighlightColor;
-        mesh.material.color = pathHighlightColor;
+        Highlighter = GetComponent<TileHighlighter>();
         SetTileParameters();
     }
 
@@ -58,77 +57,6 @@ public class Tile : MonoBehaviour
         //update the highlight color of tiles each frame for testing
         //highlightColor = GameManager.Instance.tileHighlightColor;
         //mesh.material.color = highlightColor;
-    }
-
-    /// <summary>
-    /// Enables highlight mesh and sets color to path highlight color
-    /// </summary>
-    /// <param name="col"></param>
-    public void HighlightPath()
-    {
-        if (tileType == TileType.Standard)
-        {
-            mesh.enabled = true;
-            mesh.material.color = pathHighlightColor;
-        }
-    }
-
-    /// <summary>
-    /// Enables highlight mesh and sets color to move area highlight color
-    /// </summary>
-    /// <param name="col"></param>
-    public void HighlightMoveArea()
-    {
-        if (tileType == TileType.Standard)
-        {
-            mesh.enabled = true;
-            mesh.material.color = moveAreaColor;
-            moveAreaHighlighted = true;
-        }
-    }
-
-    /// <summary>
-    /// Enables highlight mesh and sets color to unit highlight color
-    /// </summary>
-    /// <param name="col"></param>
-    public void HighlightUnit()
-    {
-        if (tileType == TileType.Standard)
-        {
-            mesh.enabled = true;
-            mesh.material.color = unitHighlightColor;
-        }
-    }
-
-    public void ClearPathHighlight()
-    {
-        if(moveAreaHighlighted && tileType == TileType.Standard)
-        {
-            mesh.material.color = moveAreaColor;
-            DisplayText(rangeFromOrigin.ToString());
-        }
-        else
-        {
-            mesh.enabled = false;
-            ClearText();
-        }
-    }
-
-    public void ClearMoveAreaHighlight()
-    {
-        if (tileType == TileType.Standard)
-        {
-            mesh.enabled = false;
-            moveAreaHighlighted = false;
-        }
-    }
-
-    public void ClearUnitHighlight()
-    {
-        if (tileType == TileType.Standard)
-        {
-            mesh.enabled = false;
-        }
     }
 
     private void SetTileParameters()
@@ -179,25 +107,5 @@ public class Tile : MonoBehaviour
         tileType = (TileType)currTileIndex;
 
         SetTileParameters();
-    }
-    
-    public void DebugCostText()
-    {
-        tileText.text = TotalCost.ToString("F1");
-    }
-
-    public void DisplayDistancesText(int tileDist)
-    {
-        tileText.text = tileDist.ToString();
-    }
-
-    public void DisplayText(string text)
-    {
-        tileText.text = text;
-    }
-
-    public void ClearText()
-    {
-        tileText.text = "";
     }
 }
