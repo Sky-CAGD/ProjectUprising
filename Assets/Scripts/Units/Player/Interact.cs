@@ -55,9 +55,9 @@ public class Interact : MonoBehaviour
                     InspectTile();
                 }
                 //If a unit was moused over, set the current tile as its occupied tile and inspect the unit
-                else if (hit.transform.GetComponent<Unit>())
+                else if (hit.transform.GetComponent<Character>())
                 {
-                    currentTile = hit.transform.GetComponent<Unit>().occupiedTile;
+                    currentTile = hit.transform.GetComponent<Character>().occupiedTile;
                     InspectUnit();
                 }
 
@@ -67,7 +67,7 @@ public class Interact : MonoBehaviour
             {
                 if (lastThingHit.GetComponent<Tile>())
                     InspectTile();
-                else if (lastThingHit.GetComponent<Unit>())
+                else if (lastThingHit.GetComponent<Character>())
                     InspectUnit();
             }
         }
@@ -128,6 +128,10 @@ public class Interact : MonoBehaviour
         if (!currentTile.Occupied || currentTile.occupyingUnit.Moving)
             return;
 
+        //Exit if tile is occupied by an enemy
+        if (currentTile.occupyingUnit.GetComponent<Enemy>())
+            return;
+
         //Check if no unit is selected and this unit was not the last one viewed
         if (selectedUnit == null && (lastUnitViewed == null || lastThingHit != lastUnitViewed.gameObject))
         {
@@ -171,6 +175,9 @@ public class Interact : MonoBehaviour
 
         //Highlight all tiles with this unit's range
         unit.ShowMovementRange();
+
+        //Show the unit's movement range on the HUD
+        HUD.Instance.ShowUnitMoveRange(unit.CurrMoveRange, unit.MaxMoveRange);
     }
     
     /// <summary>
@@ -188,6 +195,10 @@ public class Interact : MonoBehaviour
 
         currentTile.Highlighter.ClearAllTileHighlights();
         currentTile = null;
+
+        //Hide the unit movement range on the HUD if no unit is selected
+        if (!selectedUnit)
+            HUD.Instance.HideUnitMoveRange();
     }
 
     /// <summary>
@@ -196,7 +207,7 @@ public class Interact : MonoBehaviour
     public void SelectUnit()
     {
         selectedUnit = currentTile.occupyingUnit;
-        selectedUnit.UnitSelected(); //Does nothing (yet)
+        selectedUnit.UnitSelected();
         CameraController.Instance.followTarget = selectedUnit.transform;
         //GetComponent<AudioSource>().PlayOneShot(pop);
     }
@@ -209,7 +220,7 @@ public class Interact : MonoBehaviour
         if (selectedUnit == null)
             return;
 
-        selectedUnit.UnitDeselected(); //Does nothing (yet)
+        selectedUnit.UnitDeselected();
         selectedUnit = null;
         CameraController.Instance.followTarget = null;
         //GetComponent<AudioSource>().PlayOneShot(pop);

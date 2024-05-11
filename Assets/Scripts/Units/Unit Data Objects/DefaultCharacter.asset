@@ -17,4 +17,4 @@ MonoBehaviour:
   MaxHealth: 10
   Health: 10
   MaxMove: 4
-  MoveSpeed: 0.35
+  MoveSpeed: 0.25

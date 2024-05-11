@@ -48,10 +48,11 @@ public class Unit : MonoBehaviour, IDamagable
         Moving = false;
     }
 
-    private void Update()
+    protected virtual void Update()
     {
         if(Input.GetKeyDown(KeyCode.T))
         {
+            print("Debug: T Key pressed, units take 3 damage");
             Damage(3);
         }
     }
@@ -64,12 +65,12 @@ public class Unit : MonoBehaviour, IDamagable
 
     public virtual void UnitSelected()
     {
-
+        HUD.Instance.ShowUnitMoveRange(CurrMoveRange, MaxMoveRange);
     }
 
     public virtual void UnitDeselected()
     {
-
+        HUD.Instance.HideUnitMoveRange();
     }
 
     /// <summary>
@@ -77,16 +78,18 @@ public class Unit : MonoBehaviour, IDamagable
     /// </summary>
     public void ShowMovementRange()
     {
-        //Get all tiles in move range if not previously done
-        //if (tilesInRange.Count == 0)
-        tilesInRange = Pathfinder.Instance.FindTilesInRange(occupiedTile, MaxMoveRange);
+        if (CurrMoveRange <= 0)
+            return;
+
+        //Get all tiles in move range
+        tilesInRange = Pathfinder.Instance.FindTilesInRange(occupiedTile, CurrMoveRange);
 
         //Hightlight all tiles in move range
         foreach (Tile tile in tilesInRange)
             tile.Highlighter.HighlightTile(HighlightType.moveArea);
 
         //Displays the distances to all tiles in move range
-        Pathfinder.Instance.Illustrator.DisplayMoveAreaDistances(tilesInRange);
+        //Pathfinder.Instance.Illustrator.DisplayMoveAreaDistances(tilesInRange);
     }
 
     /// <summary>
@@ -108,7 +111,7 @@ public class Unit : MonoBehaviour, IDamagable
     /// <summary>
     /// If no starting tile has been manually assigned, unit looks for one beneath it to occupy
     /// </summary>
-    private void FindTileAtStart()
+    protected virtual void FindTileAtStart()
     {
         if (occupiedTile != null)
         {
@@ -133,6 +136,10 @@ public class Unit : MonoBehaviour, IDamagable
     {
         Moving = true;
         occupiedTile.occupyingUnit = null;
+
+        CurrMoveRange -= _path.tiles.Length - 1;
+        HUD.Instance.ShowUnitMoveRange(CurrMoveRange, MaxMoveRange);
+
         StartCoroutine(MoveAlongPath(_path));
     }
 
@@ -141,7 +148,7 @@ public class Unit : MonoBehaviour, IDamagable
     /// </summary>
     /// <param name="path"></param>
     /// <returns></returns>
-    private IEnumerator MoveAlongPath(TileGroup path)
+    protected virtual IEnumerator MoveAlongPath(TileGroup path)
     {
         const float MIN_DISTANCE = 0.05f;
         const float TERRAIN_PENALTY = 0.5f;
@@ -182,7 +189,7 @@ public class Unit : MonoBehaviour, IDamagable
     /// End the movement along a path for this unit
     /// </summary>
     /// <param name="tile"></param>
-    private void FinalizePosition(Tile tile)
+    protected virtual void FinalizePosition(Tile tile)
     {
         tilesInRange.Clear();
         transform.position = tile.transform.position;
@@ -191,7 +198,7 @@ public class Unit : MonoBehaviour, IDamagable
         tile.occupyingUnit = this;
     }
 
-    private void MoveAndRotate(Vector3 origin, Vector3 destination, float duration)
+    protected virtual void MoveAndRotate(Vector3 origin, Vector3 destination, float duration)
     {
         transform.position = Vector3.Lerp(origin, destination, duration);
         Vector3 lookDir = origin.DirectionTo(destination).Flat();
@@ -200,7 +207,7 @@ public class Unit : MonoBehaviour, IDamagable
             transform.rotation = Quaternion.LookRotation(lookDir, Vector3.up);
     }
 
-    private void RefreshMovementRange()
+    public void RefreshMovementRange()
     {
         CurrMoveRange = MaxMoveRange;
     }
@@ -240,13 +247,13 @@ public class Unit : MonoBehaviour, IDamagable
     /// <summary>
     /// Called from Damage when Health is reduced to 0
     /// </summary>
-    private void OnDeath()
+    protected virtual void OnDeath()
     {
         Destroy(gameObject);
-        Debug.Log("Player unit killed!");
+        Debug.Log("Unit killed!");
     }
 
-    private void UpdateHealthUI()
+    protected virtual void UpdateHealthUI()
     {
         shieldBar.maxValue = MaxShield;
         shieldBar.value = Shield;
