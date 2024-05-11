@@ -48,17 +48,21 @@ public class Pathfinder : SingletonPattern<Pathfinder>
             //Destination reached
             if (currentTile == destination)
             {  
-                return PathBetween(destination, origin);
+                return MakePath(destination, origin);
             }
 
             //Evaluate each adjacent tile and their cost
-            foreach (Tile neighbor in NeighborTiles(currentTile))
+            foreach (Tile neighbor in GetNeighborTiles(currentTile))
             {
                 //Skip checking a neighbor tile that is already within the actual path
-                //Skip checking a tile that is not traversable
+                //Skip checking a tile that is not walkable
                 if(closedSet.Contains(neighbor) || !neighbor.walkable)
                     continue;
-                
+
+                //Skip checking a tile that is occupied by an enemy
+                if (neighbor.Occupied && neighbor.occupyingUnit.GetComponent<Enemy>())
+                    continue;
+
                 float costToNeighbor = currentTile.costFromOrigin + neighbor.terrainCost + tileDistance;
                 if (costToNeighbor < neighbor.costFromOrigin || !openSet.Contains(neighbor))
                 {
@@ -87,13 +91,13 @@ public class Pathfinder : SingletonPattern<Pathfinder>
         if (range <= 0)
             return null;
 
-        List<Tile> neighborTiles = NeighborTiles(origin);
+        List<Tile> neighborTiles = GetNeighborTiles(origin);
         List<Tile> range1Tiles = new List<Tile>();
 
-        //Get all walkable neighbor tiles of the origin tile
+        //Get all walkable & unoccupied neighbor tiles of the origin tile
         foreach (Tile neighbor in neighborTiles)
         {
-            if (neighbor.walkable)
+            if (neighbor.walkable && !neighbor.Occupied)
             {
                 range1Tiles.Add(neighbor);
                 neighbor.rangeFromOrigin = 1;
@@ -107,8 +111,8 @@ public class Pathfinder : SingletonPattern<Pathfinder>
         List<Tile> tilesInRange = new List<Tile>();
         List<Tile> nextRangeNeighborTiles = new List<Tile>();
 
-        //Add all neighbors (tiles in range 1) to the tilesInRange list
-        tilesInRange.AddRange(neighborTiles);
+        //Add all valid range 1 tiles to the tilesInRange list
+        tilesInRange.AddRange(range1Tiles);
 
         //Set the tiles to check next to the range1Tiles
         nextRangeNeighborTiles = range1Tiles;
@@ -121,20 +125,25 @@ public class Pathfinder : SingletonPattern<Pathfinder>
             foreach (Tile tile in nextRangeNeighborTiles)
             {
                 //Get neighbors of the tile at the current range
-                List<Tile> newNeighborTiles = NeighborTiles(tile);
+                List<Tile> newNeighborTiles = GetNeighborTiles(tile);
 
                 //Iterate through the new neighbors found
                 foreach (Tile nextNeighborTile in newNeighborTiles)
                 {
-                    //Add walkable tiles at next range to the tilesAtNewRange list if not in it
-                    if (!tilesInRange.Contains(nextNeighborTile) && nextNeighborTile.walkable)
-                    {
-                        tilesInRange.Add(nextNeighborTile);
-                        tilesAtNewRange.Add(nextNeighborTile);
+                    //If tile is already within list or is not walkable, skip it
+                    if (tilesInRange.Contains(nextNeighborTile) || !nextNeighborTile.walkable)
+                        continue;
 
-                        //Set range from origin for the added tiles
-                        nextNeighborTile.rangeFromOrigin = currTileRange + 1;
-                    }
+                    //If tile is occupied by an enemy, skip it
+                    if (nextNeighborTile.Occupied && nextNeighborTile.occupyingUnit.GetComponent<Enemy>())
+                        continue;
+
+                    //Add walkable tiles at next range to the tilesAtNewRange list
+                    tilesInRange.Add(nextNeighborTile);
+                    tilesAtNewRange.Add(nextNeighborTile);
+
+                    //Set range from origin for the added tiles
+                    nextNeighborTile.rangeFromOrigin = currTileRange + 1;
                 }
             }
 
@@ -151,56 +160,29 @@ public class Pathfinder : SingletonPattern<Pathfinder>
     /// </summary>
     /// <param name="origin"></param>
     /// <returns></returns>
-    public List<Tile> NeighborTiles(Tile origin)
+    public List<Tile> GetNeighborTiles(Tile origin)
     {
-        //if this tile has stored neighbors, return them
-        if(origin.neighbors.Count > 0)
+        //Check if this tile has stored neighbors
+        if (origin.neighbors.Count > 0)
             return origin.neighbors;
 
-        const float HEXAGONAL_OFFSET = 1.75f;
-        List<Tile> tiles = new List<Tile>();
-        Vector3 direction = Vector3.forward * (origin.GetComponent<MeshFilter>().sharedMesh.bounds.extents.x * HEXAGONAL_OFFSET);
-        float rayLength = 4f;
-        float rayHeightOffset = 1f;
+        List<Tile> neighbors = new List<Tile>();
 
-        //Rotate a raycast in 60 degree steps and find all adjacent tiles
-        for (int i = 0; i < 6; i++)
-        {
-            direction = Quaternion.Euler(0f, 60f, 0f) * direction;
+        //Perform an OverlapSphere cast to find nearby tiles
+        Collider[] hitColliders = Physics.OverlapSphere(origin.transform.position, 2f, tileMask);
 
-            Vector3 aboveTilePos = (origin.transform.position + direction).With(y: origin.transform.position.y + rayHeightOffset);
-
-            if (Physics.Raycast(aboveTilePos, Vector3.down, out RaycastHit hit, rayLength, tileMask))
-            {
-                Tile hitTile = hit.transform.GetComponent<Tile>();
-                if (hitTile.Occupied == false)
-                    tiles.Add(hitTile);
-            }
-
-            Debug.DrawRay(aboveTilePos, Vector3.down * rayLength, Color.blue);
-        }
+        //Add all tiles found in the OverlapSphere cast
+        foreach (Collider tileCollider in hitColliders)
+            neighbors.Add(tileCollider.GetComponent<Tile>());
 
         //Additionally add connected tiles such as ladders
         if (origin.connectedTile != null)
-            tiles.Add(origin.connectedTile);
+            neighbors.Add(origin.connectedTile);
 
         //Store the neighbors of this tile to save time in in future searches
-        origin.neighbors = tiles;
+        origin.neighbors = neighbors;
 
-        return tiles;
-    }
-
-    /// <summary>
-    /// Called by Interact.cs to create a path between two tiles on the grid 
-    /// </summary>
-    /// <param name="dest"></param>
-    /// <param name="source"></param>
-    /// <returns></returns>
-    public TileGroup PathBetween(Tile dest, Tile source)
-    {
-        TileGroup path = MakePath(dest, source);
-        //illustrator.IllustratePath(path);
-        return path;
+        return neighbors;
     }
 
     /// <summary>

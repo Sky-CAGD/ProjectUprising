@@ -44,8 +44,8 @@ public class Interact : MonoBehaviour
                 //Clear all highlights & text
                 Clear();
 
-                //if a unit is selected - highlight unit and move area
-                if (selectedUnit)
+                //if a unit is selected and is moving - highlight unit and move area
+                if (selectedUnit && !selectedUnit.Moving)
                     HighlightUnitArea(selectedUnit);
 
                 //If a tile was moused over, set as the current tile and inspect the tile
@@ -225,12 +225,21 @@ public class Interact : MonoBehaviour
             return;
 
         //Get and draw a path to the current tile
-        if (RetrievePath(out TileGroup newPath))
+        if (RetrievePath(out TileGroup newPath, selectedUnit.CurrMoveRange))
         {
+            //User clicks to move unit along drawn path
             if (Input.GetMouseButtonDown(0))
             {
-                //GetComponent<AudioSource>().PlayOneShot(click);
-                selectedUnit.StartMove(newPath);
+                //Check if unit has enough movement to complete this path
+                if(selectedUnit.CurrMoveRange >= newPath.tiles.Length - 1)
+                {
+                    //Start move along path
+                    selectedUnit.StartMove(newPath);
+                }
+                else
+                {
+                    //Unit does not have enough move range to complete the path
+                }
             }
         }
     }
@@ -240,14 +249,14 @@ public class Interact : MonoBehaviour
     /// </summary>
     /// <param name="path"></param>
     /// <returns>Returns true if a new valid path was found and drawn</returns>
-    bool RetrievePath(out TileGroup path)
+    bool RetrievePath(out TileGroup path, int unitMoveRange)
     {
         path = pathfinder.FindPath(selectedUnit.occupiedTile, currentTile);
         
         if (path == null)
             return false;
 
-        pathfinder.Illustrator.DrawPath(path);
+        pathfinder.Illustrator.DrawPath(path, unitMoveRange);
 
         lastPath = path;
         return true;

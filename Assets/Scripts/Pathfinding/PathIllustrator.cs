@@ -9,9 +9,9 @@ public class PathIllustrator : MonoBehaviour
     /// Highlights all tiles along a path and displays the distance to each tile
     /// </summary>
     /// <param name="path"></param>
-    public void DrawPath(TileGroup path)
+    public void DrawPath(TileGroup path, int unitMoveRange)
     {
-        HighlightPath(path);
+        HighlightPath(path, unitMoveRange);
         DisplayPathDistances(path);
     }
 
@@ -19,10 +19,15 @@ public class PathIllustrator : MonoBehaviour
     /// Highlights all tiles along a given path except the starting tile
     /// </summary>
     /// <param name="path"></param>
-    private void HighlightPath(TileGroup path)
+    private void HighlightPath(TileGroup path, int unitMoveRange)
     {
         if (path == null)
             return;
+
+        HighlightType hlType = HighlightType.validPath;
+
+        if (path.tiles.Length - 1 > unitMoveRange)
+            hlType = HighlightType.invalidPath;
 
         for (int i = 0; i < path.tiles.Length; i++)
         {
@@ -30,8 +35,10 @@ public class PathIllustrator : MonoBehaviour
             if (i == 0)
                 continue;
 
-            path.tiles[i].Highlighter.HighlightTile(HighlightType.validPath);
+            path.tiles[i].Highlighter.HighlightTile(hlType);
         }
+
+        path.tiles[0].Highlighter.HighlightTile(HighlightType.unitSelection);
     }
 
     /// <summary>
