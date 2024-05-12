@@ -13,8 +13,10 @@ MonoBehaviour:
   m_Name: SlowCharacter
   m_EditorClassIdentifier: 
   MaxShield: 10
-  Shield: 10
+  StartingShield: 10
   MaxHealth: 10
-  Health: 10
+  StartingHealth: 10
   MaxMove: 3
-  MoveSpeed: 0.2
+  MoveSpeed: 3
+  MaxActionPoints: 2
+  CurrActionPoints: 2

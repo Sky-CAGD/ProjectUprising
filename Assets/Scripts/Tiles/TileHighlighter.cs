@@ -3,15 +3,6 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public enum HighlightType
-{
-    none,
-    validPath,
-    invalidPath,
-    moveArea,
-    unitSelection
-}
-
 [RequireComponent(typeof(Tile))]
 public class TileHighlighter : MonoBehaviour
 {
@@ -21,6 +12,8 @@ public class TileHighlighter : MonoBehaviour
     private Color validPathColor;
     private Color invalidPathColor;
     private Color unitSelectionColor;
+    private Color attackAreaColor;
+    private Color attackTargetColor;
 
     private static List<Tile> highlightedTiles = new List<Tile>();
 
@@ -44,6 +37,8 @@ public class TileHighlighter : MonoBehaviour
         validPathColor = HighlightColors.Instance.ValidPathColor;
         invalidPathColor = HighlightColors.Instance.InvalidPathColor;
         unitSelectionColor = HighlightColors.Instance.UnitSelectionColor;
+        attackAreaColor = HighlightColors.Instance.AttackAreaColor;
+        attackTargetColor = HighlightColors.Instance.AttackTargetColor;
     }
 
     //--------------------------------------------
@@ -83,6 +78,16 @@ public class TileHighlighter : MonoBehaviour
             case HighlightType.unitSelection:
                 {
                     mesh.material.color = unitSelectionColor;
+                    break;
+                }
+            case HighlightType.attackArea:
+                {
+                    mesh.material.color = attackAreaColor;
+                    break;
+                }
+            case HighlightType.attackTarget:
+                {
+                    mesh.material.color = attackTargetColor;
                     break;
                 }
             default:

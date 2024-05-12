@@ -3,37 +3,38 @@ using UnityEditor;
 using UnityEngine;
 
 //[RequireComponent(typeof(AudioSource))]
-public class Interact : MonoBehaviour
+public class Interact : SingletonPattern<Interact>
 {
     //[SerializeField] private AudioClip click, pop;
     [SerializeField] private LayerMask interactMask;
 
     //Debug purposes only
     [SerializeField] private bool debug;
-    private TileGroup lastPath;
 
     private Camera mainCam;
     private Tile currentTile;
-    private Unit selectedUnit;
     private Unit lastUnitViewed;
-    private List<Tile> unitMoveArea;
     private Pathfinder pathfinder;
-    private PathIllustrator illustrator;
     private GameObject lastThingHit;
+
+    [field: SerializeField] public Character selectedCharacter { get; private set; }
 
     private void Start()
     {
         mainCam = Camera.main;
         pathfinder = Pathfinder.Instance;
-        illustrator = pathfinder.Illustrator;
     }
 
     private void Update()
     {
-        MouseUpdate();
+        BaseInteractions();
+   
+        //Check for right click input to deselect units & highlights
+        if (Input.GetMouseButtonDown(1))
+            ClearAllSelections();
     }
 
-    private void MouseUpdate()
+    private void BaseInteractions()
     {
         //Check if mouse hit object on an interactable layer (tiles, units, etc)
         if (Physics.Raycast(mainCam.ScreenPointToRay(Input.mousePosition), out RaycastHit hit, float.MaxValue, interactMask))
@@ -44,9 +45,20 @@ public class Interact : MonoBehaviour
                 //Clear all highlights & text
                 Clear();
 
-                //if a unit is selected and is moving - highlight unit and move area
-                if (selectedUnit && !selectedUnit.Moving)
-                    HighlightUnitArea(selectedUnit);
+                //Check if a unit is selected
+                if (selectedCharacter != null)
+                {
+                    //Check if selected unit is planning an attack
+                    if (selectedCharacter != null && selectedCharacter.planningAttack)
+                    {
+                        selectedCharacter.ShowAttackRange();
+                    }
+                    //Check if selected unit is not moving or attacking - highlight unit and move area
+                    else if(!selectedCharacter.Moving)
+                    {
+                        selectedCharacter.ShowMovementRange();
+                    }
+                }
 
                 //If a tile was moused over, set as the current tile and inspect the tile
                 if (hit.transform.GetComponent<Tile>())
@@ -73,17 +85,23 @@ public class Interact : MonoBehaviour
         }
         else //The mouse is over a non-interactable object
         {
+            //Skip changing interactions if a selected character unit is attacking
+            if (selectedCharacter != null && selectedCharacter.planningAttack)
+                return;
+
+            Clear();
+
             //Check for left click input in open area to deselect units/paths
             if (Input.GetMouseButtonDown(0))
             {
-                ClearAllSelections();
+                //ClearAllSelections();
             }
-        }
 
-        //Check for right click input to deselect units/paths
-        if (Input.GetMouseButtonDown(1))
-        {
-            ClearAllSelections();
+            //Show the movement range of any selected character units
+            if(selectedCharacter != null)
+                selectedCharacter.ShowMovementRange();
+
+            lastThingHit = null;
         }
     }
 
@@ -92,7 +110,7 @@ public class Interact : MonoBehaviour
     /// </summary>
     private void ClearAllSelections()
     {
-        if (selectedUnit && selectedUnit.Moving)
+        if (selectedCharacter && selectedCharacter.Moving)
             return;
 
         FindObjectOfType<TileHighlighter>().ClearAllTileHighlights();
@@ -104,12 +122,19 @@ public class Interact : MonoBehaviour
         //If a tile with a unit is hovered over, highlight the unit
         if (currentTile.Occupied)
             InspectUnit();
-        //If a unit is selected and the hovered tile is not occupied, generate a path
-        else if (selectedUnit != null)
-            NavigateToTile();
+        //Check if the hovered tile is not occupied and a unit is selected
+        else if (selectedCharacter != null)
+        {
+            //Check if character unit is planning to attack or move
+            if (selectedCharacter.planningAttack)
+                DisplayAttackToTile(); //Show attack
+            else
+                NavigateToTile(); //Generate a path
+        }
+
 
         //Alter tile type by left/right clicking on open tile while no unit is selected
-        if (!currentTile.Occupied && selectedUnit == null)
+        if (!currentTile.Occupied && selectedCharacter == null)
         {
             if(Input.GetMouseButtonDown(0))
             {
@@ -132,54 +157,39 @@ public class Interact : MonoBehaviour
         if (currentTile.occupyingUnit.GetComponent<Enemy>())
             return;
 
-        //Check if no unit is selected and this unit was not the last one viewed
-        if (selectedUnit == null && (lastUnitViewed == null || lastThingHit != lastUnitViewed.gameObject))
+        //Check if no character unit is selected and this unit was not the last one viewed
+        if (selectedCharacter == null && (lastUnitViewed == null || lastThingHit != lastUnitViewed.gameObject))
         {
-            //Set this as the last unit viewed - used to clear move area highlights later
+            //Set this character as the last unit viewed - used to clear move area highlights later
             lastUnitViewed = currentTile.occupyingUnit;
 
-            //Highlight this unit's tile and show its move area
-            HighlightUnitArea(lastUnitViewed);
+            //Highlight this character unit's tile and show its move area
+            lastUnitViewed.ShowMovementRange();
         }
 
         //Mouse clicked on unit
         if (Input.GetMouseButtonDown(0))
         {
-            //No unit selected - select it
-            if(selectedUnit == null)
+            //No character unit selected - select it
+            if(selectedCharacter == null)
             {
                 SelectUnit();
             }
-            //Unit is selected - deselect it (and potentially select a new one)
+            //Character unit is selected - deselect it (and potentially select a new one)
             else
             {
                 DeselectUnit();
 
-                //if the unit interacted with is a different unit - select it
-                if (currentTile.occupyingUnit != selectedUnit)
+                //Check if the character unit interacted with is a different unit - select it
+                if (currentTile.occupyingUnit != selectedCharacter)
                 {
                     SelectUnit();
-                    HighlightUnitArea(selectedUnit);
+                    selectedCharacter.ShowMovementRange();
                 }
             }
         }
     }
 
-    /// <summary>
-    /// Highlight this unit's tile and show its move area
-    /// </summary>
-    private void HighlightUnitArea(Unit unit)
-    {
-        //Highlight this unit's tile
-        unit.occupiedTile.Highlighter.HighlightTile(HighlightType.unitSelection);
-
-        //Highlight all tiles with this unit's range
-        unit.ShowMovementRange();
-
-        //Show the unit's movement range on the HUD
-        HUD.Instance.ShowUnitMoveRange(unit.CurrMoveRange, unit.MaxMoveRange);
-    }
-    
     /// <summary>
     /// Clears highlighted tiles - Called when mousing over a new thing
     /// </summary>
@@ -190,14 +200,14 @@ public class Interact : MonoBehaviour
         if (lastThingHit == null || currentTile == null)
             return;
         //Or if a selected unit is moving
-        if (selectedUnit && selectedUnit.Moving)
+        if (selectedCharacter && selectedCharacter.Moving)
             return;
 
         currentTile.Highlighter.ClearAllTileHighlights();
         currentTile = null;
 
         //Hide the unit movement range on the HUD if no unit is selected
-        if (!selectedUnit)
+        if (!selectedCharacter)
             HUD.Instance.HideUnitMoveRange();
     }
 
@@ -206,10 +216,10 @@ public class Interact : MonoBehaviour
     /// </summary> 
     public void SelectUnit()
     {
-        selectedUnit = currentTile.occupyingUnit;
-        selectedUnit.UnitSelected();
-        CameraController.Instance.followTarget = selectedUnit.transform;
-        //GetComponent<AudioSource>().PlayOneShot(pop);
+        selectedCharacter = currentTile.occupyingUnit.GetComponent<Character>();
+        selectedCharacter.UnitSelected();
+        CameraController.Instance.followTarget = selectedCharacter.transform;
+        HUD.Instance.ShowUnitAttackPanel();
     }
 
     /// <summary>
@@ -217,13 +227,18 @@ public class Interact : MonoBehaviour
     /// </summary>
     public void DeselectUnit()
     {
-        if (selectedUnit == null)
+        if (selectedCharacter == null)
             return;
 
-        selectedUnit.UnitDeselected();
-        selectedUnit = null;
+        selectedCharacter.UnitDeselected();
+        selectedCharacter = null;
         CameraController.Instance.followTarget = null;
-        //GetComponent<AudioSource>().PlayOneShot(pop);
+        HUD.Instance.HideUnitAttackPanel();
+    }
+
+    private void DisplayAttackToTile()
+    {
+        currentTile.Highlighter.HighlightTile(HighlightType.attackTarget);
     }
 
     /// <summary>
@@ -232,20 +247,20 @@ public class Interact : MonoBehaviour
     private void NavigateToTile()
     {
         //Exit path navigation if no unit is selected or if a selected unit is currently moving
-        if (selectedUnit == null || selectedUnit.Moving == true)
+        if (selectedCharacter == null || selectedCharacter.Moving == true)
             return;
 
         //Get and draw a path to the current tile
-        if (RetrievePath(out TileGroup newPath, selectedUnit.CurrMoveRange))
+        if (RetrievePath(out TileGroup newPath, selectedCharacter.CurrMoveRange))
         {
             //User clicks to move unit along drawn path
             if (Input.GetMouseButtonDown(0))
             {
                 //Check if unit has enough movement to complete this path
-                if(selectedUnit.CurrMoveRange >= newPath.tiles.Length - 1)
+                if(selectedCharacter.CurrMoveRange >= newPath.tiles.Length - 1)
                 {
                     //Start move along path
-                    selectedUnit.StartMove(newPath);
+                    selectedCharacter.StartMove(newPath);
                 }
                 else
                 {
@@ -262,14 +277,13 @@ public class Interact : MonoBehaviour
     /// <returns>Returns true if a new valid path was found and drawn</returns>
     bool RetrievePath(out TileGroup path, int unitMoveRange)
     {
-        path = pathfinder.FindPath(selectedUnit.occupiedTile, currentTile);
+        path = pathfinder.FindPath(selectedCharacter.occupiedTile, currentTile);
         
         if (path == null)
             return false;
 
         pathfinder.Illustrator.DrawPath(path, unitMoveRange);
 
-        lastPath = path;
         return true;
     }
 }

@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class GameManager : SingletonPattern<GameManager>
 {
-    [SerializeField] private Interact interact;
-
     /// <summary>
     /// Find all player units, reset their move range and deselect them
     /// </summary>
@@ -15,9 +13,9 @@ public class GameManager : SingletonPattern<GameManager>
 
         foreach (Character unit in playerUnits)
         {
-            unit.RefreshMovementRange();
+            unit.RefreshUnit();
         }
 
-        interact.DeselectUnit();
+        Interact.Instance.DeselectUnit();
     }
 }

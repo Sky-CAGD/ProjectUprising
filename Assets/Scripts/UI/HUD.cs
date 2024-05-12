@@ -10,9 +10,13 @@ public class HUD : SingletonPattern<HUD>
     [SerializeField] private TMP_Text currRangeText;
     [SerializeField] private TMP_Text maxRangeText;
 
+    [Header("Unit Attacking")]
+    [SerializeField] private GameObject unitAttackPanel;
+
     private void Start()
     {
         unitRangeHex.SetActive(false);
+        unitAttackPanel.SetActive(false);
     }
 
     public void ShowUnitMoveRange(int currRange, int maxRange)
@@ -25,5 +29,25 @@ public class HUD : SingletonPattern<HUD>
     public void HideUnitMoveRange()
     {
         unitRangeHex.SetActive(false);
+    }
+
+    public void ShowUnitAttackPanel()
+    {
+        unitAttackPanel.SetActive(true);
+    }
+
+    public void HideUnitAttackPanel()
+    {
+        unitAttackPanel.SetActive(false);
+    }
+
+    public void ShowUnitAttackRange()
+    {
+        Interact.Instance.selectedCharacter.ShowAttackRange();
+    }
+
+    public void HideUnitAttackRange()
+    {
+        Interact.Instance.selectedCharacter.HideAttackRange();
     }
 }

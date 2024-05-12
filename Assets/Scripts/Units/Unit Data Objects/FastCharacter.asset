@@ -13,8 +13,10 @@ MonoBehaviour:
   m_Name: FastCharacter
   m_EditorClassIdentifier: 
   MaxShield: 10
-  Shield: 10
+  StartingShield: 10
   MaxHealth: 10
-  Health: 10
+  StartingHealth: 10
   MaxMove: 5
-  MoveSpeed: 0.3
+  MoveSpeed: 5
+  MaxActionPoints: 2
+  CurrActionPoints: 2

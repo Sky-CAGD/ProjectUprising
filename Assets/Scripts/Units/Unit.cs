@@ -3,44 +3,50 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Unit : MonoBehaviour, IDamagable
+public abstract class Unit : MonoBehaviour, IDamagable
 {
-    [field: SerializeField] public UnitData unitData { get; private set; }
-    [SerializeField] private Slider shieldBar;
-    [SerializeField] private Slider healthBar;
+    [field: SerializeField] public UnitData unitData { get; protected set; }
+    [SerializeField] protected Slider shieldBar;
+    [SerializeField] protected Slider healthBar;
     public LayerMask GroundLayerMask;
 
     //Health/Shield Properties
-    public int MaxShield { get; private set; }
-    public int Shield { get; private set; }
-    public int MaxHealth { get; private set; }
-    public int Health { get; private set; }
+    public int MaxShield { get; protected set; }
+    public int Shield { get; protected set; }
+    public int MaxHealth { get; protected set; }
+    public int Health { get; protected set; }
     
+    //Movement Properties
+    public int MaxMoveRange { get; protected set; }
+    public int CurrMoveRange { get; protected set; }
+    public float MoveSpeed { get; protected set; }
+    public bool Moving { get; protected set; }
 
-    public int MaxMoveRange { get; private set; }
-    public int CurrMoveRange { get; private set; }
-    public float MoveSpeed { get; private set; }
-    public bool Moving { get; private set; }
+    //Attacking Properties
+    public int MaxActionPoints { get; protected set; }
+    public int CurrActionPoints { get; protected set; }
 
     [HideInInspector] public Tile occupiedTile;
 
-    private List<Tile> tilesInRange = new List<Tile>();
+    protected List<Tile> tilesInRange = new List<Tile>();
 
-    private void Awake()
+    protected virtual void Awake()
     {
         //Set unit to occupy a tile on the hex grid
         FindTileAtStart();
 
         //Set starting data from unit data
         MaxShield = unitData.MaxShield;
-        Shield = unitData.Shield;
+        Shield = Mathf.Clamp(unitData.StartingShield, 0, MaxShield);
         MaxHealth = unitData.MaxHealth;
-        Health = unitData.Health;
+        Health = Mathf.Clamp(unitData.StartingHealth, 0, MaxHealth);
         MaxMoveRange = unitData.MaxMove;
         MoveSpeed = unitData.MoveSpeed;
+        MaxActionPoints = unitData.MaxActionPoints;
+        CurrActionPoints = unitData.StartingActionPoints;
 
         //Set CurrMoveRange to MaxMoveRange
-        RefreshMovementRange();
+        RefreshUnit();
 
         //Update the health & shield bar UI
         UpdateHealthUI();
@@ -74,9 +80,9 @@ public class Unit : MonoBehaviour, IDamagable
     }
 
     /// <summary>
-    /// Gets all tiles within this unit's movement range, highlights them, and displays their distance
+    /// Gets all tiles within this unit's movement range and highlights them
     /// </summary>
-    public void ShowMovementRange()
+    public virtual void ShowMovementRange()
     {
         if (CurrMoveRange <= 0)
             return;
@@ -88,17 +94,61 @@ public class Unit : MonoBehaviour, IDamagable
         foreach (Tile tile in tilesInRange)
             tile.Highlighter.HighlightTile(HighlightType.moveArea);
 
+        //Highlight this unit's tile
+        occupiedTile.Highlighter.HighlightTile(HighlightType.unitSelection);
+
+        //Show the unit's movement range on the HUD
+        HUD.Instance.ShowUnitMoveRange(CurrMoveRange, MaxMoveRange);
+
         //Displays the distances to all tiles in move range
         //Pathfinder.Instance.Illustrator.DisplayMoveAreaDistances(tilesInRange);
     }
 
     /// <summary>
+    /// Gets all tiles within this unit's attack range and highlights them
+    /// </summary>
+    public virtual void ShowAttackRange()
+    {
+        if (CurrActionPoints <= 0)
+            return;
+
+        //Get all tiles in move range
+        tilesInRange = Pathfinder.Instance.FindTilesInRange(occupiedTile, MaxMoveRange);
+
+        //Hightlight all tiles in move range
+        foreach (Tile tile in tilesInRange)
+            tile.Highlighter.HighlightTile(HighlightType.attackArea);
+
+        //Highlight this unit's tile
+        occupiedTile.Highlighter.HighlightTile(HighlightType.unitSelection);
+    }
+
+    /// <summary>
     /// Hides the highlights and text for all tiles within the last generated movement range
     /// </summary>
-    public void HideMovementRange()
+    public virtual void HideMovementRange()
     {
         foreach (Tile tile in tilesInRange)
             tile.Highlighter.ClearTileHighlight();
+    }
+
+
+    /// <summary>
+    /// Hides the highlights and text for all tiles within the last generated attack range
+    /// </summary>
+    public virtual void HideAttackRange()
+    {
+        foreach (Tile tile in tilesInRange)
+            tile.Highlighter.ClearTileHighlight();
+    }
+
+    //--------------------------------------------
+    // Unit Combat
+    //--------------------------------------------
+
+    public void Attack()
+    {
+        CurrActionPoints--;
     }
 
     #endregion
@@ -132,7 +182,7 @@ public class Unit : MonoBehaviour, IDamagable
     /// Start moving this unit along a designated path
     /// </summary>
     /// <param name="_path"></param>
-    public void StartMove(TileGroup _path)
+    public virtual void StartMove(TileGroup _path)
     {
         Moving = true;
         occupiedTile.occupyingUnit = null;
@@ -165,7 +215,7 @@ public class Unit : MonoBehaviour, IDamagable
             //Move towards the next step in the path until we are closer than MIN_DIST
             Vector3 nextTilePosition = path.tiles[currentStep].transform.position;
 
-            float movementTime = animationTime / (MoveSpeed + path.tiles[currentStep].terrainCost * TERRAIN_PENALTY);
+            float movementTime = animationTime / ((1/MoveSpeed) + path.tiles[currentStep].terrainCost * TERRAIN_PENALTY);
             MoveAndRotate(currentTile.transform.position, nextTilePosition, movementTime);
             animationTime += Time.deltaTime;
 
@@ -207,7 +257,10 @@ public class Unit : MonoBehaviour, IDamagable
             transform.rotation = Quaternion.LookRotation(lookDir, Vector3.up);
     }
 
-    public void RefreshMovementRange()
+    /// <summary>
+    /// When the round ends, refresh this unit's movement & other stats
+    /// </summary>
+    public virtual void RefreshUnit()
     {
         CurrMoveRange = MaxMoveRange;
     }
@@ -223,7 +276,7 @@ public class Unit : MonoBehaviour, IDamagable
     /// Decreases Health by provided damage value, prevents Health from becoming zero
     /// </summary>
     /// <param name="damage"></param>
-    public void Damage(int damage)
+    public virtual void Damage(int damage)
     {
         int dmgToHealth = (Shield - damage) <= 0 ? Mathf.Abs(Shield - damage) : 0;
 
@@ -239,7 +292,7 @@ public class Unit : MonoBehaviour, IDamagable
     /// Increases Health by provided healAmt value, prevents Health from being larger than MaxHealth
     /// </summary>
     /// <param name="healAmt"></param>
-    public void Heal(int healAmt)
+    public virtual void Heal(int healAmt)
     {
         Health += Mathf.Min(healAmt, MaxHealth);
     }
