@@ -43,11 +43,11 @@ public class HUD : SingletonPattern<HUD>
 
     public void ShowUnitAttackRange()
     {
-        Interact.Instance.selectedCharacter.ShowAttackRange();
+        //Interact.Instance.selectedCharacter.ShowAttackRange();
     }
 
     public void HideUnitAttackRange()
     {
-        Interact.Instance.selectedCharacter.HideAttackRange();
+        //Interact.Instance.selectedCharacter.HideAttackRange();
     }
 }

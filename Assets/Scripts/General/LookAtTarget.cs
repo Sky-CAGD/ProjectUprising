@@ -9,7 +9,7 @@ public class LookAtTarget : MonoBehaviour
 {
     public Transform target;
 
-    protected virtual void FixedUpdate()
+    protected virtual void LateUpdate()
     {
         LookAt();
     }

@@ -94,14 +94,19 @@ public class Pathfinder : SingletonPattern<Pathfinder>
         List<Tile> neighborTiles = GetNeighborTiles(origin);
         List<Tile> range1Tiles = new List<Tile>();
 
-        //Get all walkable & unoccupied neighbor tiles of the origin tile
+        //Get all walkable neighbor tiles of the origin tile
         foreach (Tile neighbor in neighborTiles)
         {
-            if (neighbor.walkable && !neighbor.Occupied)
-            {
-                range1Tiles.Add(neighbor);
-                neighbor.rangeFromOrigin = 1;
-            }
+            //Skip adding unwalkable tiles
+            if (!neighbor.walkable)
+                continue;
+
+            //Skip adding tiles with enemy units
+            if (neighbor.Occupied && neighbor.occupyingUnit.GetComponent<Enemy>())
+                continue;
+
+            range1Tiles.Add(neighbor);
+            neighbor.rangeFromOrigin = 1;
         }
 
         //If range is 1, return the range 1 tiles
