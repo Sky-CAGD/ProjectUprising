@@ -6,7 +6,6 @@ using UnityEngine.EventSystems;
 //[RequireComponent(typeof(AudioSource))]
 public class Interact : SingletonPattern<Interact>
 {
-    //[SerializeField] private AudioClip click, pop;
     [SerializeField] private LayerMask interactMask;
 
     //Debug purposes only
@@ -66,6 +65,8 @@ public class Interact : SingletonPattern<Interact>
                 InspectTile();
             else if (lastThingHit.GetComponent<Character>())
                 InspectCharacterUnit();
+            else if (lastThingHit.GetComponent<Enemy>())
+                InspectEnemyUnit();
 
             return;
         }
@@ -75,20 +76,7 @@ public class Interact : SingletonPattern<Interact>
 
         NewInteraction = true;
 
-        //Check if a unit is selected
-        if (SelectedCharacter != null)
-        {
-            //Check if selected unit is planning an attack - show information related to this
-            if (SelectedCharacter.planningAttack)
-            {
-                SelectedCharacter.ShowAttackRange();
-            }
-            //Check if selected unit is not moving or attacking - highlight unit and move area
-            else if (!SelectedCharacter.Moving)
-            {
-                SelectedCharacter.ShowMovementRange();
-            }
-        }
+        SelectedUnitTilesToHighlight();
 
         //If a tile was moused over, set as the current tile and inspect the tile
         if (objectHit.GetComponent<Tile>())
@@ -101,6 +89,11 @@ public class Interact : SingletonPattern<Interact>
         {
             CurrentTile = objectHit.GetComponent<Character>().occupiedTile;
             InspectCharacterUnit();
+        }
+        else if (objectHit.GetComponent<Enemy>())
+        {
+            CurrentTile = objectHit.GetComponent<Enemy>().occupiedTile;
+            InspectEnemyUnit();
         }
 
         lastThingHit = objectHit;
@@ -116,10 +109,7 @@ public class Interact : SingletonPattern<Interact>
         if (lastThingHit != null)
         {
             Clear();
-
-            //Show unit move area if a character unit is selected
-            if (SelectedCharacter != null)
-                SelectedCharacter.ShowMovementRange();
+            SelectedUnitTilesToHighlight();
         }
 
         //Check for left click input in open area to deselect units/paths
@@ -132,13 +122,33 @@ public class Interact : SingletonPattern<Interact>
         lastThingHit = null;
     }
 
+    private void SelectedUnitTilesToHighlight()
+    {
+        if (SelectedCharacter == null)
+            return;
+
+        //Check if selected unit is planning an attack - show information related to this
+        if (SelectedCharacter.CurrState == UnitState.planningAttack)
+        {
+            SelectedCharacter.ShowAttackRange();
+        }
+        //Check if selected unit is idle - highlight unit and move area
+        else if (SelectedCharacter.CurrState == UnitState.idle)
+        {
+            SelectedCharacter.ShowMovementRange();
+        }
+    }
+
     /// <summary>
-    /// Deselect/Clear all units and paths unless a selected unit is moving
+    /// Deselect/Clear all units and paths unless a selected unit is moving/attacking (not idle)
     /// </summary>
     private void ClearAllSelections()
     {
-        if (SelectedCharacter && SelectedCharacter.Moving)
-            return;
+        if (SelectedCharacter)
+        {
+            if (SelectedCharacter.CurrState == UnitState.moving || SelectedCharacter.CurrState == UnitState.attacking)
+                return;
+        }
 
         FindObjectOfType<TileHighlighter>().ClearAllTileHighlights();
         DeselectUnit();
@@ -146,16 +156,19 @@ public class Interact : SingletonPattern<Interact>
 
     private void InspectTile()
     {
-        //If a tile with a character unit is hovered over, highlight the unit
+        //If a tile with a character unit is hovered over, inspect the unit
         if (CurrentTile.Occupied && CurrentTile.occupyingUnit.GetComponent<Character>())
             InspectCharacterUnit();
+        //If a tile with an enemy unit is hovered over, inspect the unit
+        else if (CurrentTile.Occupied && CurrentTile.occupyingUnit.GetComponent<Enemy>())
+            InspectEnemyUnit();
         //Check if the hovered tile is not occupied and a unit is selected
         else if (SelectedCharacter != null)
         {
             //Check if character unit is planning to attack or move
-            if (SelectedCharacter.planningAttack)
+            if (SelectedCharacter.CurrState == UnitState.planningAttack)
                 DisplayAttackToTile(); //Show attack
-            else
+            else if (SelectedCharacter.CurrState == UnitState.idle)
                 NavigateToTile(); //Generate a path
         }
 
@@ -180,12 +193,13 @@ public class Interact : SingletonPattern<Interact>
     }
 
     /// <summary>
-    /// Handles showing movement range of
+    /// Handles what happens when the mouse interacts with a character unit
+    /// Shows movement range of character units, allows for selecting/deselecting them
     /// </summary>
     private void InspectCharacterUnit()
     {
-        //Exit if current tile is not occupied or occupied unit is moving
-        if (!CurrentTile.Occupied || CurrentTile.occupyingUnit.Moving)
+        //Exit if current tile is not occupied or occupied unit is not idle
+        if (!CurrentTile.Occupied || CurrentTile.occupyingUnit.CurrState != UnitState.idle)
             return;
 
         //Check if no character unit is selected and this is a new interaction
@@ -194,6 +208,9 @@ public class Interact : SingletonPattern<Interact>
             //Highlight this character unit's tile and show its move area
             CurrentTile.occupyingUnit.ShowMovementRange();
         }
+        //Check if a selected character unit is planning to attack
+        else if (SelectedCharacter && SelectedCharacter.CurrState == UnitState.planningAttack)
+            DisplayAttackToTile(); //Show attack
 
         //Mouse clicked on unit
         if (Input.GetMouseButtonDown(0))
@@ -218,6 +235,17 @@ public class Interact : SingletonPattern<Interact>
         }
     }
 
+    private void InspectEnemyUnit()
+    {
+        //Exit if current tile is not occupied or occupied unit is not idle
+        if (!CurrentTile.Occupied || CurrentTile.occupyingUnit.CurrState != UnitState.idle)
+            return;
+
+        //Check if a selected character unit is planning to attack
+        if (SelectedCharacter && SelectedCharacter.CurrState == UnitState.planningAttack)
+            DisplayAttackToTile(); //Show attack
+    }
+
     /// <summary>
     /// Clears highlighted tiles - Called when mousing over a new thing
     /// </summary>
@@ -227,9 +255,12 @@ public class Interact : SingletonPattern<Interact>
         //There was no last thing or tile hit
         if (lastThingHit == null || CurrentTile == null)
             return;
-        //Or if a selected unit is moving
-        if (SelectedCharacter && SelectedCharacter.Moving)
-            return;
+        //Or if a selected unit is moving or attacking
+        if (SelectedCharacter)
+        {
+            if (SelectedCharacter.CurrState == UnitState.moving || SelectedCharacter.CurrState == UnitState.attacking)
+                return;
+        }
 
         CurrentTile.Highlighter.ClearAllTileHighlights();
         CurrentTile = null;
@@ -274,8 +305,8 @@ public class Interact : SingletonPattern<Interact>
     /// </summary>
     private void NavigateToTile()
     {
-        //Exit path navigation if no unit is selected or if a selected unit is currently moving
-        if (SelectedCharacter == null || SelectedCharacter.Moving == true)
+        //Exit path navigation if no unit is selected or if a selected unit is not idle
+        if (SelectedCharacter != null && SelectedCharacter.CurrState != UnitState.idle)
             return;
 
         //Get and draw a path to the current tile

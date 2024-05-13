@@ -1,11 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+
+public enum UnitState
+{
+    idle,
+    moving,
+    attacking,
+    planningAttack
+}
 
 public abstract class Unit : MonoBehaviour, IDamagable
 {
     [field: SerializeField] public UnitData unitData { get; protected set; }
+    [field: SerializeField] public Weapon weapon { get; protected set; }
     [SerializeField] protected Slider shieldBar;
     [SerializeField] protected Slider healthBar;
     public LayerMask GroundLayerMask;
@@ -20,7 +30,7 @@ public abstract class Unit : MonoBehaviour, IDamagable
     public int MaxMoveRange { get; protected set; }
     public int CurrMoveRange { get; protected set; }
     public float MoveSpeed { get; protected set; }
-    public bool Moving { get; protected set; }
+    public UnitState CurrState { get; protected set; }
 
     //Attacking Properties
     public int MaxActionPoints { get; protected set; }
@@ -36,14 +46,14 @@ public abstract class Unit : MonoBehaviour, IDamagable
         FindTileAtStart();
 
         //Set starting data from unit data
-        MaxShield = unitData.MaxShield;
-        Shield = Mathf.Clamp(unitData.StartingShield, 0, MaxShield);
-        MaxHealth = unitData.MaxHealth;
-        Health = Mathf.Clamp(unitData.StartingHealth, 0, MaxHealth);
-        MaxMoveRange = unitData.MaxMove;
-        MoveSpeed = unitData.MoveSpeed;
-        MaxActionPoints = unitData.MaxActionPoints;
-        CurrActionPoints = unitData.StartingActionPoints;
+        MaxShield = unitData.maxShield;
+        Shield = Mathf.Clamp(unitData.startingShield, 0, MaxShield);
+        MaxHealth = unitData.maxHealth;
+        Health = Mathf.Clamp(unitData.startingHealth, 0, MaxHealth);
+        MaxMoveRange = unitData.maxMove;
+        MoveSpeed = unitData.moveSpeed;
+        MaxActionPoints = unitData.maxActionPoints;
+        CurrActionPoints = unitData.startingActionPoints;
 
         //Set CurrMoveRange to MaxMoveRange
         RefreshUnit();
@@ -51,7 +61,7 @@ public abstract class Unit : MonoBehaviour, IDamagable
         //Update the health & shield bar UI
         UpdateHealthUI();
 
-        Moving = false;
+        CurrState = UnitState.idle;
     }
 
     protected virtual void Update()
@@ -77,6 +87,7 @@ public abstract class Unit : MonoBehaviour, IDamagable
     public virtual void UnitDeselected()
     {
         HUD.Instance.HideUnitMoveRange();
+        HideAttackRange();
     }
 
     /// <summary>
@@ -112,12 +123,29 @@ public abstract class Unit : MonoBehaviour, IDamagable
         if (CurrActionPoints <= 0)
             return;
 
-        //Get all tiles in move range
-        tilesInRange = Pathfinder.Instance.FindTilesInRange(occupiedTile, MaxMoveRange);
+        //Get all tiles in attack range
+        if (weapon.attackType == AttackType.laser)
+            tilesInRange = FindObjectsOfType<Tile>().ToList();
+        else
+            tilesInRange = Pathfinder.Instance.FindTilesInRange(occupiedTile, weapon.range);
 
-        //Hightlight all tiles in move range
-        foreach (Tile tile in tilesInRange)
-            tile.Highlighter.HighlightTile(HighlightType.attackArea);
+        //Highlight all tiles within line of sight
+        if (weapon.attackType == AttackType.artillery)
+        {
+            foreach (Tile tile in tilesInRange)
+                tile.Highlighter.HighlightTile(HighlightType.attackArea);
+        }
+        else
+        {
+            Vector3 offset = new Vector3(0, 1, 0);
+            Vector3 origin = transform.position + offset;
+            foreach (Tile tile in tilesInRange)
+            {
+                Vector3 tilePos = tile.transform.position + offset;
+                if (!Physics.Linecast(origin, tilePos))
+                    tile.Highlighter.HighlightTile(HighlightType.attackArea);
+            }
+        }
 
         //Highlight this unit's tile
         occupiedTile.Highlighter.HighlightTile(HighlightType.unitSelection);
@@ -184,7 +212,7 @@ public abstract class Unit : MonoBehaviour, IDamagable
     /// <param name="_path"></param>
     public virtual void StartMove(TileGroup _path)
     {
-        Moving = true;
+        CurrState = UnitState.moving;
         occupiedTile.occupyingUnit = null;
 
         CurrMoveRange -= _path.tiles.Length - 1;
@@ -244,7 +272,7 @@ public abstract class Unit : MonoBehaviour, IDamagable
         tilesInRange.Clear();
         transform.position = tile.transform.position;
         occupiedTile = tile;
-        Moving = false;
+        CurrState = UnitState.idle;
         tile.occupyingUnit = this;
     }
 

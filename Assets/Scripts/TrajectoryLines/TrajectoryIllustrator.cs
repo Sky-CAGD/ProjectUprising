@@ -10,22 +10,27 @@ public class TrajectoryIllustrator : MonoBehaviour
     private List<TrajectoryDot> activeDots = new List<TrajectoryDot>();
 
     [Header("Trajectory Modifiers")]
-    [Range(1, 15)] public float arcHeight;
-    public float spacing = 1.25f;
-    public float speedMod = 1f;
+    [SerializeField][Range(1, 15)] private float arcHeight;
+    [SerializeField] private float spacing = 1.25f;
+    [SerializeField] private float speedMod = 1f;
 
-    public Vector3 pointA { get; set; }
-    public Vector3 pointB { get; set; }
+    [Header("Layer Info")]
+    [SerializeField] private LayerMask wallLayer;
+
+    public Vector3 PointA { get; private set; }
+    public Vector3 PointB { get; private set; }
     public Vector3 PointC 
     {
         get
         {
-            Vector3 pointC = Vector3.Lerp(pointA, pointB, 0.5f);
+            Vector3 pointC = Vector3.Lerp(PointA, PointB, 0.5f);
             pointC += new Vector3(0, arcHeight * 2, 0);
 
             return pointC;
         }
     }
+
+    public bool CanFire { get; private set; }
 
     private int numDots;
     private float interpSpeed;
@@ -45,8 +50,8 @@ public class TrajectoryIllustrator : MonoBehaviour
         foreach (var obj in objectPool.pooledObjects)
             dots.Add(obj.GetComponent<TrajectoryDot>());
 
-        pointA = Vector3.zero;
-        pointB = Vector3.zero;
+        PointA = Vector3.zero;
+        PointB = Vector3.zero;
         offset = new Vector3(0, 1, 0);
         startingArcHeight = arcHeight;
     }
@@ -59,9 +64,9 @@ public class TrajectoryIllustrator : MonoBehaviour
             return;
         }
 
-        pointA = Interact.Instance.SelectedCharacter.transform.position + offset;
-        pointB = FindObjectOfType<Enemy>().transform.position + offset;
-        ShowTrajectory(pointA, pointB, useArc);
+        PointA = Interact.Instance.SelectedCharacter.transform.position + offset;
+        PointB = FindObjectOfType<Enemy>().transform.position + offset;
+        ShowTrajectory(PointA, PointB, useArc);
     }
 
     /// <summary>
@@ -105,17 +110,16 @@ public class TrajectoryIllustrator : MonoBehaviour
         Vector3 lastPointB = Vector3.zero;
 
         SetTrajectoryPoints();
-        CalculateTrajectoryInfo();
 
         //Move dots along trajectory
-        while (drawingTrajectory)
+        while (drawingTrajectory && Interact.Instance.SelectedCharacter != null)
         {
             //Ensure the user does not draw a trajectory with the same start and end points
-            if(pointA == pointB)
-                pointB = lastPointB;
+            if(PointA == PointB)
+                PointB = lastPointB;
 
             //If pointA or pointB have changed, re-initialize dots
-            if (pointA != lastPointA || pointB != lastPointB)
+            if (PointA != lastPointA || PointB != lastPointB)
             {
                 CalculateTrajectoryInfo();
                 InitializeDotsAlongTrajectory();
@@ -127,35 +131,37 @@ public class TrajectoryIllustrator : MonoBehaviour
                 interpolateAmt = dots[i].currLerpAmt;
                 interpolateAmt = (interpolateAmt + (Time.deltaTime * interpSpeed * speedMod) / dist) % 1f;
 
-                Vector3 pointAC = Vector3.Lerp(pointA, PointC, interpolateAmt);
-                Vector3 pointCB = Vector3.Lerp(PointC, pointB, interpolateAmt);
+                Vector3 pointAC = Vector3.Lerp(PointA, PointC, interpolateAmt);
+                Vector3 pointCB = Vector3.Lerp(PointC, PointB, interpolateAmt);
                 dots[i].transform.position = Vector3.Lerp(pointAC, pointCB, interpolateAmt);
                 dots[i].currLerpAmt = interpolateAmt;
             }
 
-            lastPointA = pointA;
-            lastPointB = pointB;
+            lastPointA = PointA;
+            lastPointB = PointB;
 
             yield return null;
 
             SetTrajectoryPoints();
         }
+
+        HideTrajectory();
     }
 
     private void SetTrajectoryPoints()
     {
         if(Interact.Instance.SelectedCharacter)
-            pointA = Interact.Instance.SelectedCharacter.transform.position + offset;
+            PointA = Interact.Instance.SelectedCharacter.transform.position + offset;
 
         if (Interact.Instance.CurrentTile)
-            pointB = Interact.Instance.CurrentTile.transform.position + offset;
+            PointB = Interact.Instance.CurrentTile.transform.position + offset;
         else
-            pointB = FindObjectOfType<Enemy>().transform.position + offset;
+            PointB = FindObjectOfType<Enemy>().transform.position + offset;
     }
 
     private void CalculateTrajectoryInfo()
     {
-        dist = Mathf.Clamp(Vector3.Distance(pointA, pointB), 0, maxDist);
+        dist = Mathf.Clamp(Vector3.Distance(PointA, PointB), 0, maxDist);
         numDots = Mathf.Clamp((int)Mathf.Round(dist / spacing), 1, dots.Count);
 
         //Add extra dots to the trajectory if it is an Arc
@@ -164,6 +170,8 @@ public class TrajectoryIllustrator : MonoBehaviour
 
         interpSpeed = Mathf.Lerp(2, 3f, dist / maxDist);
         interpSpacing = (float)1 / numDots;
+
+        CanFire = ValidTrajectory();
     }
 
     private void InitializeDotsAlongTrajectory()
@@ -182,14 +190,29 @@ public class TrajectoryIllustrator : MonoBehaviour
             dots[i].gameObject.SetActive(true);
             activeDots.Add(dots[i]);
 
-            Vector3 pointAC = Vector3.Lerp(pointA, PointC, interpolateAmt);
-            Vector3 pointCB = Vector3.Lerp(PointC, pointB, interpolateAmt);
+            Vector3 pointAC = Vector3.Lerp(PointA, PointC, interpolateAmt);
+            Vector3 pointCB = Vector3.Lerp(PointC, PointB, interpolateAmt);
             dots[i].transform.position = Vector3.Lerp(pointAC, pointCB, interpolateAmt);
 
             interpolateAmt += interpSpacing;
-
             dots[i].currLerpAmt = interpolateAmt;
+
+            if (CanFire)
+                dots[i].SetValidTrajectoryColor();
+            else
+                dots[i].SetInvalidTrajectoryColor();
         }
+    }
+
+    private bool ValidTrajectory()
+    {
+        if (Interact.Instance.SelectedCharacter == null)
+            return false;
+
+        if (Physics.Linecast(PointA, PointB))
+            return false;
+
+        return true;
     }
 
     /// <summary>

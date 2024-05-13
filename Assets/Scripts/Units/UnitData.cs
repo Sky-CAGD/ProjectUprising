@@ -6,16 +6,16 @@ using UnityEngine;
 public class UnitData : ScriptableObject
 {
     [Header("Health")]
-    public int MaxShield;
-    public int StartingShield;
-    public int MaxHealth;
-    public int StartingHealth;
+    public int maxShield;
+    public int startingShield;
+    public int maxHealth;
+    public int startingHealth;
 
     [Header("Movement")]
-    public int MaxMove = 8;
-    public float MoveSpeed = 0.5f;
+    public int maxMove = 8;
+    public float moveSpeed = 0.5f;
 
     [Header("Attacking")]
-    public int MaxActionPoints;
-    public int StartingActionPoints;
+    public int maxActionPoints;
+    public int startingActionPoints;
 }

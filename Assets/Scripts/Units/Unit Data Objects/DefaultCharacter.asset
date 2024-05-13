@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0c1e9fc09dbd744c91afff577eddbed, type: 3}
   m_Name: DefaultCharacter
   m_EditorClassIdentifier: 
-  MaxShield: 10
-  StartingShield: 10
-  MaxHealth: 10
-  StartingHealth: 10
-  MaxMove: 4
-  MoveSpeed: 4
-  MaxActionPoints: 2
-  CurrActionPoints: 2
+  maxShield: 10
+  startingShield: 10
+  maxHealth: 10
+  startingHealth: 10
+  maxMove: 4
+  moveSpeed: 4
+  maxActionPoints: 2
+  startingActionPoints: 2

@@ -41,13 +41,13 @@ public class HUD : SingletonPattern<HUD>
         unitAttackPanel.SetActive(false);
     }
 
-    public void ShowUnitAttackRange()
+    public void StartPlanningAttack()
     {
-        //Interact.Instance.selectedCharacter.ShowAttackRange();
+        Interact.Instance.SelectedCharacter.StartPlanningAttack();
     }
 
-    public void HideUnitAttackRange()
+    public void StopPlanningAttack()
     {
-        //Interact.Instance.selectedCharacter.HideAttackRange();
+        Interact.Instance.SelectedCharacter.StopPlanningAttack();
     }
 }
