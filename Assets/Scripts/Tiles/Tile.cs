@@ -2,8 +2,12 @@ using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
 using System;
-using UnityEditor;
-using Unity.VisualScripting;
+
+/*
+ * Author: Kilan Sky Larsen
+ * Last Updated: 5/14/2024
+ * Description: Handles information storage & setting tile types for a tile
+ */
 
 public enum TileType
 {

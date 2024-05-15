@@ -1,6 +1,13 @@
 using UnityEditor;
 using UnityEngine;
 
+/*
+ * Author: ForlornU
+ * https://github.com/ForlornU/A-Star-pathfinding
+ * Last Updated: N/A
+ * Description: Creates a tool for generating hex grids within the Unity Editor
+ */
+
 public class GridEditor : EditorWindow
 {
     GameObject parent;

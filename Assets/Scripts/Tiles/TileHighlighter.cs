@@ -1,7 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
+
+/*
+ * Author: Kilan Sky Larsen
+ * Last Updated: 5/14/2024
+ * Description: Handles highlighting and setting text on a tile
+ */
 
 [RequireComponent(typeof(Tile))]
 public class TileHighlighter : MonoBehaviour

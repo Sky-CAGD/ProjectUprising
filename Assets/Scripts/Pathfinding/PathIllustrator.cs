@@ -3,6 +3,12 @@ using System.Diagnostics;
 using System.IO;
 using UnityEngine;
 
+/*
+ * Author: Kilan Sky Larsen
+ * Last Updated: 5/14/2024
+ * Description: Handles drawing highlights & text on paths
+ */
+
 public class PathIllustrator : MonoBehaviour
 {
     /// <summary>

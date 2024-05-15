@@ -1,30 +1,35 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class CameraController : SingletonPattern<CameraController>
+/*
+ * Author: Kilan Sky Larsen
+ * Last Updated: 5/14/2024
+ * Description: Controls camera movement
+ */
+
+public class CameraController : MonoBehaviour
 {
     [Header("Camera Values")]
-    public float baseSpeed;
-    public float fastSpeed;
-    public float moveTime;
-    public float rotateSpeed;
-    public float zoomSpeed;
-    public float vertMoveSpeed;
-    public Transform followTarget;
+    [SerializeField] private float baseSpeed;
+    [SerializeField] private float fastSpeed;
+    [SerializeField] private float moveTime;
+    [SerializeField] private float rotateSpeed;
+    [SerializeField] private float zoomSpeed;
+    [SerializeField] private float vertMoveSpeed;
+    [SerializeField] private Transform followTarget;
 
     [Header("Edge Scrolling")]
-    public float edgeScrollDist;
-    public float scrollSpeed;
+    [SerializeField] private float edgeScrollDist;
+    [SerializeField] private float scrollSpeed;
 
     [Header("Bounding Box")]
-    public Transform boundingBox;
-    private float leftBounds;
-    private float rightBounds;
-    private float topBounds;
-    private float bottomBounds;
+    [SerializeField] private Transform boundingBox;
+    [SerializeField] private float leftBounds;
+    [SerializeField] private float rightBounds;
+    [SerializeField] private float topBounds;
+    [SerializeField] private float bottomBounds;
 
     //Camera Position
     private float moveSpeed;
@@ -55,10 +60,8 @@ public class CameraController : SingletonPattern<CameraController>
     private InputAction mousePosition;
     private Vector2 mousePos;
 
-    protected override void Awake()
+    private void Awake()
     {
-        base.Awake();
-
         //Get references and initialize values
         cameraTransform = Camera.main.transform;
         newPosition = transform.position;
@@ -105,6 +108,9 @@ public class CameraController : SingletonPattern<CameraController>
         playerInput.PlayerActions.Interact.canceled += StartEndMousePanning;
         playerInput.PlayerActions.RotatePan.performed += StartEndMouseRotating;
         playerInput.PlayerActions.RotatePan.canceled += StartEndMouseRotating;
+
+        EventManager.CharacterSelected += CharacterSelected;
+        EventManager.CharacterDeselected += CharacterDeselected;
     }
 
     private void OnDisable()
@@ -115,10 +121,23 @@ public class CameraController : SingletonPattern<CameraController>
         playerInput.PlayerActions.Interact.canceled -= StartEndMousePanning;
         playerInput.PlayerActions.RotatePan.performed -= StartEndMouseRotating;
         playerInput.PlayerActions.RotatePan.canceled -= StartEndMouseRotating;
+
+        EventManager.CharacterSelected -= CharacterSelected;
+        EventManager.CharacterDeselected -= CharacterDeselected;
+    }
+
+    private void CharacterSelected(Character character)
+    {
+        followTarget = character.transform;
+    }
+
+    private void CharacterDeselected()
+    {
+        followTarget = null;
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         mousePos = mousePosition.ReadValue<Vector2>();
 

@@ -2,12 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// Forces an object to look at a target object (like the camera) each frame
-/// </summary>
+/*
+ * Author: Kilan Sky Larsen
+ * Last Updated: 5/14/2024
+ * Description: Forces this object to look at a specified target object each frame
+ */
+
 public class LookAtTarget : MonoBehaviour
 {
-    public Transform target;
+    [SerializeField] protected Transform target;
 
     protected virtual void LateUpdate()
     {
@@ -16,6 +19,9 @@ public class LookAtTarget : MonoBehaviour
 
     protected virtual void LookAt()
     {
-        transform.LookAt(target.position);
+        if (target == null)
+            Debug.LogError("target to look at is not defined!");
+        else
+            transform.LookAt(target.position);
     }
 }

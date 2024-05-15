@@ -1,5 +1,11 @@
 using UnityEngine;
-using UnityEngine.ProBuilder;
+
+/*
+ * Author: ForlornU
+ * https://github.com/ForlornU/A-Star-pathfinding
+ * Last Updated: N/A
+ * Description: Generates a grid of hex tiles
+ */
 
 public class TileGenerator : MonoBehaviour
 {

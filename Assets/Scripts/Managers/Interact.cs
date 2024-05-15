@@ -1,9 +1,13 @@
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-//[RequireComponent(typeof(AudioSource))]
+/*
+ * Author: Kilan Sky Larsen
+ * Last Updated: 5/14/2024
+ * Description: Handles mouse interactions with units and hex grid
+ */
+
 public class Interact : SingletonPattern<Interact>
 {
     [SerializeField] private LayerMask interactMask;
@@ -127,16 +131,19 @@ public class Interact : SingletonPattern<Interact>
         if (SelectedCharacter == null)
             return;
 
-        //Check if selected unit is planning an attack - show information related to this
-        if (SelectedCharacter.CurrState == UnitState.planningAttack)
-        {
-            SelectedCharacter.ShowAttackRange();
-        }
-        //Check if selected unit is idle - highlight unit and move area
-        else if (SelectedCharacter.CurrState == UnitState.idle)
+        //Check if selected unit is planning to move - highlight unit and move area
+        if (SelectedCharacter.CurrState == UnitState.planningMovement)
         {
             SelectedCharacter.ShowMovementRange();
         }
+        //Check if selected unit is planning an attack - show information related to this
+        else if(SelectedCharacter.CurrState == UnitState.planningAttack)
+        {
+            SelectedCharacter.ShowAttackRange();
+        }
+
+        //Highlight this unit's tile
+        SelectedCharacter.occupiedTile.Highlighter.HighlightTile(HighlightType.unitSelection);
     }
 
     /// <summary>
@@ -156,20 +163,19 @@ public class Interact : SingletonPattern<Interact>
 
     private void InspectTile()
     {
-        //If a tile with a character unit is hovered over, inspect the unit
+        //If a tile with a unit is hovered over, inspect the unit
         if (CurrentTile.Occupied && CurrentTile.occupyingUnit.GetComponent<Character>())
             InspectCharacterUnit();
-        //If a tile with an enemy unit is hovered over, inspect the unit
         else if (CurrentTile.Occupied && CurrentTile.occupyingUnit.GetComponent<Enemy>())
             InspectEnemyUnit();
         //Check if the hovered tile is not occupied and a unit is selected
         else if (SelectedCharacter != null)
         {
-            //Check if character unit is planning to attack or move
-            if (SelectedCharacter.CurrState == UnitState.planningAttack)
-                DisplayAttackToTile(); //Show attack
-            else if (SelectedCharacter.CurrState == UnitState.idle)
+            //Check if character unit is planning to move or attack
+            if (SelectedCharacter.CurrState == UnitState.planningMovement)
                 NavigateToTile(); //Generate a path
+            else if (SelectedCharacter.CurrState == UnitState.planningAttack)
+                DisplayAttackToTile(); //Show attack       
         }
 
         //Check if moused over unoccupied tile and no unit is selected - allow altering tile
@@ -207,6 +213,7 @@ public class Interact : SingletonPattern<Interact>
         {
             //Highlight this character unit's tile and show its move area
             CurrentTile.occupyingUnit.ShowMovementRange();
+            CurrentTile.Highlighter.HighlightTile(HighlightType.unitSelection);
         }
         //Check if a selected character unit is planning to attack
         else if (SelectedCharacter && SelectedCharacter.CurrState == UnitState.planningAttack)
@@ -227,10 +234,7 @@ public class Interact : SingletonPattern<Interact>
 
                 //Check if the character unit interacted with is a different unit - select it
                 if (CurrentTile.occupyingUnit != SelectedCharacter)
-                {
                     SelectUnit();
-                    SelectedCharacter.ShowMovementRange();
-                }
             }
         }
     }
@@ -264,10 +268,6 @@ public class Interact : SingletonPattern<Interact>
 
         CurrentTile.Highlighter.ClearAllTileHighlights();
         CurrentTile = null;
-
-        //Hide the unit movement range on the HUD if no unit is selected
-        if (!SelectedCharacter)
-            HUD.Instance.HideUnitMoveRange();
     }
 
     /// <summary>
@@ -275,10 +275,11 @@ public class Interact : SingletonPattern<Interact>
     /// </summary> 
     public void SelectUnit()
     {
+        //Set the newly selected character
         SelectedCharacter = CurrentTile.occupyingUnit.GetComponent<Character>();
-        SelectedCharacter.UnitSelected();
-        CameraController.Instance.followTarget = SelectedCharacter.transform;
-        HUD.Instance.ShowUnitAttackPanel();
+        SelectedCharacter.CharacterSelected();
+
+        EventManager.OnCharacterSelected(SelectedCharacter);
     }
 
     /// <summary>
@@ -289,10 +290,10 @@ public class Interact : SingletonPattern<Interact>
         if (SelectedCharacter == null)
             return;
 
-        SelectedCharacter.UnitDeselected();
+        SelectedCharacter.CharacterDeselected();
+        EventManager.OnCharacterDeselected();
+
         SelectedCharacter = null;
-        CameraController.Instance.followTarget = null;
-        HUD.Instance.HideUnitAttackPanel();
     }
 
     private void DisplayAttackToTile()
@@ -305,8 +306,8 @@ public class Interact : SingletonPattern<Interact>
     /// </summary>
     private void NavigateToTile()
     {
-        //Exit path navigation if no unit is selected or if a selected unit is not idle
-        if (SelectedCharacter != null && SelectedCharacter.CurrState != UnitState.idle)
+        //Exit path navigation if no unit is selected or if a selected unit is not planning to move
+        if (SelectedCharacter != null && SelectedCharacter.CurrState != UnitState.planningMovement)
             return;
 
         //Get and draw a path to the current tile

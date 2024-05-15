@@ -2,6 +2,14 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * Author: ForlornU
+ * https://github.com/ForlornU/A-Star-pathfinding
+ * Edited By: Kilan Sky Larsen
+ * Last Updated: 5/14/2024
+ * Description: Finds: paths from one tile to another, neighbor tiles, and tiles in range of an origin
+ */
+
 [RequireComponent(typeof(PathIllustrator))]
 public class Pathfinder : SingletonPattern<Pathfinder>
 {

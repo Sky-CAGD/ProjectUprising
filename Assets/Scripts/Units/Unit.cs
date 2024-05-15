@@ -4,21 +4,32 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
+/*
+ * Author: Kilan Sky Larsen
+ * Last Updated: 5/14/2024
+ * Description: Handles how each unit on the hex grid is selected, moves, attacks, & takes damage
+ */
+
 public enum UnitState
 {
     idle,
     moving,
     attacking,
-    planningAttack
+    planningAttack,
+    planningMovement
 }
 
 public abstract class Unit : MonoBehaviour, IDamagable
 {
+    //Inspector exposed fields
     [field: SerializeField] public UnitData unitData { get; protected set; }
     [field: SerializeField] public Weapon weapon { get; protected set; }
+    [SerializeField] protected LayerMask groundLayer;
+    [SerializeField] protected LayerMask wallLayer;
+
+    [Header("Health UI")]
     [SerializeField] protected Slider shieldBar;
     [SerializeField] protected Slider healthBar;
-    public LayerMask GroundLayerMask;
 
     //Health/Shield Properties
     public int MaxShield { get; protected set; }
@@ -64,6 +75,11 @@ public abstract class Unit : MonoBehaviour, IDamagable
         CurrState = UnitState.idle;
     }
 
+    protected virtual void Start()
+    {
+
+    }
+
     protected virtual void Update()
     {
         if(Input.GetKeyDown(KeyCode.T))
@@ -79,17 +95,6 @@ public abstract class Unit : MonoBehaviour, IDamagable
 
     #region Selection
 
-    public virtual void UnitSelected()
-    {
-        HUD.Instance.ShowUnitMoveRange(CurrMoveRange, MaxMoveRange);
-    }
-
-    public virtual void UnitDeselected()
-    {
-        HUD.Instance.HideUnitMoveRange();
-        HideAttackRange();
-    }
-
     /// <summary>
     /// Gets all tiles within this unit's movement range and highlights them
     /// </summary>
@@ -99,17 +104,12 @@ public abstract class Unit : MonoBehaviour, IDamagable
             return;
 
         //Get all tiles in move range
-        tilesInRange = Pathfinder.Instance.FindTilesInRange(occupiedTile, CurrMoveRange);
+        if (tilesInRange.Count == 0)
+            tilesInRange = Pathfinder.Instance.FindTilesInRange(occupiedTile, CurrMoveRange);
 
         //Hightlight all tiles in move range
         foreach (Tile tile in tilesInRange)
             tile.Highlighter.HighlightTile(HighlightType.moveArea);
-
-        //Highlight this unit's tile
-        occupiedTile.Highlighter.HighlightTile(HighlightType.unitSelection);
-
-        //Show the unit's movement range on the HUD
-        HUD.Instance.ShowUnitMoveRange(CurrMoveRange, MaxMoveRange);
 
         //Displays the distances to all tiles in move range
         //Pathfinder.Instance.Illustrator.DisplayMoveAreaDistances(tilesInRange);
@@ -124,57 +124,55 @@ public abstract class Unit : MonoBehaviour, IDamagable
             return;
 
         //Get all tiles in attack range
-        if (weapon.attackType == AttackType.laser)
-            tilesInRange = FindObjectsOfType<Tile>().ToList();
-        else
-            tilesInRange = Pathfinder.Instance.FindTilesInRange(occupiedTile, weapon.range);
+        if (tilesInRange.Count == 0)
+        {
+            //Get tiles within weapon range
+            if (weapon.attackType == AttackType.laser)
+                tilesInRange = FindObjectsOfType<Tile>().ToList();
+            else
+                tilesInRange = Pathfinder.Instance.FindTilesInRange(occupiedTile, weapon.range);
 
-        //Highlight all tiles within line of sight
-        if (weapon.attackType == AttackType.artillery)
-        {
-            foreach (Tile tile in tilesInRange)
-                tile.Highlighter.HighlightTile(HighlightType.attackArea);
-        }
-        else
-        {
-            Vector3 offset = new Vector3(0, 1, 0);
-            Vector3 origin = transform.position + offset;
-            foreach (Tile tile in tilesInRange)
+            //Get tiles within line of sight
+            if (weapon.attackType != AttackType.artillery)
             {
-                Vector3 tilePos = tile.transform.position + offset;
-                if (!Physics.Linecast(origin, tilePos))
-                    tile.Highlighter.HighlightTile(HighlightType.attackArea);
+                Vector3 offset = new Vector3(0, 1, 0);
+                Vector3 origin = transform.position + offset;
+                List<Tile> sightOfSightTiles = new List<Tile>();
+                foreach (Tile tile in tilesInRange)
+                {
+                    Vector3 tilePos = tile.transform.position + offset;
+                    if (!Physics.Linecast(origin, tilePos, wallLayer))
+                        sightOfSightTiles.Add(tile);
+                }
+
+                tilesInRange = sightOfSightTiles;
             }
         }
 
-        //Highlight this unit's tile
-        occupiedTile.Highlighter.HighlightTile(HighlightType.unitSelection);
+        //Highlight all tiles in attack range
+        foreach (Tile tile in tilesInRange)
+            tile.Highlighter.HighlightTile(HighlightType.attackArea);
     }
 
     /// <summary>
-    /// Hides the highlights and text for all tiles within the last generated movement range
+    /// Clears out the last generated movement or attack range when exiting planning
     /// </summary>
-    public virtual void HideMovementRange()
+    public virtual void ClearTilesInRange()
     {
-        foreach (Tile tile in tilesInRange)
-            tile.Highlighter.ClearTileHighlight();
+        if(tilesInRange.Count > 0)
+            tilesInRange.Clear();
     }
 
-
-    /// <summary>
-    /// Hides the highlights and text for all tiles within the last generated attack range
-    /// </summary>
-    public virtual void HideAttackRange()
-    {
-        foreach (Tile tile in tilesInRange)
-            tile.Highlighter.ClearTileHighlight();
-    }
+    #endregion
 
     //--------------------------------------------
     // Unit Combat
     //--------------------------------------------
 
-    public void Attack()
+
+    #region Combat
+
+    protected void Attack()
     {
         CurrActionPoints--;
     }
@@ -197,7 +195,7 @@ public abstract class Unit : MonoBehaviour, IDamagable
             return;
         }
 
-        if (Physics.Raycast(transform.position + new Vector3(0, 1, 0), -transform.up, out RaycastHit hit, 50f, GroundLayerMask))
+        if (Physics.Raycast(transform.position + new Vector3(0, 1, 0), -transform.up, out RaycastHit hit, 50f, groundLayer))
         {
             FinalizePosition(hit.transform.GetComponent<Tile>());
             return;
@@ -216,7 +214,6 @@ public abstract class Unit : MonoBehaviour, IDamagable
         occupiedTile.occupyingUnit = null;
 
         CurrMoveRange -= _path.tiles.Length - 1;
-        HUD.Instance.ShowUnitMoveRange(CurrMoveRange, MaxMoveRange);
 
         StartCoroutine(MoveAlongPath(_path));
     }
@@ -272,8 +269,12 @@ public abstract class Unit : MonoBehaviour, IDamagable
         tilesInRange.Clear();
         transform.position = tile.transform.position;
         occupiedTile = tile;
-        CurrState = UnitState.idle;
         tile.occupyingUnit = this;
+
+        if(CurrMoveRange <= 0)
+            CurrState = UnitState.idle;
+        else
+            CurrState = UnitState.planningMovement;
     }
 
     protected virtual void MoveAndRotate(Vector3 origin, Vector3 destination, float duration)
@@ -291,6 +292,7 @@ public abstract class Unit : MonoBehaviour, IDamagable
     public virtual void RefreshUnit()
     {
         CurrMoveRange = MaxMoveRange;
+        CurrActionPoints = MaxActionPoints;
     }
 
     #endregion

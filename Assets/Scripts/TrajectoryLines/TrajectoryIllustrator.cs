@@ -2,6 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * Author: Kilan Sky Larsen
+ * Last Updated: 5/14/2024
+ * Description: Handles drawing a trajectory line from given points A to B, with potential to arc towards a pointC
+ */
+
 [RequireComponent(typeof(ObjectPool))]
 public class TrajectoryIllustrator : MonoBehaviour
 {
@@ -17,9 +23,9 @@ public class TrajectoryIllustrator : MonoBehaviour
     [Header("Layer Info")]
     [SerializeField] private LayerMask wallLayer;
 
-    public Vector3 PointA { get; private set; }
-    public Vector3 PointB { get; private set; }
-    public Vector3 PointC 
+    public Vector3 PointA { get; private set; } //Start point (Unit)
+    public Vector3 PointB { get; private set; } //End point (Target)
+    public Vector3 PointC //Middle point between A & B with added height for drawing arcs
     {
         get
         {
@@ -42,6 +48,17 @@ public class TrajectoryIllustrator : MonoBehaviour
     private float startingArcHeight;
     private bool drawingTrajectory;
 
+    private void OnEnable()
+    {
+        EventManager.CharacterStartedPlanningAttack += StartDrawingTrajectory;
+        EventManager.CharacterEndedPlanningAttack += HideTrajectory;
+    }
+
+    private void OnDisable()
+    {
+        
+    }
+
     private void Start()
     {
         objectPool = GetComponent<ObjectPool>();
@@ -56,35 +73,26 @@ public class TrajectoryIllustrator : MonoBehaviour
         startingArcHeight = arcHeight;
     }
 
-    public void TempButtonPress(bool useArc)
-    {
-        if (drawingTrajectory)
-        {
-            HideTrajectory();
-            return;
-        }
-
-        PointA = Interact.Instance.SelectedCharacter.transform.position + offset;
-        PointB = FindObjectOfType<Enemy>().transform.position + offset;
-        ShowTrajectory(PointA, PointB, useArc);
-    }
-
     /// <summary>
     /// Start drawing a trajectory line with an arc between two points
     /// </summary>
     /// <param name="pointA"></param>
     /// <param name="pointB"></param>
-    public void ShowTrajectory(Vector3 pointA, Vector3 pointB, bool drawArc = false)
+    private void StartDrawingTrajectory(Character character)
     {
         drawingTrajectory = true;
 
-        StartCoroutine(DrawTrajectory());
+        PointA = character.occupiedTile.transform.position + offset;
 
-        if (drawArc) //draw arced trajectory
+        //draw arced trajectory
+        if (character.weapon.attackType == AttackType.artillery)
             arcHeight = startingArcHeight;
-        else //draw straight line trajectory
+        //draw straight line trajectory
+        else
             arcHeight = 0;
-    }   
+
+        StartCoroutine(DrawTrajectory());
+    }
 
     /// <summary>
     /// Stop drawing a trajectory line
@@ -109,10 +117,17 @@ public class TrajectoryIllustrator : MonoBehaviour
         Vector3 lastPointA = Vector3.zero;
         Vector3 lastPointB = Vector3.zero;
 
-        SetTrajectoryPoints();
+        SetPointB();
+
+        //Do not start drawing a trajectory until the user mouses over a tile
+        while(PointB == Vector3.zero)
+        {
+            yield return null;
+            SetPointB();
+        }
 
         //Move dots along trajectory
-        while (drawingTrajectory && Interact.Instance.SelectedCharacter != null)
+        while (drawingTrajectory)
         {
             //Ensure the user does not draw a trajectory with the same start and end points
             if(PointA == PointB)
@@ -142,21 +157,14 @@ public class TrajectoryIllustrator : MonoBehaviour
 
             yield return null;
 
-            SetTrajectoryPoints();
+            SetPointB();
         }
-
-        HideTrajectory();
     }
 
-    private void SetTrajectoryPoints()
+    private void SetPointB()
     {
-        if(Interact.Instance.SelectedCharacter)
-            PointA = Interact.Instance.SelectedCharacter.transform.position + offset;
-
         if (Interact.Instance.CurrentTile)
             PointB = Interact.Instance.CurrentTile.transform.position + offset;
-        else
-            PointB = FindObjectOfType<Enemy>().transform.position + offset;
     }
 
     private void CalculateTrajectoryInfo()
@@ -204,98 +212,18 @@ public class TrajectoryIllustrator : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Determines if the trajectory between A & B is valid (unit can attack PointB)
+    /// </summary>
+    /// <returns></returns>
     private bool ValidTrajectory()
     {
         if (Interact.Instance.SelectedCharacter == null)
             return false;
 
-        if (Physics.Linecast(PointA, PointB))
+        if (Physics.Linecast(PointA, PointB, wallLayer))
             return false;
 
         return true;
-    }
-
-    /// <summary>
-    /// Lerps the dots of a trajectory line along a straight line each frame
-    /// </summary>
-    /// <param name="pointA">The starting point to draw a trajectory from</param>
-    /// <param name="pointB">The ending point to draw a trajectory to</param>
-    /// <returns></returns>
-    public IEnumerator DrawTrajectory(Vector3 pointA, Vector3 pointB)
-    {
-        float interpolateAmt = 0;
-        numDots = Mathf.Clamp((int)Mathf.Round(dist / spacing), 1, dots.Count);
-
-        float interpSpacing = (float) 1 / numDots;
-
-        //Initialize dot visibility and positions
-        for (int i = 0; i < numDots; i++)
-        {
-            dots[i].gameObject.SetActive(true);
-            dots[i].transform.position = Vector3.Lerp(pointA, pointB, interpolateAmt);
-            interpolateAmt += interpSpacing;
-
-            dots[i].currLerpAmt = interpolateAmt;
-        }
-
-        //Move dots along trajectory
-        while (drawingTrajectory)
-        {
-            for (int i = 0; i < numDots; i++)
-            {
-                interpolateAmt = dots[i].currLerpAmt;
-                interpolateAmt = (interpolateAmt + (Time.deltaTime * interpSpeed * speedMod) /dist) % 1f;
-
-                dots[i].transform.position = Vector3.Lerp(pointA, pointB, interpolateAmt);
-                dots[i].currLerpAmt = interpolateAmt;
-            }
-
-            yield return null;
-        }
-    }
-
-    /// <summary>
-    /// Lerps the dots of a trajectory line along an arced line each frame
-    /// </summary>
-    /// <param name="pointA">The starting point to draw a trajectory from</param>
-    /// <param name="pointB">The ending point to draw a trajectory to</param>
-    /// <returns></returns>
-    public IEnumerator DrawTrajectory(Vector3 pointA, Vector3 pointB, Vector3 pointC)
-    {
-        float interpolateAmt = 0;
-        numDots = Mathf.Clamp((int)Mathf.Round(dist / spacing) + 3, 1, dots.Count);
-
-        float interpSpacing = (float)1 / numDots;
-
-        //Initialize dot visibility and positions
-        for (int i = 0; i < numDots; i++)
-        {
-            dots[i].gameObject.SetActive(true);
-            Vector3 pointAC = Vector3.Lerp(pointA, pointC, interpolateAmt);
-            Vector3 pointCB = Vector3.Lerp(pointC, pointB, interpolateAmt);
-            dots[i].transform.position = Vector3.Lerp(pointAC, pointCB, interpolateAmt);
-            interpolateAmt += interpSpacing;
-
-            dots[i].currLerpAmt = interpolateAmt;
-        }
-
-        //Move dots along trajectory
-        while (drawingTrajectory)
-        {
-            pointC = Vector3.Lerp(pointA, pointB, 0.5f) + new Vector3(0, arcHeight * 2, 0);
-
-            for (int i = 0; i < numDots; i++)
-            {
-                interpolateAmt = dots[i].currLerpAmt;
-                interpolateAmt = (interpolateAmt + (Time.deltaTime * interpSpeed * speedMod) / dist) % 1f;
-
-                Vector3 pointAC = Vector3.Lerp(pointA, pointC, interpolateAmt);
-                Vector3 pointCB = Vector3.Lerp(pointC, pointB, interpolateAmt);
-                dots[i].transform.position = Vector3.Lerp(pointAC, pointCB, interpolateAmt);
-                dots[i].currLerpAmt = interpolateAmt;
-            }
-
-            yield return null;
-        }
     }
 }

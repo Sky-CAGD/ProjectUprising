@@ -2,9 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// Use this script as a requirement alongside anything that needs a pool of objects to pull from
-/// </summary>
+/*
+ * Author: Kilan Sky Larsen
+ * Last Updated: 5/14/2024
+ * Description: Instantiates a pool of game objects to enable/disable when needed later
+ * 
+ * Use this script as a requirement alongside anything that needs a pool of objects to pull from
+ */
+
 public class ObjectPool : MonoBehaviour
 {
     [field: SerializeField] public GameObject objectToPool { get; private set; }

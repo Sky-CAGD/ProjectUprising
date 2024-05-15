@@ -1,7 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
+
+/*
+ * Author: Kilan Sky Larsen
+ * Last Updated: 5/14/2024
+ * Description: Test script to draw highlights on a group of adjacent tiles from an origin
+ */
 
 public class HexAreaTest : MonoBehaviour
 {

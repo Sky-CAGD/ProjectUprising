@@ -1,6 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
+/*
+ * Author: Kilan Sky Larsen
+ * Last Updated: 5/14/2024
+ * Description: Forces this object to look at the main camera (creating a billboard)
+ */
 
 public class LookAtCamera : LookAtTarget
 {

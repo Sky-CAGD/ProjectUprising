@@ -1,53 +1,95 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 
-public class HUD : SingletonPattern<HUD>
+/*
+ * Author: Kilan Sky Larsen
+ * Last Updated: 5/14/2024
+ * Description: Handles interactions/events relating to the HUD UI elements
+ */
+
+public class HUD : MonoBehaviour
 {
     [Header("Unit Move Range")]
-    [SerializeField] private GameObject unitRangeHex;
-    [SerializeField] private TMP_Text currRangeText;
-    [SerializeField] private TMP_Text maxRangeText;
+    [SerializeField] private GameObject unitMoveRangeHex;
+    [SerializeField] private TMP_Text currMoveRangeText;
+    [SerializeField] private TMP_Text maxMoveRangeText;
 
     [Header("Unit Attacking")]
-    [SerializeField] private GameObject unitAttackPanel;
+    [SerializeField] private GameObject characterAttackPanel;
+    [SerializeField] private TMP_Text characterWeaponTypeText;
 
-    private void Start()
+    private Character selectedCharacter;
+
+    private void OnEnable()
     {
-        unitRangeHex.SetActive(false);
-        unitAttackPanel.SetActive(false);
+        EventManager.CharacterSelected += CharacterSelected;
+        EventManager.CharacterDeselected += CharacterDeselected;
+        EventManager.CharacterMoved += UpdateCharacterInfo;
     }
 
-    public void ShowUnitMoveRange(int currRange, int maxRange)
+    private void OnDisable()
     {
-        unitRangeHex.SetActive(true);
-        currRangeText.text = currRange.ToString();
-        maxRangeText.text = maxRange.ToString();
+        EventManager.CharacterSelected -= CharacterSelected;
+        EventManager.CharacterDeselected -= CharacterDeselected;
+        EventManager.CharacterMoved -= UpdateCharacterInfo;
     }
 
-    public void HideUnitMoveRange()
+    private void Awake()
     {
-        unitRangeHex.SetActive(false);
+        unitMoveRangeHex.SetActive(false);
+        characterAttackPanel.SetActive(false);
     }
 
-    public void ShowUnitAttackPanel()
+    /// <summary>
+    /// Shows UI relevant to a newly selected character unit
+    /// </summary>
+    /// <param name="character">The character that was selected</param>
+    private void CharacterSelected(Character character)
     {
-        unitAttackPanel.SetActive(true);
+        selectedCharacter = character;
+        unitMoveRangeHex.SetActive(true);
+        UpdateCharacterInfo(character);
+
+        //Attack UI
+        characterAttackPanel.SetActive(true);
     }
 
-    public void HideUnitAttackPanel()
+    /// <summary>
+    /// Hides UI relevant to selected character units
+    /// </summary>
+    private void CharacterDeselected()
     {
-        unitAttackPanel.SetActive(false);
+        selectedCharacter = null;
+
+        //Movement UI
+        unitMoveRangeHex.SetActive(false);
+
+        //Attack UI
+        characterAttackPanel.SetActive(false);
     }
 
-    public void StartPlanningAttack()
+    /// <summary>
+    /// Updates UI relevant to selected character units
+    /// </summary>
+    /// <param name="character"></param>
+    private void UpdateCharacterInfo(Unit character)
     {
-        Interact.Instance.SelectedCharacter.StartPlanningAttack();
+        currMoveRangeText.text = character.CurrMoveRange.ToString();
+        maxMoveRangeText.text = character.MaxMoveRange.ToString();
+        characterWeaponTypeText.text = character.weapon.attackType.ToString();
     }
 
-    public void StopPlanningAttack()
+    /// <summary>
+    /// Called when a UI element event is triggered to start planning a character unit's attack
+    /// </summary>
+    public void CharacterAttackInitiated()
     {
-        Interact.Instance.SelectedCharacter.StopPlanningAttack();
+        if (selectedCharacter == null)
+            return;
+
+        selectedCharacter.StartPlanningAttack();
+        characterAttackPanel.SetActive(false);
     }
 }

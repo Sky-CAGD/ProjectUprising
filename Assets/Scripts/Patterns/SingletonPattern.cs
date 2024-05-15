@@ -1,6 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+
+/*
+ * Author: ??? [This is pulled from a .unitypackage that's been passed along many times.
+ *              Kudos to the original creator, this is extremely useful!]
+ * Last Updated: N/A
+ * Description: Other scripts may inherit from this to easily become a Singleton
+ */
 
 public abstract class SingletonPattern<T> : MonoBehaviour where T : SingletonPattern<T>
 {

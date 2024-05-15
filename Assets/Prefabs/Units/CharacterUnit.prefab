@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 402148687042507822}
   - component: {fileID: 8257684439187281224}
   m_Layer: 6
-  m_Name: Player
+  m_Name: CharacterUnit
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -189,11 +189,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <unitData>k__BackingField: {fileID: 11400000, guid: f94d7beb9cf4cac45978e59d37ad79d8,
     type: 2}
-  shieldBar: {fileID: 6675227564742184443}
-  healthBar: {fileID: 7540404394711708315}
-  GroundLayerMask:
+  <weapon>k__BackingField: {fileID: 11400000, guid: 7473e797692b5484796c6c2619bf9a68,
+    type: 2}
+  groundLayer:
     serializedVersion: 2
     m_Bits: 8
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  shieldBar: {fileID: 6675227564742184443}
+  healthBar: {fileID: 7540404394711708315}
   occupiedTile: {fileID: 0}
 --- !u!136 &8257684439187281224
 CapsuleCollider:
@@ -806,7 +811,7 @@ GameObject:
   - component: {fileID: 5177199062652379189}
   - component: {fileID: 8010475543765033777}
   m_Layer: 6
-  m_Name: UnitCanvas
+  m_Name: HealthBarsCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

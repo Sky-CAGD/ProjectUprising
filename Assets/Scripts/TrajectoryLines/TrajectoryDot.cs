@@ -1,7 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+
+/*
+ * Author: Kilan Sky Larsen
+ * Last Updated: 5/14/2024
+ * Description: A single dot to be instantiated and moved along a trajectory line
+ * Stores its position along the trajectory and allows setting of its color
+ */
 
 public class TrajectoryDot : MonoBehaviour
 {

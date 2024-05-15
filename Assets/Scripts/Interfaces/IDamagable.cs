@@ -1,6 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+/*
+ * Author: Kilan Sky Larsen
+ * Last Updated: 5/14/2024
+ * Description: An interface to define the necessary aspects of damagable things in the game
+ */
 
 public interface IDamagable
 {
