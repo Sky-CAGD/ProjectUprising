@@ -65,7 +65,7 @@ public class HexAreaTest : MonoBehaviour
             currentTile.Highlighter.HighlightTile(HighlightType.validPath);
             selectedTiles.Add(currentTile);
 
-            List<Tile> newTileList = Pathfinder.Instance.GetNeighborTiles(currentTile);
+            List<Tile> newTileList = Rangefinder.GetNeighborTiles(currentTile);
 
             foreach (Tile tile in newTileList)
             {

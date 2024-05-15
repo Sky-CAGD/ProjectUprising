@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Energy Cannon
   m_EditorClassIdentifier: 
   attackType: 2
-  range: 5
-  baseDamage: 6
+  range: 4
+  baseDamage: 5

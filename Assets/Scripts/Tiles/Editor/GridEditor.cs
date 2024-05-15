@@ -124,8 +124,8 @@ public class GridEditor : EditorWindow
 
         if (tiles[0].GetComponent<Tile>() && tiles[1].GetComponent<Tile>())
         {
-            tiles[0].GetComponent<Tile>().connectedTile = tiles[1].GetComponent<Tile>();
-            tiles[1].GetComponent<Tile>().connectedTile = tiles[0].GetComponent<Tile>();
+            tiles[0].GetComponent<Tile>().ConnectedTile = tiles[1].GetComponent<Tile>();
+            tiles[1].GetComponent<Tile>().ConnectedTile = tiles[0].GetComponent<Tile>();
             Debug.Log($"Created ladder between tile {tiles[0].name} and {tiles[1].name}");
         }
     }

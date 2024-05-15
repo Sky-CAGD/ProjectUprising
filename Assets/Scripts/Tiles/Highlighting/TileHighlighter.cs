@@ -29,11 +29,11 @@ public class TileHighlighter : MonoBehaviour
     {
         //Get tile to highlight and its highlight mesh
         tile = GetComponent<Tile>();
-        mesh = tile.highlightMesh.GetComponent<Renderer>();
+        mesh = tile.HighlightMesh.GetComponent<Renderer>();
 
         //Set up tile text and highlight mesh to default values
-        tile.tileText.text = "";
-        tile.highlightMesh.gameObject.SetActive(true);
+        tile.TileText.text = "";
+        tile.HighlightMesh.gameObject.SetActive(true);
         mesh.enabled = false;
         CurrHighlight = HighlightType.none;
 
@@ -57,7 +57,7 @@ public class TileHighlighter : MonoBehaviour
     public void HighlightTile(HighlightType hlType)
     {
         //If this tile is not a highlightable type, exit w/o highlighting it
-        if (tile.tileType != TileType.Standard)
+        if (tile.ThisTileType != TileType.Standard)
             return;
 
         //Set the color of the highlight based on the provided type
@@ -114,7 +114,7 @@ public class TileHighlighter : MonoBehaviour
     public void ClearTileHighlight()
     {
         //If this tile is not a highlightable type, exit w/o clearing highlights (should not be highlighted)
-        if (tile.tileType != TileType.Standard || CurrHighlight == HighlightType.none)
+        if (tile.ThisTileType != TileType.Standard || CurrHighlight == HighlightType.none)
             return;
 
         //Clear any highlights and text
@@ -148,21 +148,21 @@ public class TileHighlighter : MonoBehaviour
 
     public void DebugCostText()
     {
-        tile.tileText.text = tile.TotalCost.ToString("F1");
+        tile.TileText.text = tile.TotalCost.ToString("F1");
     }
 
     public void DisplayDistancesText(int tileDist)
     {
-        tile.tileText.text = tileDist.ToString();
+        tile.TileText.text = tileDist.ToString();
     }
 
     public void DisplayText(string text)
     {
-        tile.tileText.text = text;
+        tile.TileText.text = text;
     }
 
     public void ClearText()
     {
-        tile.tileText.text = "";
+        tile.TileText.text = "";
     }
 }

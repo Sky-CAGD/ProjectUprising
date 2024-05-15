@@ -52,7 +52,8 @@ public class CameraController : MonoBehaviour
     //Input Actions
     private PlayerInput playerInput;
     private InputAction move;
-    private InputAction click;
+    private InputAction leftClick;
+    private InputAction rightClick;
     private InputAction rotateAxis;
     private InputAction rotatePan;
     private InputAction zoom;
@@ -95,7 +96,8 @@ public class CameraController : MonoBehaviour
     private void OnEnable()
     {
         move = playerInput.PlayerActions.Move;
-        click = playerInput.PlayerActions.Interact;
+        leftClick = playerInput.PlayerActions.LeftClick;
+        rightClick = playerInput.PlayerActions.RightClick;
         rotateAxis = playerInput.PlayerActions.RotateAxis;
         rotatePan = playerInput.PlayerActions.RotatePan;
         zoom = playerInput.PlayerActions.Zoom;
@@ -104,8 +106,8 @@ public class CameraController : MonoBehaviour
 
         playerInput.Enable();
 
-        playerInput.PlayerActions.Interact.performed += StartEndMousePanning;
-        playerInput.PlayerActions.Interact.canceled += StartEndMousePanning;
+        playerInput.PlayerActions.LeftClick.performed += StartEndMousePanning;
+        playerInput.PlayerActions.LeftClick.canceled += StartEndMousePanning;
         playerInput.PlayerActions.RotatePan.performed += StartEndMouseRotating;
         playerInput.PlayerActions.RotatePan.canceled += StartEndMouseRotating;
 
@@ -117,8 +119,8 @@ public class CameraController : MonoBehaviour
     {
         playerInput.Disable();
 
-        playerInput.PlayerActions.Interact.performed -= StartEndMousePanning;
-        playerInput.PlayerActions.Interact.canceled -= StartEndMousePanning;
+        playerInput.PlayerActions.LeftClick.performed -= StartEndMousePanning;
+        playerInput.PlayerActions.LeftClick.canceled -= StartEndMousePanning;
         playerInput.PlayerActions.RotatePan.performed -= StartEndMouseRotating;
         playerInput.PlayerActions.RotatePan.canceled -= StartEndMouseRotating;
 
@@ -246,7 +248,7 @@ public class CameraController : MonoBehaviour
     /// </summary>
     private void MouseDragPanning()
     {
-        bool isMouseHeld = click.ReadValue<float>() > 0.1f;
+        bool isMouseHeld = leftClick.ReadValue<float>() > 0.1f;
 
         //Continuous left click held to drag camera
         if (isMouseHeld && dragStartPos != Vector3.zero)

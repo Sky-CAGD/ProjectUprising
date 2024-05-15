@@ -105,7 +105,7 @@ public abstract class Unit : MonoBehaviour, IDamagable
 
         //Get all tiles in move range
         if (tilesInRange.Count == 0)
-            tilesInRange = Pathfinder.Instance.FindTilesInRange(occupiedTile, CurrMoveRange);
+            tilesInRange = Rangefinder.FindTilesInRange(occupiedTile, CurrMoveRange);
 
         //Hightlight all tiles in move range
         foreach (Tile tile in tilesInRange)
@@ -130,7 +130,7 @@ public abstract class Unit : MonoBehaviour, IDamagable
             if (weapon.attackType == AttackType.laser)
                 tilesInRange = FindObjectsOfType<Tile>().ToList();
             else
-                tilesInRange = Pathfinder.Instance.FindTilesInRange(occupiedTile, weapon.range);
+                tilesInRange = Rangefinder.FindTilesInRange(occupiedTile, weapon.range, true);
 
             //Get tiles within line of sight
             if (weapon.attackType != AttackType.artillery)
@@ -159,6 +159,9 @@ public abstract class Unit : MonoBehaviour, IDamagable
     /// </summary>
     public virtual void ClearTilesInRange()
     {
+        foreach (Tile tile in tilesInRange)
+            tile.RangeFromOrigin = int.MaxValue;
+
         if(tilesInRange.Count > 0)
             tilesInRange.Clear();
     }
@@ -211,7 +214,7 @@ public abstract class Unit : MonoBehaviour, IDamagable
     public virtual void StartMove(TileGroup _path)
     {
         CurrState = UnitState.moving;
-        occupiedTile.occupyingUnit = null;
+        occupiedTile.OccupyingUnit = null;
 
         CurrMoveRange -= _path.tiles.Length - 1;
 
@@ -240,7 +243,7 @@ public abstract class Unit : MonoBehaviour, IDamagable
             //Move towards the next step in the path until we are closer than MIN_DIST
             Vector3 nextTilePosition = path.tiles[currentStep].transform.position;
 
-            float movementTime = animationTime / ((1/MoveSpeed) + path.tiles[currentStep].terrainCost * TERRAIN_PENALTY);
+            float movementTime = animationTime / ((1/MoveSpeed) + path.tiles[currentStep].TerrainCost * TERRAIN_PENALTY);
             MoveAndRotate(currentTile.transform.position, nextTilePosition, movementTime);
             animationTime += Time.deltaTime;
 
@@ -269,7 +272,7 @@ public abstract class Unit : MonoBehaviour, IDamagable
         tilesInRange.Clear();
         transform.position = tile.transform.position;
         occupiedTile = tile;
-        tile.occupyingUnit = this;
+        tile.OccupyingUnit = this;
 
         if(CurrMoveRange <= 0)
             CurrState = UnitState.idle;

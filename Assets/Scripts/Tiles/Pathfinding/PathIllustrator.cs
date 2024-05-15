@@ -1,7 +1,4 @@
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using UnityEngine;
 
 /*
  * Author: Kilan Sky Larsen
@@ -9,13 +6,13 @@ using UnityEngine;
  * Description: Handles drawing highlights & text on paths
  */
 
-public class PathIllustrator : MonoBehaviour
+public static class PathIllustrator
 {
     /// <summary>
     /// Highlights all tiles along a path and displays the distance to each tile
     /// </summary>
     /// <param name="path"></param>
-    public void DrawPath(TileGroup path, int unitMoveRange)
+    public static void DrawPath(TileGroup path, int unitMoveRange)
     {
         HighlightPath(path, unitMoveRange);
         DisplayPathDistances(path);
@@ -25,14 +22,15 @@ public class PathIllustrator : MonoBehaviour
     /// Highlights all tiles along a given path except the starting tile
     /// </summary>
     /// <param name="path"></param>
-    private void HighlightPath(TileGroup path, int unitMoveRange)
+    private static void HighlightPath(TileGroup path, int unitMoveRange)
     {
         if (path == null)
             return;
 
         HighlightType hlType = HighlightType.validPath;
 
-        if (path.tiles.Length - 1 > unitMoveRange)
+        //Show the path as invalid if it is longer than the moveRange or if the destination is occupied
+        if (path.tiles.Length - 1 > unitMoveRange || Interact.Instance.CurrentTile.Occupied)
             hlType = HighlightType.invalidPath;
 
         for (int i = 0; i < path.tiles.Length; i++)
@@ -51,7 +49,7 @@ public class PathIllustrator : MonoBehaviour
     /// [Obsolete??] Clears Highlights of all tiles along a given path except the starting tile
     /// </summary>
     /// <param name="path"></param>
-    public void ClearPathHighlights(TileGroup path)
+    public static void ClearPathHighlights(TileGroup path)
     {
         if (path == null)
             return;
@@ -70,7 +68,7 @@ public class PathIllustrator : MonoBehaviour
     /// Displays the distance of each tile along a path relative to the origin
     /// </summary>
     /// <param name="path"></param>
-    public void DisplayPathDistances(TileGroup path)
+    public static void DisplayPathDistances(TileGroup path)
     {
         for (int tileDist = 0; tileDist < path.tiles.Length; tileDist++)
         {
@@ -86,21 +84,21 @@ public class PathIllustrator : MonoBehaviour
     /// Displays the distance of each tile within a move area from a unit
     /// </summary>
     /// <param name="path"></param>
-    public void DisplayMoveAreaDistances(List<Tile> tilesAtRange)
+    public static void DisplayMoveAreaDistances(List<Tile> tilesAtRange)
     {
         foreach (Tile tile in tilesAtRange)
         {
-            if(tile.tileType == TileType.Standard)
-                tile.Highlighter.DisplayDistancesText(tile.rangeFromOrigin);
+            if(tile.ThisTileType == TileType.Standard)
+                tile.Highlighter.DisplayDistancesText(tile.RangeFromOrigin);
         }
     }
 
     //Debug only
-    public void DebugPathCosts(TileGroup path)
+    public static void DebugPathCosts(TileGroup path)
     {
         foreach (Tile tile in path.tiles)
         {
-            if (tile.tileType == TileType.Standard)
+            if (tile.ThisTileType == TileType.Standard)
                 tile.Highlighter.DebugCostText();
         }
     }

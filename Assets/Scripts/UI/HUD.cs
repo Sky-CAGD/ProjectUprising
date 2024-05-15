@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 /*
  * Author: Kilan Sky Larsen
@@ -9,7 +10,7 @@ using UnityEngine;
  * Description: Handles interactions/events relating to the HUD UI elements
  */
 
-public class HUD : MonoBehaviour
+public class HUD : SingletonPattern<HUD>
 {
     [Header("Unit Move Range")]
     [SerializeField] private GameObject unitMoveRangeHex;
@@ -36,8 +37,10 @@ public class HUD : MonoBehaviour
         EventManager.CharacterMoved -= UpdateCharacterInfo;
     }
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         unitMoveRangeHex.SetActive(false);
         characterAttackPanel.SetActive(false);
     }
@@ -49,8 +52,7 @@ public class HUD : MonoBehaviour
     private void CharacterSelected(Character character)
     {
         selectedCharacter = character;
-        unitMoveRangeHex.SetActive(true);
-        UpdateCharacterInfo(character);
+        ShowCharacterInfo(character);
 
         //Attack UI
         characterAttackPanel.SetActive(true);
@@ -68,6 +70,25 @@ public class HUD : MonoBehaviour
 
         //Attack UI
         characterAttackPanel.SetActive(false);
+    }
+
+    /// <summary>
+    /// Shows UI information related to a moused over or selected character unit
+    /// </summary>
+    /// <param name="character"></param>
+    public void ShowCharacterInfo(Character character)
+    {
+        unitMoveRangeHex.SetActive(true);
+        UpdateCharacterInfo(character);
+    }
+
+    /// <summary>
+    /// Hides UI information related to a previously moused over or selected character unit
+    /// </summary>
+    /// <param name="character"></param>
+    public void HideCharacterInfo()
+    {
+        unitMoveRangeHex.SetActive(false);
     }
 
     /// <summary>

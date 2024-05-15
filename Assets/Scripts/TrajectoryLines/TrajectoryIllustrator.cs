@@ -56,7 +56,8 @@ public class TrajectoryIllustrator : MonoBehaviour
 
     private void OnDisable()
     {
-        
+        EventManager.CharacterStartedPlanningAttack -= StartDrawingTrajectory;
+        EventManager.CharacterEndedPlanningAttack -= HideTrajectory;
     }
 
     private void Start()
@@ -172,11 +173,15 @@ public class TrajectoryIllustrator : MonoBehaviour
         dist = Mathf.Clamp(Vector3.Distance(PointA, PointB), 0, maxDist);
         numDots = Mathf.Clamp((int)Mathf.Round(dist / spacing), 1, dots.Count);
 
-        //Add extra dots to the trajectory if it is an Arc
+        //Add extra dots and adjust the interpSpeed if the trajectory is an Arc
         if (arcHeight > 1)
+        {
             numDots = Mathf.Clamp(numDots + 3, 1, dots.Count);
+            interpSpeed = Mathf.Lerp(1, 3f, dist / maxDist);
+        }
+        else
+            interpSpeed = Mathf.Lerp(2, 3f, dist / maxDist);
 
-        interpSpeed = Mathf.Lerp(2, 3f, dist / maxDist);
         interpSpacing = (float)1 / numDots;
 
         CanFire = ValidTrajectory();
@@ -218,11 +223,29 @@ public class TrajectoryIllustrator : MonoBehaviour
     /// <returns></returns>
     private bool ValidTrajectory()
     {
-        if (Interact.Instance.SelectedCharacter == null)
+        Character selectedCharacter = Interact.Instance.SelectedCharacter;
+        Tile currTile = Interact.Instance.CurrentTile;
+
+        if (selectedCharacter == null || currTile == null)
             return false;
 
-        if (Physics.Linecast(PointA, PointB, wallLayer))
+        if (!currTile.Walkable)
             return false;
+
+
+        //If the character's weapon is not a laser, check for range to target
+        if (selectedCharacter.weapon.attackType != AttackType.laser)
+        {
+            if (currTile.RangeFromOrigin > selectedCharacter.weapon.range)
+                return false;
+        }
+
+        //If the character's weapon is not artillery, check for line of sight to target tile
+        if (selectedCharacter.weapon.attackType != AttackType.artillery)
+        {
+            if (Physics.Linecast(PointA, PointB, wallLayer))
+                return false;
+        }
 
         return true;
     }

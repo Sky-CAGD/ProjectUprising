@@ -81,20 +81,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e756be36c92cff47bb1f4e8017253b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parent: {fileID: 0}
-  connectedTile: {fileID: 0}
-  neighbors: []
-  occupyingUnit: {fileID: 0}
-  tileType: 1
-  costFromOrigin: 0
-  costToDestination: 0
-  terrainCost: 0
-  rangeFromOrigin: 0
-  walkable: 1
-  <tileText>k__BackingField: {fileID: 5414345140399377436}
-  <hexTileStandard>k__BackingField: {fileID: 7554034790510032543}
-  <hexTileWall>k__BackingField: {fileID: 3926994183879587237}
-  <highlightMesh>k__BackingField: {fileID: 9086155470349411890}
+  <TileText>k__BackingField: {fileID: 5414345140399377436}
+  <HexTileStandard>k__BackingField: {fileID: 7554034790510032543}
+  <HexTileWall>k__BackingField: {fileID: 3926994183879587237}
+  <HighlightMesh>k__BackingField: {fileID: 9086155470349411890}
 --- !u!114 &1375975614249764836
 MonoBehaviour:
   m_ObjectHideFlags: 0
