@@ -51,10 +51,30 @@ public class Interact : SingletonPattern<Interact>
         if (Physics.Raycast(mainCam.ScreenPointToRay(Input.mousePosition), out RaycastHit hit, float.MaxValue, interactMask))
         {
             ObjectMousedOver(hit.transform);
+            CheckToStartAttacking();
         }
         else //The mouse is over a non-interactable object
         {
             NothingMousedOver();
+        }
+    }
+
+    /// <summary>
+    /// Checks for when the user clicks to attack a target tile
+    /// </summary>
+    private void CheckToStartAttacking()
+    {
+        //Exit if any of the following conditions are true:
+        if (!Attacking.Instance.ValidAttackTrajectory())
+            return;
+
+        if (SelectedCharacter.CurrState != UnitState.planningAttack) 
+            return;
+
+        //User has clicked to initiate an attack
+        if (Input.GetMouseButtonDown(0))
+        {
+            SelectedCharacter.StartAttack(CurrentTile);
         }
     }
 
@@ -228,7 +248,7 @@ public class Interact : SingletonPattern<Interact>
             return;
 
         //Check if no character unit is selected and this is a new interaction
-        if (SelectedCharacter == null && NewInteraction)
+        if (!SelectedCharacter && NewInteraction)
         {
             Character newCharacter = CurrentTile.OccupyingUnit.GetComponent<Character>();
             //Highlight this character unit's tile and show its move area
@@ -241,13 +261,15 @@ public class Interact : SingletonPattern<Interact>
         if (Input.GetMouseButtonDown(0))
         {
             //No character unit selected - select it
-            if(SelectedCharacter == null)
+            if(!SelectedCharacter)
             {
                 SelectUnit();
             }
-            //Character unit is selected - deselect it (and potentially select a new one)
-            else
+            //Character unit is selected
+            //Check if selected character is planning an attack (don't deselect or switch selections)
+            else if (SelectedCharacter.CurrState != UnitState.planningAttack)
             {
+                //Selected unit not planning an attack - deselect it
                 DeselectUnit();
 
                 //Check if the character unit interacted with is a different unit - select it
@@ -317,6 +339,8 @@ public class Interact : SingletonPattern<Interact>
 
     private void DisplayAttackToTile()
     {
+        if (CurrentTile == null) return;
+
         CurrentTile.Highlighter.HighlightTile(HighlightType.attackTarget);
     }
 

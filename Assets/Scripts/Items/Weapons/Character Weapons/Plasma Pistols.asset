@@ -13,5 +13,7 @@ MonoBehaviour:
   m_Name: Plasma Pistols
   m_EditorClassIdentifier: 
   attackType: 0
+  projectile: {fileID: 1851373938288990749, guid: 82af11bb6321a9342a73ca03710f0bbf,
+    type: 3}
   range: 6
   baseDamage: 4

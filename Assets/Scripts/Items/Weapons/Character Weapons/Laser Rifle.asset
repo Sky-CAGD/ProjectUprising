@@ -13,5 +13,7 @@ MonoBehaviour:
   m_Name: Laser Rifle
   m_EditorClassIdentifier: 
   attackType: 1
+  projectile: {fileID: 2115140216605947028, guid: 9c3f946dfd544774fad0ed5a4025b80c,
+    type: 3}
   range: 99
-  baseDamage: 3
+  baseDamage: 5

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /*
@@ -10,7 +8,11 @@ using UnityEngine;
 
 public class LookAtTarget : MonoBehaviour
 {
-    [SerializeField] protected Transform target;
+    //prioritze looking at target set in inspector
+    public Transform target; 
+
+    //set targetPos from other scripts to look at a position in space
+    [HideInInspector] public Vector3 targetPos;
 
     protected virtual void LateUpdate()
     {
@@ -19,9 +21,11 @@ public class LookAtTarget : MonoBehaviour
 
     protected virtual void LookAt()
     {
-        if (target == null)
+        if (target == null && targetPos == Vector3.zero)
             Debug.LogError("target to look at is not defined!");
-        else
+        else if(target != null)
             transform.LookAt(target.position);
+        else if(targetPos != Vector3.zero)
+            transform.LookAt(targetPos);
     }
 }

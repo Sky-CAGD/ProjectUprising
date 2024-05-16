@@ -196,8 +196,9 @@ GameObject:
   - component: {fileID: 5174549087288369593}
   - component: {fileID: 5388714258016729762}
   - component: {fileID: 1394241344503026726}
+  - component: {fileID: 7581760746062879216}
   m_Layer: 0
-  m_Name: TrajectoryIllustrator
+  m_Name: CombatHandler
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -251,6 +252,19 @@ MonoBehaviour:
   wallLayer:
     serializedVersion: 2
     m_Bits: 256
+--- !u!114 &7581760746062879216
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2634138192778943494}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 899f1762684499d459e181d99bbad56d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  arcHeight: 10
 --- !u!1 &3758836032945536316
 GameObject:
   m_ObjectHideFlags: 0
@@ -282,8 +296,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5872339481070279397}
-  - {fileID: 4852309072228334192}
   - {fileID: 5174549087288369593}
+  - {fileID: 4852309072228334192}
   - {fileID: 1531435558560624871}
   - {fileID: 1659213451262601091}
   m_Father: {fileID: 0}

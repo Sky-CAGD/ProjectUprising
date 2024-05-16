@@ -20,9 +20,6 @@ public class TrajectoryIllustrator : MonoBehaviour
     [SerializeField] private float spacing = 1.25f;
     [SerializeField] private float speedMod = 1f;
 
-    [Header("Layer Info")]
-    [SerializeField] private LayerMask wallLayer;
-
     public Vector3 PointA { get; private set; } //Start point (Unit)
     public Vector3 PointB { get; private set; } //End point (Target)
     public Vector3 PointC //Middle point between A & B with added height for drawing arcs
@@ -81,6 +78,9 @@ public class TrajectoryIllustrator : MonoBehaviour
     /// <param name="pointB"></param>
     private void StartDrawingTrajectory(Character character)
     {
+        if (drawingTrajectory)
+            return;
+
         drawingTrajectory = true;
 
         PointA = character.occupiedTile.transform.position + offset;
@@ -98,7 +98,7 @@ public class TrajectoryIllustrator : MonoBehaviour
     /// <summary>
     /// Stop drawing a trajectory line
     /// </summary>
-    public void HideTrajectory()
+    private void HideTrajectory()
     {
         drawingTrajectory = false;
 
@@ -106,14 +106,13 @@ public class TrajectoryIllustrator : MonoBehaviour
             dot.gameObject.SetActive(false);
     }
 
-
     /// <summary>
     /// Lerps the dots of a trajectory line along a straight line each frame
     /// </summary>
     /// <param name="pointA">The starting point to draw a trajectory from</param>
     /// <param name="pointB">The ending point to draw a trajectory to</param>
     /// <returns></returns>
-    public IEnumerator DrawTrajectory()
+    private IEnumerator DrawTrajectory()
     {
         Vector3 lastPointA = Vector3.zero;
         Vector3 lastPointB = Vector3.zero;
@@ -184,7 +183,7 @@ public class TrajectoryIllustrator : MonoBehaviour
 
         interpSpacing = (float)1 / numDots;
 
-        CanFire = ValidTrajectory();
+        CanFire = Attacking.Instance.ValidAttackTrajectory();
     }
 
     private void InitializeDotsAlongTrajectory()
@@ -215,38 +214,5 @@ public class TrajectoryIllustrator : MonoBehaviour
             else
                 dots[i].SetInvalidTrajectoryColor();
         }
-    }
-
-    /// <summary>
-    /// Determines if the trajectory between A & B is valid (unit can attack PointB)
-    /// </summary>
-    /// <returns></returns>
-    private bool ValidTrajectory()
-    {
-        Character selectedCharacter = Interact.Instance.SelectedCharacter;
-        Tile currTile = Interact.Instance.CurrentTile;
-
-        if (selectedCharacter == null || currTile == null)
-            return false;
-
-        if (!currTile.Walkable)
-            return false;
-
-
-        //If the character's weapon is not a laser, check for range to target
-        if (selectedCharacter.weapon.attackType != AttackType.laser)
-        {
-            if (currTile.RangeFromOrigin > selectedCharacter.weapon.range)
-                return false;
-        }
-
-        //If the character's weapon is not artillery, check for line of sight to target tile
-        if (selectedCharacter.weapon.attackType != AttackType.artillery)
-        {
-            if (Physics.Linecast(PointA, PointB, wallLayer))
-                return false;
-        }
-
-        return true;
     }
 }

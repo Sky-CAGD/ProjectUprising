@@ -8,19 +8,11 @@ using UnityEngine;
  * Description: Holds data about weapon that can be equipped by units as a scriptable object
  */
 
-public enum AttackType
-{
-    shoot,
-    laser,
-    artillery,
-    blast,
-    melee
-}
-
 [CreateAssetMenu(menuName = "ScriptableObjects/Weapon", fileName = "New Weapon", order = 2)]
 public class Weapon : ScriptableObject
 {
     public AttackType attackType = AttackType.shoot;
+    public GameObject projectile;
     [Range(1, 99)] public int range = 6;
     [Range(1, 99)] public int baseDamage = 4;
 }

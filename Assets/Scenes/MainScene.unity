@@ -66129,7 +66129,7 @@ PrefabInstance:
         type: 3}
       propertyPath: <weapon>k__BackingField
       value: 
-      objectReference: {fileID: 11400000, guid: 8cf9215e539891048bfa98ad9f5f560a,
+      objectReference: {fileID: 11400000, guid: 5d18ff6b4f194464d8cd28fcc1752506,
         type: 2}
     - target: {fileID: 402148687042507822, guid: 9e62eacb0b934924e996871848be7ecb,
         type: 3}
@@ -72369,7 +72369,7 @@ PrefabInstance:
         type: 3}
       propertyPath: <weapon>k__BackingField
       value: 
-      objectReference: {fileID: 11400000, guid: 7473e797692b5484796c6c2619bf9a68,
+      objectReference: {fileID: 11400000, guid: ed1b9e362d9e30f4f95ad85b0a0ceff0,
         type: 2}
     - target: {fileID: 3152366192583233711, guid: 9e62eacb0b934924e996871848be7ecb,
         type: 3}
@@ -108335,6 +108335,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: GameManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 7581760746062879216, guid: 757b6cc8a0af91a43bb448c4afe574ad,
+        type: 3}
+      propertyPath: wallLayer.m_Bits
+      value: 256
       objectReference: {fileID: 0}
     - target: {fileID: 9206523868978398221, guid: 757b6cc8a0af91a43bb448c4afe574ad,
         type: 3}

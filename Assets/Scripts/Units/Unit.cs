@@ -175,9 +175,19 @@ public abstract class Unit : MonoBehaviour, IDamagable
 
     #region Combat
 
-    protected void Attack()
+    public virtual void StartAttack(Tile target)
     {
+        if (CurrActionPoints <= 0)
+            return;
+
         CurrActionPoints--;
+        EventManager.OnUnitStartedAttacking(this, target);
+        CurrState = UnitState.attacking;
+    }
+
+    public virtual void EndAttack()
+    {
+
     }
 
     #endregion

@@ -71,4 +71,23 @@ public class Character : Unit
 
         EventManager.OnCharacterMoved(this);
     }
+
+    public override void StartAttack(Tile target)
+    {
+        StopPlanning();
+
+        base.StartAttack(target);
+    }
+
+    public override void EndAttack()
+    {
+        base.EndAttack();
+
+        if (CurrActionPoints > 0)
+            StartPlanningAttack();
+        else if (CurrMoveRange > 0)
+            StartPlanningMovement();
+        else
+            CurrState = UnitState.idle;
+    }
 }
