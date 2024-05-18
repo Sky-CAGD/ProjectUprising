@@ -18,5 +18,5 @@ MonoBehaviour:
   startingHealth: 10
   maxMove: 4
   moveSpeed: 4
-  maxActionPoints: 2
-  startingActionPoints: 2
+  maxActionPoints: 1
+  startingActionPoints: 1

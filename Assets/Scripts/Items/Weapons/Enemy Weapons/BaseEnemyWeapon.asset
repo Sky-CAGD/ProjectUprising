@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 50b26610bd17f504792a321cc0166c99, type: 3}
-  m_Name: Plasma Pistols
+  m_Name: BaseEnemyWeapon
   m_EditorClassIdentifier: 
   attackType: 0
   projectile: {fileID: 27510312052155867, guid: d3561892566d161428b4c07fa92db44b,

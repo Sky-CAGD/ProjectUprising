@@ -31,6 +31,10 @@ public abstract class Unit : MonoBehaviour, IDamagable
     [SerializeField] protected Slider shieldBar;
     [SerializeField] protected Slider healthBar;
 
+    [Header("Debug/Testing")]
+    //If true, any amount of shield will prevent all health damage
+    [SerializeField] protected bool shieldBlocksAll; 
+
     //Health/Shield Properties
     public int MaxShield { get; protected set; }
     public int Shield { get; protected set; }
@@ -47,7 +51,7 @@ public abstract class Unit : MonoBehaviour, IDamagable
     public int MaxActionPoints { get; protected set; }
     public int CurrActionPoints { get; protected set; }
 
-    [HideInInspector] public Tile occupiedTile;
+    public Tile occupiedTile;
 
     protected List<Tile> tilesInRange = new List<Tile>();
 
@@ -175,6 +179,10 @@ public abstract class Unit : MonoBehaviour, IDamagable
 
     #region Combat
 
+    /// <summary>
+    /// Reduces the unit's action points and begins an attack against a single target
+    /// </summary>
+    /// <param name="target"></param>
     public virtual void StartAttack(Tile target)
     {
         if (CurrActionPoints <= 0)
@@ -184,6 +192,7 @@ public abstract class Unit : MonoBehaviour, IDamagable
         EventManager.OnUnitStartedAttacking(this, target);
         CurrState = UnitState.attacking;
     }
+
 
     public virtual void EndAttack()
     {
@@ -267,10 +276,6 @@ public abstract class Unit : MonoBehaviour, IDamagable
         }
 
         FinalizePosition(path.tiles[pathLength]);
-
-        occupiedTile.Highlighter.ClearAllTileHighlights();
-        ShowMovementRange();
-        occupiedTile.Highlighter.HighlightTile(HighlightType.unitSelection);
     }
 
     /// <summary>
@@ -283,11 +288,7 @@ public abstract class Unit : MonoBehaviour, IDamagable
         transform.position = tile.transform.position;
         occupiedTile = tile;
         tile.OccupyingUnit = this;
-
-        if(CurrMoveRange <= 0)
-            CurrState = UnitState.idle;
-        else
-            CurrState = UnitState.planningMovement;
+        CurrState = UnitState.idle;
     }
 
     protected virtual void MoveAndRotate(Vector3 origin, Vector3 destination, float duration)
@@ -321,10 +322,21 @@ public abstract class Unit : MonoBehaviour, IDamagable
     /// <param name="damage"></param>
     public virtual void Damage(int damage)
     {
-        int dmgToHealth = (Shield - damage) <= 0 ? Mathf.Abs(Shield - damage) : 0;
+        if(shieldBlocksAll) //Debug/testing - Health cannot be reduced if unit has any shield
+        {
+            if(Shield > 0)
+                Shield = Mathf.Max(Shield - damage, 0);
+            else
+                Health = Mathf.Max(Health - damage, 0);
+        }
+        else //Damage dealt past the current shield value affects the unit's Health
+        {
+            int dmgToHealth = (Shield - damage) <= 0 ? Mathf.Abs(Shield - damage) : 0;
 
-        Shield = Mathf.Max(Shield - damage, 0);
-        Health = Mathf.Max(Health - dmgToHealth, 0);
+            Shield = Mathf.Max(Shield - damage, 0);
+            Health = Mathf.Max(Health - dmgToHealth, 0);
+        }
+
         UpdateHealthUI();
 
         if(Health <= 0)

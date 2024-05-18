@@ -1,3 +1,7 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
 /*
  * Author: Kilan Sky Larsen
  * Last Updated: 5/14/2024
@@ -89,5 +93,33 @@ public class Character : Unit
             StartPlanningMovement();
         else
             CurrState = UnitState.idle;
+    }
+
+    /// <summary>
+    /// Moves this unit along a given path over time
+    /// </summary>
+    /// <param name="path"></param>
+    /// <returns></returns>
+    protected override IEnumerator MoveAlongPath(TileGroup path)
+    {
+        StartCoroutine(base.MoveAlongPath(path));
+
+        occupiedTile.Highlighter.ClearAllTileHighlights();
+        ShowMovementRange();
+        occupiedTile.Highlighter.HighlightTile(HighlightType.unitSelection);
+
+        yield return null;
+    }
+
+    /// <summary>
+    /// End the movement along a path for this unit
+    /// </summary>
+    /// <param name="tile"></param>
+    protected override void FinalizePosition(Tile tile)
+    {
+        base.FinalizePosition(tile);
+
+        if (CurrMoveRange > 0)
+            CurrState = UnitState.planningMovement;
     }
 }

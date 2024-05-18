@@ -115,7 +115,7 @@ public static class Rangefinder
     public static List<Tile> GetNeighborTiles(Tile origin)
     {
         //Check if this tile has stored neighbors
-        if (origin.Neighbors.Count > 0)
+        if (origin.Neighbors != null && origin.Neighbors.Count > 0)
             return origin.Neighbors;
 
         List<Tile> neighbors = new List<Tile>();

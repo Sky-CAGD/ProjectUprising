@@ -21,21 +21,26 @@ public class Interact : SingletonPattern<Interact>
     public Tile CurrentTile { get; private set; }
     public Character SelectedCharacter { get; private set; }
     public bool NewInteraction { get; private set; }
+    public bool CanInteract { get; set; }
 
     private TileGroup lastPath = new TileGroup();
 
     private void Start()
     {
         mainCam = Camera.main;
+        CanInteract = true;
     }
 
     private void Update()
     {
-        CheckMouseOverInteraction();
-   
-        //Check for right click input to deselect units & highlights
-        if (Input.GetMouseButtonDown(1))
-            ClearAllSelections();
+        if(CanInteract)
+        {
+            CheckMouseOverInteraction();
+
+            //Check for right click input to deselect units & highlights
+            if (Input.GetMouseButtonDown(1))
+                ClearAllSelections();
+        }
     }
 
     private void CheckMouseOverInteraction()
