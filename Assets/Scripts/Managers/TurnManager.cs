@@ -23,17 +23,12 @@ public class TurnManager : MonoBehaviour
         EventManager.EnemyPhaseEnded -= StartPlayerTurn;
     }
 
-    private void Start()
-    {
-        characterUnits = FindObjectsOfType<Character>();
-        enemyUnits = FindObjectsOfType<Enemy>();
-    }
-
     /// <summary>
     /// Called when player clicks next/end turn button, sends event to start enemies moving/attacking
     /// </summary>
     public void StartEnemyTurn()
     {
+        FindObjectOfType<TileHighlighter>().ClearAllTileHighlights();
         Interact.Instance.DeselectUnit();
         Interact.Instance.CanInteract = false;
         EventManager.OnEnemyPhaseStarted();
@@ -53,6 +48,9 @@ public class TurnManager : MonoBehaviour
     /// </summary>
     private void RefreshAllUnits()
     {
+        characterUnits = FindObjectsOfType<Character>();
+        enemyUnits = FindObjectsOfType<Enemy>();
+
         foreach (Character unit in characterUnits)
             unit.RefreshUnit();
 

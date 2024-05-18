@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -28,6 +29,7 @@ public abstract class Unit : MonoBehaviour, IDamagable
     [SerializeField] protected LayerMask wallLayer;
 
     [Header("Health UI")]
+    [SerializeField] protected TMP_Text weaponTypeText;
     [SerializeField] protected Slider shieldBar;
     [SerializeField] protected Slider healthBar;
 
@@ -75,6 +77,7 @@ public abstract class Unit : MonoBehaviour, IDamagable
 
         //Update the health & shield bar UI
         UpdateHealthUI();
+        weaponTypeText.text = weapon.attackType.ToString();
 
         CurrState = UnitState.idle;
     }

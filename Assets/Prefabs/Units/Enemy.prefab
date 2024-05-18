@@ -319,9 +319,24 @@ MonoBehaviour:
   wallLayer:
     serializedVersion: 2
     m_Bits: 256
+  weaponTypeText: {fileID: 2886706896253186854}
   shieldBar: {fileID: 6025785187103461043}
   healthBar: {fileID: 7464763049012081107}
+  shieldBlocksAll: 0
   occupiedTile: {fileID: 0}
+  viewValidMoveTiles: 0
+--- !u!114 &2886706896253186854 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2824719079780200558, guid: 9e62eacb0b934924e996871848be7ecb,
+    type: 3}
+  m_PrefabInstance: {fileID: 1097980737371915080}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &6025785187103461043 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6675227564742184443, guid: 9e62eacb0b934924e996871848be7ecb,

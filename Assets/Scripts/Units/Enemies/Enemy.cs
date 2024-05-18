@@ -14,23 +14,30 @@ using UnityEngine.TextCore.Text;
 public class Enemy : Unit
 {
     protected Tile target;
-    protected Vector3 offset;
     protected bool takingTurn;
+
+    [Header("Debug/Testing")]
+    [SerializeField] bool viewValidMoveTiles = false;
 
     protected override void Start()
     {
         base.Start();
 
         takingTurn = false;
-        offset = new Vector3 (0, 1, 0);
     }
 
     public virtual void StartTurn()
     {
         takingTurn = true;
 
-        /// AI METHOD 1
+        /// AI METHOD 2
+        float waitTime = 0f;
+        if (viewValidMoveTiles)
+            waitTime = 2f;
 
+        StartCoroutine(ExecuteTurn(waitTime));
+
+        /// AI METHOD 1
         /*
         Character[] characters = FindObjectsOfType<Character>();
         TileGroup[] characterPaths = GeneratePathsToCharacters(characters);
@@ -52,9 +59,16 @@ public class Enemy : Unit
         }
         */
 
-        /// AI METHOD 2
+    }
 
+    protected IEnumerator ExecuteTurn(float waitTime)
+    {
         Tile bestMoveTile = FindBestMoveTile();
+
+        yield return new WaitForSeconds(waitTime);
+
+        if (viewValidMoveTiles)
+            occupiedTile.Highlighter.ClearAllTileHighlights();
 
         Character[] characters = FindObjectsOfType<Character>();
         TileGroup[] characterPaths = GeneratePathsToCharacters(characters);
@@ -70,7 +84,7 @@ public class Enemy : Unit
             StartMove(movePath);
         }
         //Enemy is currently standing on best tile, immediately attack
-        else if(bestMoveTile == occupiedTile)
+        else if (bestMoveTile == occupiedTile)
         {
             List<Character> charsInRange = GetCharactersInRange(characters, characterPaths);
 
@@ -87,15 +101,12 @@ public class Enemy : Unit
         {
             TileGroup movePath = Pathfinder.FindPath(occupiedTile, bestMoveTile);
 
-            if(movePath == null)
+            if (movePath == null)
             {
                 Debug.LogError(gameObject + " Failed to find a path to the best tile: " + bestMoveTile);
                 EndTurn();
-                return;
+                StopAllCoroutines();
             }
-
-            int closestChar = GetClosestCharacterIndex(characters, characterPaths);
-            target = characters[closestChar].occupiedTile;
 
             //If the best tile is further than this unit's move range, shorten the path
             if (movePath.tiles.Length - 1 > CurrMoveRange)
@@ -121,9 +132,16 @@ public class Enemy : Unit
 
         if(takingTurn)
         {
-            if(target == null)
+            Character[] characters = FindObjectsOfType<Character>();
+            TileGroup[] characterPaths = GeneratePathsToCharacters(characters);
+            List<Character> charsInRange = GetCharactersInRange(characters, characterPaths);
+
+            target = null;
+            if (charsInRange.Count > 0)
+                target = charsInRange[0].occupiedTile;
+
+            if (target == null)
             {
-                Debug.LogError("Enemy target was not set");
                 EndTurn();
             }
             else
@@ -173,19 +191,20 @@ public class Enemy : Unit
         {
             foreach (Tile tile in tilesInRange)
             {
-                if(!tile.Occupied && tile.Walkable)
+                //Check if the tile potential move tile is walkable & unoccupied, or if it is this units current tile
+                if(!tile.Occupied && tile.Walkable || tile == occupiedTile)
                 {
-                    //Ignore checking line of sight for artillery
-                    if (weapon.attackType == AttackType.artillery)
+                    //Check line of sight except for artillery
+                    if (weapon.attackType == AttackType.artillery || CanSeeTarget(tile, character.occupiedTile))
                     {
                         //Add tiles that are not already within the potentialAttackTiles list
                         if (!potentialAttackTiles.Contains(tile))
+                        {
                             potentialAttackTiles.Add(tile);
-                    }
-                    else if (CanSeeTarget(tile, character.occupiedTile))
-                    {
-                        if (!potentialAttackTiles.Contains(tile))
-                            potentialAttackTiles.Add(tile);
+
+                            if (viewValidMoveTiles)
+                                tile.Highlighter.HighlightTile(HighlightType.validPath);
+                        }
                     }
                 }
             }
@@ -204,7 +223,8 @@ public class Enemy : Unit
             }
         }
 
-        bestTile.Highlighter.HighlightTile(HighlightType.attackTarget);
+        if (viewValidMoveTiles)
+            bestTile.Highlighter.HighlightTile(HighlightType.attackTarget);
 
         return bestTile;
     }
@@ -220,15 +240,8 @@ public class Enemy : Unit
 
         for (int i = 0; i < characters.Length; i++)
         {
-            //Get all tiles in range of artillery (ignore line of sight)
-            if(weapon.attackType == AttackType.artillery)
-            {
-                //Check if character is within weapon's attack range
-                if (charPaths[i] != null && charPaths[i].tiles.Length - 1 <= weapon.range)
-                    charsInRange.Add(characters[i]);
-            }
             //Check for walls blocking line of sight
-            else if (CanSeeTarget(occupiedTile, characters[i].occupiedTile))
+            if (CanSeeTarget(occupiedTile, characters[i].occupiedTile))
             {
                 //Check if character is within weapon's attack range
                 if (charPaths[i] != null && charPaths[i].tiles.Length - 1 <= weapon.range)
@@ -320,9 +333,13 @@ public class Enemy : Unit
     protected virtual bool CanSeeTarget(Tile tile, Tile target)
     {
         bool canSee = false;
+        Vector3 offset = new Vector3(0, 1, 0);
 
         //Check for walls blocking line of sight
         if (!Physics.Linecast(tile.transform.position + offset, target.transform.position + offset, wallLayer))
+            canSee = true;
+
+        if (weapon.attackType == AttackType.artillery)
             canSee = true;
 
         return canSee;
