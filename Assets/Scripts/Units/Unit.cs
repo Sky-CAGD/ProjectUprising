@@ -91,8 +91,8 @@ public abstract class Unit : MonoBehaviour, IDamagable
     {
         if(Input.GetKeyDown(KeyCode.T))
         {
-            print("Debug: T Key pressed, units take 3 damage");
-            Damage(3);
+            print("Debug: T Key pressed, units gain 1 action point");
+            AddActionPoints(1);
         }
     }
 
@@ -199,7 +199,7 @@ public abstract class Unit : MonoBehaviour, IDamagable
 
     public virtual void EndAttack()
     {
-
+        occupiedTile.Highlighter.ClearAllTileHighlights();
     }
 
     #endregion
@@ -235,6 +235,11 @@ public abstract class Unit : MonoBehaviour, IDamagable
     /// <param name="_path"></param>
     public virtual void StartMove(TileGroup _path)
     {
+        Tile destination = _path.tiles[_path.tiles.Length - 1];
+
+        if (destination.Occupied || !destination.Walkable)
+            return;
+
         CurrState = UnitState.moving;
         occupiedTile.OccupyingUnit = null;
 
@@ -373,4 +378,11 @@ public abstract class Unit : MonoBehaviour, IDamagable
     }
     #endregion
 
+    //--------------------------------------------
+    // Action Points
+    //--------------------------------------------
+    protected virtual void AddActionPoints(int actionPoints)
+    {
+        CurrActionPoints += actionPoints;
+    }
 }

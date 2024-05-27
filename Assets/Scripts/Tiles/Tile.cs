@@ -21,7 +21,7 @@ public enum TileType
 public class Tile : MonoBehaviour
 {
     public Tile Parent { get; set; }
-    public Tile ConnectedTile { get; set; }
+    [field: SerializeField] public Tile ConnectedTile { get; set; }
     public List<Tile> Neighbors { get; set; }
     public Unit OccupyingUnit { get; set; }
 
@@ -76,6 +76,12 @@ public class Tile : MonoBehaviour
 
     private void Update()
     {
+        if(Input.GetKeyDown(KeyCode.G))
+        {
+            RandomizeTileType();
+            SetTileParameters();
+        }
+
         //update the highlight color of tiles each frame for testing
         //highlightColor = GameManager.Instance.tileHighlightColor;
         //mesh.material.color = highlightColor;

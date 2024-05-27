@@ -16,4 +16,4 @@ MonoBehaviour:
   projectile: {fileID: 2115140216605947028, guid: 9c3f946dfd544774fad0ed5a4025b80c,
     type: 3}
   range: 99
-  baseDamage: 5
+  baseDamage: 3

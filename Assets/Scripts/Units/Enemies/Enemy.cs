@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
 
 /*
  * Author: Kilan Sky Larsen
- * Last Updated: 5/14/2024
+ * Last Updated: 5/18/2024
  * Description: Handles behavior of AI controlled enemy units
  */
 
@@ -18,6 +19,7 @@ public class Enemy : Unit
 
     [Header("Debug/Testing")]
     [SerializeField] bool viewValidMoveTiles = false;
+    [SerializeField] bool useAIMethod1;
 
     protected override void Start()
     {
@@ -29,25 +31,43 @@ public class Enemy : Unit
     public virtual void StartTurn()
     {
         takingTurn = true;
-
-        /// AI METHOD 2
         float waitTime = 0f;
-        if (viewValidMoveTiles)
-            waitTime = 2f;
-
-        StartCoroutine(ExecuteTurn(waitTime));
 
         /// AI METHOD 1
-        /*
+        if (useAIMethod1)
+        {
+            StartCoroutine(ExecuteTurnMethod1(waitTime));
+        }
+        /// AI METHOD 2
+        else
+        {
+            if (viewValidMoveTiles)
+                waitTime = 2f;
+
+            StartCoroutine(ExecuteTurnMethod2(waitTime));
+        }
+    }
+
+    protected IEnumerator ExecuteTurnMethod1(float waitTime)
+    {
         Character[] characters = FindObjectsOfType<Character>();
         TileGroup[] characterPaths = GeneratePathsToCharacters(characters);
-        List<Character> charsInRange = GetCharactersInRange(characters, characterPaths);
+        List<Character> charsInRange = GetCharactersInRange(characters);
+
+        yield return new WaitForSeconds(waitTime);
 
         if (charsInRange.Count == 1) //There was exactly one character within sight & range
         {
+            //Immediately attack
             StartAttack(charsInRange[0].occupiedTile);
         }
-        else //There was zero OR more than one character unit within sight & range
+        else if(charsInRange.Count > 1) //There was more than one character within sight & range
+        {
+            //Get the closest character, then attack
+            Character closestChar = GetClosestCharacter(charsInRange.ToArray());
+            StartAttack(closestChar.occupiedTile);
+        }
+        else //There were zero character units within sight & range
         {
             int closestChar = GetClosestCharacterIndex(characters, characterPaths);
             target = characters[closestChar].occupiedTile;
@@ -57,11 +77,9 @@ public class Enemy : Unit
 
             StartMove(movePath);
         }
-        */
-
     }
 
-    protected IEnumerator ExecuteTurn(float waitTime)
+    protected IEnumerator ExecuteTurnMethod2(float waitTime)
     {
         Tile bestMoveTile = FindBestMoveTile();
 
@@ -71,26 +89,26 @@ public class Enemy : Unit
             occupiedTile.Highlighter.ClearAllTileHighlights();
 
         Character[] characters = FindObjectsOfType<Character>();
-        TileGroup[] characterPaths = GeneratePathsToCharacters(characters);
 
         //Enemy cannot attack a character this turn
         //Instead, move towards the nearest character
         if (bestMoveTile == null)
         {
-            int closestChar = GetClosestCharacterIndex(characters, characterPaths);
-            target = characters[closestChar].occupiedTile;
-            TileGroup movePath = Pathfinder.FindPath(occupiedTile, characterPaths[closestChar].tiles[CurrMoveRange]);
+            Character closestChar = GetClosestCharacter(characters);
+            TileGroup pathToChar = Pathfinder.FindPath(occupiedTile, closestChar.occupiedTile);
+            TileGroup movePath = Pathfinder.FindPath(occupiedTile, pathToChar.tiles[CurrMoveRange]);
 
             StartMove(movePath);
         }
         //Enemy is currently standing on best tile, immediately attack
         else if (bestMoveTile == occupiedTile)
         {
-            List<Character> charsInRange = GetCharactersInRange(characters, characterPaths);
+            List<Character> charsInRange = GetCharactersInRange(characters);
+            Character closestChar = GetClosestCharacter(characters);
 
             if (charsInRange.Count > 0)
             {
-                target = charsInRange[0].occupiedTile;
+                target = closestChar.occupiedTile;
                 StartAttack(target);
             }
             else
@@ -116,7 +134,7 @@ public class Enemy : Unit
         }
     }
 
-    protected void EndTurn()
+        protected void EndTurn()
     {
         takingTurn = false;
         EventManager.OnEnemyTurnEnded();
@@ -133,13 +151,15 @@ public class Enemy : Unit
         if(takingTurn)
         {
             Character[] characters = FindObjectsOfType<Character>();
-            TileGroup[] characterPaths = GeneratePathsToCharacters(characters);
-            List<Character> charsInRange = GetCharactersInRange(characters, characterPaths);
+            List<Character> charsInRange = GetCharactersInRange(characters);
 
             target = null;
             if (charsInRange.Count > 0)
-                target = charsInRange[0].occupiedTile;
-
+            {
+                Character closestChar = GetClosestCharacter(charsInRange.ToArray());
+                target = closestChar.occupiedTile;
+            }
+ 
             if (target == null)
             {
                 EndTurn();
@@ -234,22 +254,50 @@ public class Enemy : Unit
     /// </summary>
     /// <param name="character"></param>
     /// <returns></returns>
-    protected virtual List<Character> GetCharactersInRange(Character[] characters, TileGroup[] charPaths)
+    protected virtual List<Character> GetCharactersInRange(Character[] characters)
     {
         List<Character> charsInRange = new List<Character>();
 
         for (int i = 0; i < characters.Length; i++)
         {
-            //Check for walls blocking line of sight
-            if (CanSeeTarget(occupiedTile, characters[i].occupiedTile))
+            TileGroup charDirectPath = Pathfinder.FindPath(occupiedTile, characters[i].occupiedTile, true);
+
+            //Check for walls blocking line of sight (or if using an artillery weapon)
+            if (CanSeeTarget(occupiedTile, characters[i].occupiedTile) || weapon.attackType == AttackType.artillery)
             {
                 //Check if character is within weapon's attack range
-                if (charPaths[i] != null && charPaths[i].tiles.Length - 1 <= weapon.range)
+                if (charDirectPath != null && charDirectPath.tiles.Length - 1 <= weapon.range)
                     charsInRange.Add(characters[i]);
             }
         }
 
         return charsInRange;
+    }
+
+    /// <summary>
+    /// Returns the character unit that is closest to this enemy
+    /// </summary>
+    /// <param name="characters"></param>
+    /// <param name="charPaths"></param>
+    /// <returns></returns>
+    protected virtual Character GetClosestCharacter(Character[] characters)
+    {
+        Character closestChar = null;
+        float closestCharDist = int.MaxValue;
+
+        //Check for the closest character by distance
+        for (int i = 0; i < characters.Length; i++)
+        {
+            float charDist = Vector3.Distance(occupiedTile.transform.position, characters[i].occupiedTile.transform.position);
+
+            if (charDist < closestCharDist)
+            {
+                closestCharDist = charDist;
+                closestChar = characters[i];
+            }
+        }
+
+        return closestChar;
     }
 
     /// <summary>
@@ -286,18 +334,25 @@ public class Enemy : Unit
     {
         Tile bestTile = null;
         Tile lastTile = path.tiles[path.tiles.Length - 1];
-        int rangeFromCurrTile = path.tiles.Length - 1;
 
         int numTilesToCheck = Mathf.Min(CurrMoveRange, path.tiles.Length - 2);
-        for (int i = 0; i < numTilesToCheck; i++)
+        for (int i = 1; i < numTilesToCheck; i++)
         {
-            //Check if there is line of sight and weapon range to target's tile
-            if (CanSeeTarget(path.tiles[i], lastTile) && rangeFromCurrTile <= weapon.range)
+            if (path.tiles[i] == lastTile)
+                continue;
+
+            //Check if there is line of sight to target's tile
+            if (CanSeeTarget(path.tiles[i], lastTile) || weapon.attackType == AttackType.artillery)
             {
-                bestTile = path.tiles[i];
-                break;
+                int directRangeToTarget = Pathfinder.FindPath(path.tiles[i], lastTile, true).tiles.Length;
+
+                //Check if within weapon range of target's tile
+                if (directRangeToTarget <= weapon.range)
+                {
+                    bestTile = path.tiles[i];
+                    break;
+                }
             }
-            rangeFromCurrTile--;
         }
 
         //Check if no tiles were found this unit can attack from
@@ -354,7 +409,7 @@ public class Enemy : Unit
     {
         bool canHit = false;
 
-        int rangeFromCurrTile = Pathfinder.FindPath(tile, target).tiles.Length - 1;
+        int rangeFromCurrTile = Pathfinder.FindPath(tile, target, true).tiles.Length - 1;
 
         //Check if there is line of sight and weapon range to target's tile
         if (CanSeeTarget(tile, target) && rangeFromCurrTile <= weapon.range)

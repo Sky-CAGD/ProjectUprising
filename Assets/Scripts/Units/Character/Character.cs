@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 /*
  * Author: Kilan Sky Larsen
@@ -10,9 +11,17 @@ using UnityEngine;
 
 public class Character : Unit
 {
+    [Header("Action Points")]
+    [SerializeField] private Color actionPointColor = Color.red;
+    [SerializeField] private Color bonusActionPointColor = Color.yellow;
+    [SerializeField] private Color usedActionPointColor = Color.black;
+    [SerializeField] private GameObject actionPointPanel;
+    [SerializeField] private GameObject actionPointPrefab;
+    private List<Image> actionPoints = new List<Image>();
     protected override void Start()
     {
         base.Start();
+        RefreshUnit();
     }
 
     /// <summary>
@@ -48,6 +57,7 @@ public class Character : Unit
     public void StartPlanningAttack()
     {
         ClearTilesInRange();
+        occupiedTile.Highlighter.ClearAllTileHighlights();
         EventManager.OnCharacterStartedPlanningAttack(this);
         CurrState = UnitState.planningAttack;
         ShowAttackRange();
@@ -81,6 +91,8 @@ public class Character : Unit
         StopPlanning();
 
         base.StartAttack(target);
+        SetUpActionPointsPanel();
+        DisplayRemainingActionPoints();
     }
 
     public override void EndAttack()
@@ -121,5 +133,63 @@ public class Character : Unit
 
         if (CurrMoveRange > 0)
             CurrState = UnitState.planningMovement;
+    }
+
+    public override void RefreshUnit()
+    {
+        base.RefreshUnit();
+        SetUpActionPointsPanel();
+        DisplayRemainingActionPoints();
+    }
+
+    //--------------------------------------------
+    // Action Points
+    //--------------------------------------------
+    protected void SetUpActionPointsPanel()
+    {
+        if (actionPoints.Count == CurrActionPoints)
+            return;
+
+        //Action points were reduced - remove and clear them to regenerate the correct #
+        if (actionPoints.Count > CurrActionPoints)
+        {
+            foreach (Image AP in actionPoints)
+                Destroy(AP.gameObject);
+
+            actionPoints.Clear();
+        }
+
+        //Keep adding action points until the correct number have been added
+        int numAP = Mathf.Max(CurrActionPoints, MaxActionPoints);
+        while (actionPoints.Count < numAP)
+        {
+            GameObject newAP = Instantiate(actionPointPrefab, actionPointPanel.transform);
+            actionPoints.Add(newAP.GetComponent<Image>());
+        }
+    }
+
+    /// <summary>
+    /// For each action point the player has, sets the UI to diplay as:
+    /// Yellow: Bonus AP - These are temp AP that are greater than the Unit's maximum
+    /// Red: Unused AP - These are AP within the maximum that have not been used yet this turn
+    /// Black: Used AP - These are AP that have already been used during this turn
+    /// </summary>
+    protected void DisplayRemainingActionPoints()
+    {
+        for (int i = 0; i < actionPoints.Count; i++)
+        {
+            if (i >= MaxActionPoints)
+                actionPoints[i].color = bonusActionPointColor;
+            else if (CurrActionPoints > i)
+                actionPoints[i].color = actionPointColor;
+            else
+                actionPoints[i].color = usedActionPointColor;
+        }
+    }
+    protected override void AddActionPoints(int actionPoints)
+    {
+        base.AddActionPoints(actionPoints);
+        SetUpActionPointsPanel();
+        DisplayRemainingActionPoints();
     }
 }

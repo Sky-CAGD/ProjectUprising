@@ -16,7 +16,7 @@ public static class Pathfinder
     /// in "currentFrontier" for later clearing
     /// </summary>
     /// <param name="character"></param>
-    public static TileGroup FindPath(Tile origin, Tile destination)
+    public static TileGroup FindPath(Tile origin, Tile destination, bool includeUnwalkable = false)
     {
         List<Tile> openSet = new List<Tile>(); //contains all new neighboring tiles that we discover
         List<Tile> closedSet = new List<Tile>(); //contains tiles that will become the actual path
@@ -49,8 +49,11 @@ public static class Pathfinder
             foreach (Tile neighbor in Rangefinder.GetNeighborTiles(currentTile))
             {
                 //Skip checking a neighbor tile that is already within the actual path
-                //Skip checking a tile that is not walkable
-                if(closedSet.Contains(neighbor) || !neighbor.Walkable)
+                if(closedSet.Contains(neighbor))
+                    continue;
+
+                //Skip checking a tile that is not walkable (unless otherwise specified)
+                if (!includeUnwalkable && !neighbor.Walkable)
                     continue;
 
                 float costToNeighbor = currentTile.CostFromOrigin + neighbor.TerrainCost + tileDistance;
